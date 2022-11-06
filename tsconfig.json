@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"useDefineForClassFields": true,
+		"moduleResolution": "Node",
+		"strict": true,
+		"jsx": "preserve",
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"lib": ["ESNext", "DOM"],
+		"skipLibCheck": true,
+		"types": ["vite/client", "pinia", "vue3-google-login"],
+		"baseUrl": ".",
+		"paths": {
+			"@api/*": ["src/api/*"],
+			"@components/*": ["src/components/*"],
+			"@interfaces/*": ["src/interfaces/*"],
+			"@layouts/*": ["src/layouts/*"],
+			"@stores/*": ["src/stores/*"],
+			"@utils/*": ["src/utils/*"],
+			"@views/*": ["src/views/*"]
+		}
+	},
+	"include": ["src", "vite.config.ts"]
+}
