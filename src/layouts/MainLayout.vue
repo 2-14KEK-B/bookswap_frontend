@@ -16,7 +16,9 @@
 				<q-space />
 				<q-btn-dropdown
 					v-if="loggedInUser"
+					split
 					flat
+					:to="{ name: 'myProfile' }"
 					:label="`${loggedInUser.email} ${loggedInUser.role == 'admin' ? '*' : ''}`"
 				>
 					<q-list>

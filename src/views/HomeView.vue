@@ -9,6 +9,11 @@
 
 				<q-card-section>
 					<div class="q-ma-lg">
+						<div v-if="userStore.getLoggedUser?._id !== book.uploader">
+							<span @click.prevent="router.push({ name: 'userProfile', params: { id: book.uploader } })">
+								{{ book.uploader }}
+							</span>
+						</div>
 						<q-badge class="q-pa-xs" :color="book.available ? 'green' : 'red'" style="font-size: small">
 							{{ book.available ? "Elérhető" : "Nem elérhető" }}
 						</q-badge>
@@ -25,7 +30,11 @@
 	import { onMounted, ref } from "vue";
 	import $axios from "@api/axios";
 	import { Book } from "@interfaces/book";
+	import { useUserStore } from "@stores/user";
+	import { useRouter } from "vue-router";
 
+	const router = useRouter();
+	const userStore = useUserStore();
 	const books = ref<Book[]>([]);
 
 	onMounted(() => {
