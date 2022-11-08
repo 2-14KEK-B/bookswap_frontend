@@ -14,7 +14,7 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach(async (to, _from) => {
+router.beforeEach(async (to, from) => {
 	const userStore = useUserStore();
 	const user: User | null = getUserFromLocalStorage();
 	// console.log("from: ", from.name);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import $axios from "@api/axios";
 import { RouteRecordRaw } from "vue-router";
 
 export const routes: RouteRecordRaw[] = [
@@ -14,6 +16,28 @@ export const routes: RouteRecordRaw[] = [
 				path: "auth",
 				name: "auth",
 				component: () => import("@views/AuthView.vue"),
+			},
+			{
+				path: "me",
+				name: "myProfile",
+				component: () => import("@views/MyProfileView.vue"),
+				beforeEnter: async (to, from) => {
+					await $axios.get("user/me").then((res) => (to.meta = res.data));
+					// console.log("to: ", to);
+					// console.log("from: ", from);
+				},
+			},
+			{
+				path: "user/:id",
+				name: "userProfile",
+				component: () => import("@views/UserProfileView.vue"),
+				beforeEnter: async (to, from) => {
+					await $axios.get(`user/${to.params.id}`).then((res) => (to.meta = res.data));
+					// console.log(to.params);
+					// console.log(to.meta);
+					// console.log("to: ", to);
+					// console.log("from: ", from);
+				},
 			},
 		],
 	},
@@ -85,3 +109,4 @@ export const routes: RouteRecordRaw[] = [
 	// 	component: () => import("@views/404View.vue"),
 	// },import component from './vite-env.d';
 ];
+import { useUserStore } from "@stores/user";
