@@ -15,14 +15,14 @@
 				</q-toolbar-title>
 				<q-space />
 				<q-btn-dropdown
-					v-if="loggedInUser"
+					v-if="userStore.getLoggedUser"
 					split
 					flat
 					:to="{ name: 'myProfile' }"
-					:label="`${loggedInUser.email} ${loggedInUser.role == 'admin' ? '*' : ''}`"
+					:label="`${userStore.getLoggedUser.email} ${userStore.getLoggedUser.role == 'admin' ? '*' : ''}`"
 				>
 					<q-list>
-						<q-item v-if="loggedInUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
+						<q-item v-if="userStore.getLoggedUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
 							<q-item-section>
 								<q-item-label>Go to admin page</q-item-label>
 							</q-item-section>
@@ -34,7 +34,7 @@
 							</q-item-section>
 						</q-item>
 
-						<q-item v-close-popup clickable @click="logOut">
+						<q-item v-close-popup clickable @click="userStore.logOut">
 							<q-item-section>
 								<q-item-label>Logout</q-item-label>
 							</q-item-section>
@@ -52,11 +52,9 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
 
 	const quasar = useQuasar();
-	const { getLoggedUser, logOut } = useUserStore();
-	const loggedInUser = ref(getLoggedUser);
+	const userStore = useUserStore();
 </script>
