@@ -6,6 +6,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 4000"
   },
+  "license": "MIT",
   "dependencies": {
     "@quasar/extras": "^1.15.5",
     "axios": "^1.1.3",
