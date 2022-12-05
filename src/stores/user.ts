@@ -5,7 +5,7 @@ import { router } from "../modules/router";
 import { AxiosResponse } from "axios";
 import $axios from "@api/axios";
 import { handle } from "@utils/error";
-import { User } from "@interfaces/user";
+import { User, EditUser } from "@interfaces/user";
 import { LoginCred, RegisterCred } from "@interfaces/auth";
 
 export const useUserStore = defineStore("user", () => {
@@ -54,6 +54,14 @@ export const useUserStore = defineStore("user", () => {
 			})
 			.catch(handle);
 	}
+	async function edit(userData: EditUser) {
+		return $axios
+			.patch(`user/${loggedInUser.value?._id}`, userData)
+			.then(async (res) => {
+				handleUserSuccess(res);
+			})
+			.catch(handle);
+	}
 
 	async function register(userData: RegisterCred) {
 		return $axios.post("auth/register", userData).catch(handle);
@@ -72,6 +80,7 @@ export const useUserStore = defineStore("user", () => {
 		register,
 		logOut,
 		checkValidUser,
+		edit
 		// loginWithGoogle,
 	};
 });

@@ -20,4 +20,11 @@ interface User {
 	borrows: (Borrow | string)[];
 }
 
+interface EditUser {
+	username?: string;
+	fullname?: string;
+	picture?: string;
+}
+
 export { User };
+export { EditUser };
