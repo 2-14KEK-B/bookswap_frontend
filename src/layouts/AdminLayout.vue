@@ -3,9 +3,6 @@
 		<q-header elevated class="bg-accent text-white">
 			<q-toolbar>
 				<q-btn dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
-				<q-btn flat @click="quasar.dark.toggle">
-					<q-icon name="mdi-theme-light-dark" />
-				</q-btn>
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'admin_home' }">
 						<!-- <q-avatar class="q-mr-lg">
@@ -23,7 +20,7 @@
 					:to="{ name: 'myProfile' }"
 				>
 					<q-list>
-						<q-item v-close-popup clickable>
+						<q-item v-close-popup clickable :to="{ name: 'editProfile' }">
 							<q-item-section>
 								<q-item-label>Modify profile</q-item-label>
 							</q-item-section>
@@ -37,6 +34,9 @@
 					</q-list>
 				</q-btn-dropdown>
 				<q-btn v-else label="Login" :to="{ name: 'auth' }" />
+				<q-btn flat @click="quasar.dark.toggle">
+					<q-icon name="mdi-theme-light-dark" />
+				</q-btn>
 			</q-toolbar>
 		</q-header>
 

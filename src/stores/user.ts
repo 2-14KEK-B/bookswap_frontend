@@ -5,7 +5,7 @@ import { router } from "../modules/router";
 import { AxiosResponse } from "axios";
 import $axios from "@api/axios";
 import { handle } from "@utils/error";
-import { User } from "@interfaces/user";
+import { User, EditUser } from "@interfaces/user";
 import { LoginCred, RegisterCred } from "@interfaces/auth";
 
 export const useUserStore = defineStore("user", () => {
@@ -21,8 +21,8 @@ export const useUserStore = defineStore("user", () => {
 	});
 
 	function handleUserSuccess(res: AxiosResponse) {
-		// console.log("user in handlesuccess: ", res.data);
 		const user: User = res.data;
+		// console.log(res.data);
 		localStorage.setItem("user", JSON.stringify(user));
 		loggedInUser.value = user;
 	}
@@ -44,13 +44,16 @@ export const useUserStore = defineStore("user", () => {
 			.post("auth/login", userData)
 			.then(async (res) => {
 				handleUserSuccess(res);
-				// const user: User = res.data;
-				// console.log(res);
-				// localStorage.setItem("user", JSON.stringify(user));
-				// loggedInUser.value = user;
 				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
 				else router.push({ name: "home" });
-				// $axios.get("test").then((res) => console.log("test: ", res));
+			})
+			.catch(handle);
+	}
+	async function edit(userData: EditUser) {
+		return $axios
+			.patch(`user/${loggedInUser.value?._id}`, userData)
+			.then(async (res) => {
+				handleUserSuccess(res);
 			})
 			.catch(handle);
 	}
@@ -72,6 +75,6 @@ export const useUserStore = defineStore("user", () => {
 		register,
 		logOut,
 		checkValidUser,
-		// loginWithGoogle,
+		edit,
 	};
 });

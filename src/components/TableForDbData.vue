@@ -89,8 +89,9 @@
 
 	async function getData() {
 		return $axios
-			.get(`/${componentProps.baseUrl}/all`, { transformResponse: (r) => r })
+			.get(`/${componentProps.baseUrl}`, { transformResponse: (r) => r })
 			.then((res) => {
+				// console.log(res.data);
 				data.value = JSON.parse(res.data);
 			})
 			.catch((e: AxiosError) => {

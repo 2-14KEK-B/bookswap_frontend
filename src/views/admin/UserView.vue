@@ -13,8 +13,10 @@
 
 	const columns: QTableProps["columns"] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "created_on", name: "created_on", label: "created_on" },
-		{ field: "updated_on", name: "updated_on", label: "updated_on" },
+		{ field: "createdAt", name: "createdAt", label: "createdAt" },
+		{ field: "updatedAt", name: "updatedAt", label: "updatedAt" },
+		{ field: "fullname", name: "fullname", label: "fullname" },
+		{ field: "username", name: "username", label: "username" },
 		{ field: "email", name: "email", label: "email" },
 		{ field: "email_is_verified", name: "email_is_verified", label: "email_is_verified" },
 		{ field: "locale", name: "locale", label: "locale" },
@@ -38,11 +40,17 @@
 			format: (borrows: User["borrows"]) => borrows.join(", "),
 		},
 		{
-			field: "user_ratings",
-			name: "user_ratings",
-			label: "user_ratings",
-			format: (ratings: User["user_ratings"]) => ratings.join(", "),
+			field: "rated_books",
+			name: "rated_books",
+			label: "rated_books",
+			format: (rate: User["rated_books"]) => rate.join(", "),
 		},
+		// {
+		// 	field: "user_ratings",
+		// 	name: "user_ratings",
+		// 	label: "user_ratings",
+		// 	format: (ratings: User["user_ratings"]) => ratings.join(", "),
+		// },
 	];
 </script>
 

@@ -16,8 +16,16 @@ interface User {
 	role?: string;
 	books: (Book | string)[];
 	messages: (Message | string)[];
+	rated_books: string[];
 	user_ratings: string[];
 	borrows: (Borrow | string)[];
 }
 
+interface EditUser {
+	username?: string;
+	fullname?: string;
+	picture?: string;
+}
+
 export { User };
+export { EditUser };

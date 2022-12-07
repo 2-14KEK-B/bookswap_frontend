@@ -25,9 +25,9 @@ interface CreateBook {
 	author: string;
 	title: string;
 	picture: string;
-	category: string[];
+	category?: string[];
 	price?: number;
-	for_borrow: boolean;
+	for_borrow?: boolean;
 }
 
 interface ModifyBook {
