@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import $axios from "@api/axios";
 import { RouteRecordRaw } from "vue-router";
 
@@ -31,22 +30,24 @@ export const routes: RouteRecordRaw[] = [
 				path: "me",
 				name: "myProfile",
 				component: () => import("@views/MyProfileView.vue"),
-				beforeEnter: async (to, from) => {
+				beforeEnter: async (to) => {
 					await $axios.get("user/me").then((res) => (to.meta = res.data));
-					// console.log("to: ", to);
-					// console.log("from: ", from);
 				},
 			},
 			{
 				path: "user/:id",
 				name: "userProfile",
 				component: () => import("@views/UserProfileView.vue"),
-				beforeEnter: async (to, from) => {
+				beforeEnter: async (to) => {
 					await $axios.get(`user/${to.params.id}`).then((res) => (to.meta = res.data));
-					// console.log(to.params);
-					// console.log(to.meta);
-					// console.log("to: ", to);
-					// console.log("from: ", from);
+				},
+			},
+			{
+				path: "book/:id",
+				name: "book",
+				component: () => import("@views/BookView.vue"),
+				beforeEnter: async (to) => {
+					await $axios.get(`book/${to.params.id}`).then((res) => (to.meta = res.data));
 				},
 			},
 		],
@@ -87,36 +88,4 @@ export const routes: RouteRecordRaw[] = [
 		name: "notfound",
 		component: () => import("@views/404View.vue"),
 	},
-	// {
-	// 	path: "/home",
-	// 	name: "home",
-	// 	component: () => import("@views/HomeView.vue"),
-	// },
-	// { path: "/admin", name: "admin", component: () => import("@views/AdminView.vue") },
-	// {
-	// 	path: "/auth",
-	// 	name: "auth",
-	// 	component: () => import("@views/AuthView.vue"),
-	// },
-	// {
-	// 	path: "/book",
-	// 	name: "book",
-	// 	component: () => import("@views/BookView.vue"),
-	// },
-	// {
-	// 	path: "/borrow",
-	// 	name: "borrow",
-	// 	component: () => import("@views/BorrowView.vue"),
-	// },
-	// {
-	// 	path: "/message",
-	// 	name: "message",
-	// 	component: () => import("@views/MessageView.vue"),
-	// },
-	// {
-	// 	path: "/:pathMatch(.*)*",
-	// 	name: "notfound",
-	// 	component: () => import("@views/404View.vue"),
-	// },import component from './vite-env.d';
 ];
-import { useUserStore } from "@stores/user";

@@ -5,14 +5,11 @@
 				<q-btn v-if="userStore.getLoggedUser" flat round dense icon="menu">
 					<q-menu transition-show="jump-down" transition-hide="jump-up">
 						<q-list style="min-width: 100px">
-							<q-item clickable>
-								<q-item-section>Kölcsönözhető könyvek</q-item-section>
-							</q-item>
 							<q-item clickable :to="{ name: 'newBook' }">
 								<q-item-section>Upload a new book</q-item-section>
 							</q-item>
 							<q-separator />
-							<q-item clickable>
+							<q-item clickable disable>
 								<q-item-section>Forum</q-item-section>
 							</q-item>
 						</q-list>
@@ -20,9 +17,9 @@
 				</q-btn>
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'home' }">
-						<q-avatar class="q-mr-lg">
+						<!-- <q-avatar class="q-mr-lg">
 							<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-						</q-avatar>
+						</q-avatar> -->
 						BookSwap
 					</q-btn>
 				</q-toolbar-title>
@@ -30,7 +27,7 @@
 
 				<q-btn-dropdown v-if="userStore.getLoggedUser" split flat :to="{ name: 'myProfile' }">
 					<template #label>
-						<div>
+						<div class="flex row items-center">
 							<q-avatar>
 								<q-img
 									:src="
@@ -40,13 +37,18 @@
 									"
 								></q-img>
 							</q-avatar>
-							<div class="text-center">
-								{{ `${userStore.getLoggedUser.username} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
+							<div class="q-ml-md">
+								<div v-if="userStore.getLoggedUser.username">
+									{{ `${userStore.getLoggedUser.username} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
+								</div>
+								<div v-else>
+									{{ `${userStore.getLoggedUser.email} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
+								</div>
 							</div>
 						</div>
 					</template>
 					<q-list>
-						<q-item v-if="userStore.getLoggedUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home'}">
+						<q-item v-if="userStore.getLoggedUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
 							<q-item-section>
 								<q-item-label>Go to admin page</q-item-label>
 							</q-item-section>

@@ -1,7 +1,7 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-			<TableForDbData :columns="columns" title="Messages" base-url="message" />
+			<TableForDbData :columns="columns" title="Messages" base-url="message/all" />
 		</div>
 	</q-page>
 </template>
@@ -23,7 +23,7 @@
 			field: "message_contents",
 			name: "message_contents",
 			label: "message_contents",
-			format: (contents: Message["message_contents"]) => contents.map(c => c._id).join(", "),
+			format: (contents: Message["message_contents"]) => contents.map((c) => c._id).join(", "),
 		},
 	];
 </script>

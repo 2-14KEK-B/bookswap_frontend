@@ -1,12 +1,38 @@
 <template>
-	<div>
-		<q-form @submit.prevent="bookCreating">
-			<q-input v-model="authorInput" label="Author" />
-			<q-input v-model="titleInput" label="Title" />
-			<q-input v-model="picInput" label="Picture" />
-			<q-input v-model="priceInput" label="Price" />
-			<q-toggle v-model="avaible" checked-icon="check" color="green" unchecked-icon="clear" />
-			<q-btn type="submit">Create a new book</q-btn>
+	<div class="q-pa-lg">
+		<q-form @submit.prevent="bookCreating" @reset="resetFields">
+			<q-input
+				v-model="input.author"
+				label="Author"
+				lazy-rules
+				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+			/>
+			<q-input
+				v-model="input.title"
+				label="Title"
+				lazy-rules
+				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+			/>
+			<q-input v-model="input.picture" label="Picture" />
+			<q-input
+				v-model="input.price"
+				label="Price"
+				lazy-rules
+				type="number"
+				:rules="[(val: number) => (!isNaN(val)) || 'Please add valid price']"
+			/>
+			<q-toggle
+				v-model="input.for_borrow"
+				checked-icon="check"
+				color="green"
+				:label="input.for_borrow ? 'Upload for borrow' : 'Upload for lend'"
+				left-label
+				unchecked-icon="clear"
+			/>
+			<div>
+				<q-btn label="Submit" type="submit" color="primary" />
+				<q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+			</div>
 		</q-form>
 	</div>
 </template>
@@ -17,23 +43,19 @@
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
 
+	const defaultValue = { author: "", title: "", picture: "", price: 0, for_borrow: true };
 	const bookStore = useBookStore();
 	const router = useRouter();
-	const authorInput = ref("");
-	const titleInput = ref("");
-	const picInput = ref("");
-	const priceInput = ref(0);
-	const avaible = ref(true);
+
+	const input = ref(defaultValue);
 
 	async function bookCreating() {
-		await bookStore.createBook({
-			author: authorInput.value,
-			title: titleInput.value,
-			picture: picInput.value,
-			price: priceInput.value,
-			for_borrow: avaible.value,
-		});
+		await bookStore.createBook(input.value);
 		await router.push("/");
+	}
+
+	function resetFields() {
+		input.value = defaultValue;
 	}
 </script>
 

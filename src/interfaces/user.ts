@@ -16,6 +16,7 @@ interface User {
 	role?: string;
 	books: (Book | string)[];
 	messages: (Message | string)[];
+	rated_books: string[];
 	user_ratings: string[];
 	borrows: (Borrow | string)[];
 }

@@ -13,17 +13,18 @@
 
 	const columns: QTableProps["columns"] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "time", name: "time", label: "time" },
+		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
+		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
 		{ field: "from_id", name: "from_id", label: "from_id" },
 		{ field: "to_id", name: "to_id", label: "to_id" },
 		{ field: "books", name: "books", label: "books", format: (book: Borrow["books"]) => book?.join(", ") },
 		{ field: "verified", name: "verified", label: "verified" },
-		{
-			field: "user_ratings",
-			name: "user_ratings",
-			label: "user_ratings",
-			format: (rating: Borrow["user_ratings"]) => rating?.join(", "),
-		},
+		// {
+		// 	field: "user_ratings",
+		// 	name: "user_ratings",
+		// 	label: "user_ratings",
+		// 	format: (rating: Borrow["user_ratings"]) => rating?.join(", "),
+		// },
 		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>
