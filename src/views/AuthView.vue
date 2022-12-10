@@ -2,7 +2,7 @@
 	<q-page padding>
 		<div style="height: 70vh" class="flex justify-center items-center">
 			<!-- @login-with-google="loginWithGoogle" -->
-			<Login v-if="islogin" class="q-pa-lg modal" @login="login" @to-register="islogin = false" />
+			<Login v-if="islogin" class="q-pa-lg modal" @login="login" @to-register="islogin = false" @login-with-google="loginWithGoogle" />
 			<Register
 				v-else
 				class="q-pa-lg modal"
@@ -22,7 +22,7 @@
 	const {
 		login,
 		register,
-		// loginWithGoogle
+		loginWithGoogle
 	} = useUserStore();
 	const islogin = ref(true);
 </script>
