@@ -40,8 +40,17 @@ export const useUserStore = defineStore("user", () => {
 	}
 
 	async function login(userData: LoginCred) {
+		const isEmail = new RegExp(
+			/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
+		);
+		const loginData: { email?: string; username?: string; password: string } = { password: userData.password };
+		if (isEmail.test(userData.emailOrUsername)) {
+			loginData.email = userData.emailOrUsername;
+		} else {
+			loginData.username = userData.emailOrUsername;
+		}
 		return $axios
-			.post("auth/login", userData)
+			.post("auth/login", loginData)
 			.then(async (res) => {
 				saveUserData(res);
 				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
