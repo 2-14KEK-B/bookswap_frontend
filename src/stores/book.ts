@@ -5,7 +5,6 @@ import { AxiosResponse } from "axios";
 import { handle } from "@utils/error";
 
 export const useBookStore = defineStore("book", () => {
-
 	function handleBookSuccess(res: AxiosResponse) {
 		const book: Book = res.data;
 		localStorage.setItem("book", JSON.stringify(book));

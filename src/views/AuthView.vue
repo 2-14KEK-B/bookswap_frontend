@@ -2,7 +2,13 @@
 	<q-page padding>
 		<div style="height: 70vh" class="flex justify-center items-center">
 			<!-- @login-with-google="loginWithGoogle" -->
-			<Login v-if="islogin" class="q-pa-lg modal" @login="login" @to-register="islogin = false" @login-with-google="loginWithGoogle" />
+			<Login
+				v-if="islogin"
+				class="q-pa-lg modal"
+				@login="login"
+				@to-register="islogin = false"
+				@login-with-google="loginWithGoogle"
+			/>
 			<Register
 				v-else
 				class="q-pa-lg modal"
@@ -19,11 +25,7 @@
 	import Login from "@components/LoginModal.vue";
 	import { useUserStore } from "@stores/user";
 
-	const {
-		login,
-		register,
-		loginWithGoogle
-	} = useUserStore();
+	const { login, register, loginWithGoogle } = useUserStore();
 	const islogin = ref(true);
 </script>
 
