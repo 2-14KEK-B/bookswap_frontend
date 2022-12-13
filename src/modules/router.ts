@@ -5,6 +5,7 @@ import { routes } from "../routes";
 import { User } from "@interfaces/user";
 import getUserFromLocalStorage from "./../utils/localstorage";
 import { useUserStore } from "@stores/user";
+import $axios from "@api/axios";
 
 const publicPathNames = ["home", "auth"];
 const adminPathsNames = ["admin_home", "admin_user", "admin_book", "admin_borrow", "admin_message"];
@@ -28,8 +29,9 @@ router.beforeEach(async (to, from) => {
 			}
 		}
 	}
-	if (adminPathsNames.includes(to.name as string) && userStore.getLoggedUser?.role !== "admin") {
-		return "/";
+	if (adminPathsNames.includes(to.name as string)) {
+		const { data } = await $axios.get("auth");
+		if (data.role !== "admin") return "/";
 	}
 });
 

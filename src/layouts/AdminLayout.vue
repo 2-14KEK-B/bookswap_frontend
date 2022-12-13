@@ -4,39 +4,33 @@
 			<q-toolbar>
 				<q-btn dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 				<q-toolbar-title>
-					<q-btn flat :to="{ name: 'admin_home' }">
-						<!-- <q-avatar class="q-mr-lg">
-							<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-						</q-avatar> -->
-						BookSwap
-					</q-btn>
+					<q-btn flat :to="{ name: 'admin_home' }">BookSwap</q-btn>
 				</q-toolbar-title>
-				<q-space />
-				<q-btn-dropdown
-					v-if="getLoggedUser"
-					split
-					:label="`${getLoggedUser.email} ${getLoggedUser.role == 'admin' ? '*' : ''}`"
-					flat
-					:to="{ name: 'myProfile' }"
-				>
-					<q-list>
-						<q-item v-close-popup clickable :to="{ name: 'editProfile' }">
-							<q-item-section>
-								<q-item-label>Modify profile</q-item-label>
-							</q-item-section>
-						</q-item>
-
-						<q-item v-close-popup clickable @click="logOut">
-							<q-item-section>
-								<q-item-label>Logout</q-item-label>
-							</q-item-section>
-						</q-item>
-					</q-list>
-				</q-btn-dropdown>
-				<q-btn v-else label="Login" :to="{ name: 'auth' }" />
-				<q-btn flat @click="quasar.dark.toggle">
-					<q-icon name="mdi-theme-light-dark" />
-				</q-btn>
+				<div v-if="userStore.getLoggedUser">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
+					<q-btn-dropdown flat rounded dense class="q-ml-sm">
+						<template #label>
+							<q-avatar>
+								<q-img
+									:src="
+										userStore.getLoggedUser.picture
+											? userStore.getLoggedUser.picture
+											: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
+									"
+								></q-img>
+							</q-avatar>
+						</template>
+						<q-list>
+							<template v-for="button in buttons" :key="button.name">
+								<q-item v-close-popup clickable class="flex-center" @click="button.action">
+									<q-icon v-if="button.icon" :name="button.icon" size="sm" class="q-mr-sm" />
+									<q-item-section>{{ button.name }}</q-item-section>
+								</q-item>
+							</template>
+						</q-list>
+					</q-btn-dropdown>
+				</div>
 			</q-toolbar>
 		</q-header>
 
@@ -72,13 +66,17 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ComputedRef, ref } from "vue";
+	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
 	import MenuDrawer from "@interfaces/drawer";
+	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
+	import { matPerson, matLogout } from "@quasar/extras/material-icons";
 
+	const router = useRouter();
+	const userStore = useUserStore();
 	const quasar = useQuasar();
-	const { getLoggedUser, logOut } = useUserStore();
 	const leftDrawerOpen = ref(false);
 
 	const menuItems: MenuDrawer[] = [
@@ -123,4 +121,22 @@
 			separator: false,
 		},
 	];
+
+	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
+		{
+			name: "My profile",
+			action: () => router.push({ name: "myProfile" }),
+			icon: matPerson,
+		},
+		{
+			name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
+			action: quasar.dark.toggle,
+			icon: mdiThemeLightDark,
+		},
+		{
+			name: "Logout",
+			action: userStore.logOut,
+			icon: matLogout,
+		},
+	]);
 </script>

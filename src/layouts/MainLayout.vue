@@ -1,33 +1,22 @@
 <template>
-	<q-layout view="hHh lpR fFf">
+	<q-layout view="hHh lpR fFf" style="height: 100vh">
 		<q-header elevated class="bg-primary text-white">
 			<q-toolbar>
-				<q-btn v-if="userStore.getLoggedUser" flat round dense icon="menu">
-					<q-menu transition-show="jump-down" transition-hide="jump-up">
-						<q-list style="min-width: 100px">
-							<q-item clickable :to="{ name: 'newBook' }">
-								<q-item-section>Upload a new book</q-item-section>
-							</q-item>
-							<q-separator />
-							<q-item clickable disable>
-								<q-item-section>Forum</q-item-section>
-							</q-item>
-						</q-list>
-					</q-menu>
-				</q-btn>
 				<q-toolbar-title>
-					<q-btn flat :to="{ name: 'home' }">
-						<!-- <q-avatar class="q-mr-lg">
-							<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-						</q-avatar> -->
-						BookSwap
-					</q-btn>
+					<q-btn rounded flat :to="{ name: 'home' }">BookSwap</q-btn>
 				</q-toolbar-title>
-				<q-space />
 
-				<q-btn-dropdown v-if="userStore.getLoggedUser" split flat :to="{ name: 'myProfile' }">
-					<template #label>
-						<div class="flex row items-center">
+				<div v-if="userStore.getLoggedUser">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
+					<q-btn
+						flat
+						rounded
+						:label="quasar.screen.gt.sm ? 'Messages' : ''"
+						:to="{ name: 'message' }"
+						:icon="mdiMessage"
+					/>
+					<q-btn-dropdown flat rounded dense class="q-ml-sm">
+						<template #label>
 							<q-avatar>
 								<q-img
 									:src="
@@ -37,45 +26,35 @@
 									"
 								></q-img>
 							</q-avatar>
-							<div class="q-ml-md">
-								<div v-if="userStore.getLoggedUser.username">
-									{{ `${userStore.getLoggedUser.username} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
-								</div>
-								<div v-else>
-									{{ `${userStore.getLoggedUser.email} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
-								</div>
-							</div>
-						</div>
-					</template>
-					<q-list>
-						<q-item v-if="userStore.getLoggedUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
-							<q-item-section>
-								<q-item-label>Go to admin page</q-item-label>
-							</q-item-section>
-						</q-item>
+						</template>
+						<q-list>
+							<q-item
+								v-if="userStore.getLoggedUser.role === 'admin'"
+								v-close-popup
+								clickable
+								:to="{ name: 'admin_home' }"
+							>
+								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
-						<q-item v-close-popup clickable :to="{ name: 'editProfile' }">
-							<q-item-section>
-								<q-item-label>Modify profile</q-item-label>
-							</q-item-section>
-						</q-item>
-
-						<q-item v-close-popup clickable @click="userStore.logOut">
-							<q-item-section>
-								<q-item-label>Logout</q-item-label>
-							</q-item-section>
-						</q-item>
-					</q-list>
-				</q-btn-dropdown>
+								<q-item-section>
+									<q-item-label>Go to admin page</q-item-label>
+								</q-item-section>
+							</q-item>
+							<template v-for="button in buttons" :key="button.name">
+								<q-item v-close-popup clickable class="flex-center" @click="button.action">
+									<q-icon v-if="button.icon" :name="button.icon" size="sm" class="q-mr-sm" />
+									<q-item-section>{{ button.name }}</q-item-section>
+								</q-item>
+							</template>
+						</q-list>
+					</q-btn-dropdown>
+				</div>
 				<q-btn v-else label="Login" :to="{ name: 'auth' }" />
-				<q-btn flat @click="quasar.dark.toggle">
-					<q-icon name="mdi-theme-light-dark" />
-				</q-btn>
 			</q-toolbar>
 		</q-header>
 
 		<q-page-container>
-			<router-view></router-view>
+			<router-view />
 		</q-page-container>
 	</q-layout>
 </template>
@@ -83,7 +62,30 @@
 <script setup lang="ts">
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
+	import { useRouter } from "vue-router";
+	import { computed, ComputedRef, ref } from "vue";
+	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
+	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
 
+	const router = useRouter();
 	const quasar = useQuasar();
 	const userStore = useUserStore();
+
+	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
+		{
+			name: "My profile",
+			action: () => router.push({ name: "myProfile" }),
+			icon: matPerson,
+		},
+		{
+			name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
+			action: quasar.dark.toggle,
+			icon: mdiThemeLightDark,
+		},
+		{
+			name: "Logout",
+			action: userStore.logOut,
+			icon: matLogout,
+		},
+	]);
 </script>
