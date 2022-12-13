@@ -1,15 +1,18 @@
 import { defineStore } from "pinia";
 import { computed, ref, WritableComputedRef } from "vue";
 // import { useRouter } from "vue-router";
+import { io } from "socket.io-client";
 import { router } from "../modules/router";
 import { AxiosResponse } from "axios";
 import $axios from "@api/axios";
 import { handle } from "@utils/error";
 import { User, EditUser } from "@interfaces/user";
 import { LoginCred, RegisterCred } from "@interfaces/auth";
+import API_URL from "../config/api_url";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
+	const socket = io(API_URL, { autoConnect: false });
 
 	const getLoggedUser: WritableComputedRef<User | undefined> = computed({
 		get(): User | undefined {
@@ -25,6 +28,8 @@ export const useUserStore = defineStore("user", () => {
 		// console.log(res.data);
 		localStorage.setItem("user", JSON.stringify(user));
 		loggedInUser.value = user;
+		socket.connect();
+		socket.emit("add-user", user._id);
 	}
 
 	async function checkValidUser() {
@@ -90,6 +95,7 @@ export const useUserStore = defineStore("user", () => {
 
 	return {
 		getLoggedUser,
+		socket,
 		login,
 		loginWithGoogle,
 		register,
