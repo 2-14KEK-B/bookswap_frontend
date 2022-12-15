@@ -49,11 +49,22 @@ export const useUserStore = defineStore("user", () => {
 			})
 			.catch(handle);
 	}
-	async function edit(userData: EditUser) {
+	async function edit(userData: EditUser, id: string = loggedInUser.value?._id as string ) {
 		return $axios
-			.patch(`user/${loggedInUser.value?._id}`, userData)
+			.patch(`user/${id}`, userData)
 			.then(async (res) => {
-				handleUserSuccess(res);
+				if (loggedInUser.value?._id === id) {
+					handleUserSuccess(res);
+				}
+			})
+			.catch(handle);
+	}
+
+	async function deleteUser(id: string) {
+		return $axios
+			.delete(`/user/${id}`)
+			.then(async (res) => {
+				console.log(res.status);
 			})
 			.catch(handle);
 	}
@@ -76,5 +87,6 @@ export const useUserStore = defineStore("user", () => {
 		logOut,
 		checkValidUser,
 		edit,
+		deleteUser,
 	};
 });

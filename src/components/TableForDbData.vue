@@ -22,7 +22,6 @@
 			</q-tr>
 		</template>
 		<template #top-right>
-			<q-btn v-if="selected.length" color="green" @click.prevent="editData">Edit</q-btn>
 			<q-btn v-if="selected.length" class="q-mx-sm" color="red" @click.prevent="deleteData">Delete</q-btn>
 			<q-input
 				v-model="filter"
@@ -48,6 +47,7 @@
 					<q-card-section>
 						<div>
 							<q-checkbox v-model="props.selected" dense :label="`_id: ${props.row._id}`" />
+							<q-btn color="green" @click.prevent="editData">Edit</q-btn>
 						</div>
 					</q-card-section>
 					<q-separator />
@@ -64,6 +64,7 @@
 				</q-card>
 			</div>
 		</template>
+		
 	</q-table>
 </template>
 
@@ -73,9 +74,17 @@
 	import { QTableProps, QTable } from "quasar";
 	import $axios from "@api/axios";
 	import { handle } from "@utils/error";
+	import { useBookStore } from "@stores/book";
+	import { useUserStore } from "@stores/user";
+	import { useBorrowStore } from "@stores/borrow";
+	import { useMessageStore } from "@stores/message";
 
+	const bookStore = useBookStore();
+	const userStore = useUserStore();
+	const borrowStore = useBorrowStore();
+	const messageStore = useMessageStore();
 	const tableRef = ref();
-	const selected = ref<{ _id?: string }[]>([]);
+	const selected = ref<{ _id: string }[]>([]);
 	const loading = ref(false);
 	const data = ref();
 	const error = ref("");
@@ -105,9 +114,26 @@
 		console.log(`EDIT :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
 	}
 
-	function deleteData() {
-		// return $axios.delete(`${componentProps.baseUrl}/${selected.value[0]._id}`)
+	async function deleteData() {
+		if (componentProps.baseUrl == "book") {
+			bookStore.deleteBook(selected.value[0]._id);
+			console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
+		}
+		if (componentProps.baseUrl == "user") {
+			userStore.deleteUser(selected.value[0]._id);
+			console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
+		}
+		if (componentProps.baseUrl == "borrow") {
+			borrowStore.deleteBorrow(selected.value[0]._id);
+			console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
+		}
+		if (componentProps.baseUrl == "message/all") {
+			messageStore.deleteMessage(selected.value[0]._id);
+			console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
+		}
 		console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
+		// return $axios.delete(`${componentProps.baseUrl}/${selected.value[0]._id}`)
+		// console.log(`DELETE :: ${componentProps.baseUrl}/${selected.value[0]._id}`);
 	}
 
 	onMounted(() => {
