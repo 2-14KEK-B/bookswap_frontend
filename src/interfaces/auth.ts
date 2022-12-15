@@ -1,5 +1,5 @@
 interface LoginCred {
-	email: string;
+	emailOrUsername: string;
 	password: string;
 }
 interface RegisterCred {

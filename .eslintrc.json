@@ -30,6 +30,7 @@
 			{
 				"ignores": []
 			}
-		]
+		],
+		"@typescript-eslint/no-namespace": "off"
 	}
 }
