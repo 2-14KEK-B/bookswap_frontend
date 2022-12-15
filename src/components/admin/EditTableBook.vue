@@ -1,23 +1,34 @@
 <template>
-	<q-dialog v-model="isOpen" persistent @hide="emits('close', isOpen)">
-		<q-card>
-			<q-form @submit.prevent="editBook" @reset="reset">
-				<q-input v-model="bookData.author" label="Author" clearable />
-				<q-input v-model="bookData.title" label="Title" clearable />
-				<q-input v-model="bookData.picture" label="Picture" clearable />
-				<q-input v-model="bookData.price" label="Price" clearable />
-				<q-checkbox v-model="bookData.available" label="Availabe?" clearable />
-				<q-checkbox v-model="bookData.category" label="Category" clearable />
-				<q-checkbox v-model="bookData.for_borrow" label="For Borrow" clearable />
-				<q-btn type="submit">Edit</q-btn>
-				<q-btn v-close-popup no-caps label="Close dialog" color="primary" />
-			</q-form>
+	<q-dialog v-model="isOpen" class="q-pa-md" persistent @hide="emits('close', isOpen)">
+		<q-card class="q-pa-md" style="min-width: 400px">
+			<q-card-section>
+				<q-toolbar-title class="flex justify-between">
+					Book Editing
+					<q-btn v-close-popup no-caps icon="mdi-close" color="red" />
+				</q-toolbar-title>
+			</q-card-section>
+			<q-card-section>
+				<q-form class="q-gutter-y-md" @submit.prevent="editBook" @reset="reset">
+					<q-input v-model="bookData.author" type="text" label="Author" clearable />
+					<q-input v-model="bookData.title" type="text" label="Title" clearable />
+					<q-input v-model="bookData.picture" type="url" label="Picture" clearable />
+					<q-input v-model="bookData.price" type="number" label="Price" suffix="Ft" step="100" min="0" />
+					<q-checkbox v-model="bookData.available" label="Available" clearable />
+					<q-select v-model="bookData.category" multiple label="Category" disable />
+					<q-checkbox v-model="bookData.for_borrow" label="For Borrow" clearable />
+					<div class="flex">
+						<q-btn type="reset" label="reset" />
+						<q-space />
+						<q-btn type="submit" color="secondary">Edit</q-btn>
+					</div>
+				</q-form>
+			</q-card-section>
 		</q-card>
 	</q-dialog>
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from "vue";
+	import { ref } from "vue";
 	import { useBookStore } from "@stores/book";
 	// import { useRouter } from "vue-router";
 	import { Book } from "@interfaces/book";
@@ -37,47 +48,32 @@
 		for_borrow?: boolean;
 		available?: boolean;
 	}
-	let defaultValue: ModifiableData;
 
 	const bookData = ref<ModifiableData>({
 		author: props.book.author || "",
 		title: props.book.title || "",
 		picture: props.book.picture || "",
-		category: props.book.category,
-		price: props.book.price,
-		for_borrow: props.book.for_borrow ,
-		available: props.book.available ,
+		category: props.book.category || [],
+		price: props.book.price || 0,
+		for_borrow: props.book.for_borrow || true,
+		available: props.book.available || true,
 	});
 	async function editBook() {
-		// let dataToSend: ModifiableData = {};
-		// Object.keys(userData.value).forEach((x: string | keyof ModifiableData) => {
-		// 	if (userData.value[x as keyof ModifiableData] != defaultValue[x as keyof ModifiableData]) {
-		// 		dataToSend[x as keyof ModifiableData] = userData.value[x as keyof ModifiableData];
-		// 	}
-		// 	console.log(userData.value[x as keyof ModifiableData], defaultValue[x as keyof ModifiableData]);
-		// });
 		await bookStore.edit(bookData.value, props.book._id as string);
 		emits("close", isOpen.value);
-		// if (Object.keys(userData.value).length > 0) {
-		// 	await router.push("/me");
-		// }
 	}
 
 	function reset() {
-		bookData.value = defaultValue;
-	}
-
-	onMounted(() => {
-		defaultValue = {
+		bookData.value = {
 			author: props.book.author || "",
 			title: props.book.title || "",
 			picture: props.book.picture || "",
-			category: props.book.category || "",
-			price: props.book.price,
-			for_borrow: props.book.for_borrow,
-			available: props.book.available,
+			category: props.book.category || [],
+			price: props.book.price || 0,
+			for_borrow: props.book.for_borrow || true,
+			available: props.book.available || true,
 		};
-	});
+	}
 </script>
 
 <style scoped></style>

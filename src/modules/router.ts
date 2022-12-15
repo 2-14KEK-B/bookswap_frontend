@@ -2,8 +2,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { App } from "vue";
 import { routes } from "../routes";
-import { User } from "@interfaces/user";
-import getUserFromLocalStorage from "./../utils/localstorage";
 import { useUserStore } from "@stores/user";
 
 const publicPathNames = ["home", "auth"];
@@ -16,11 +14,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
 	const userStore = useUserStore();
-	const user: User | null = getUserFromLocalStorage();
-	// console.log(user, userStore.getLoggedUser);
-	// console.log(getUserFromLocalStorage())
+	const user_id: string | null = localStorage.getItem("user_id");
 	if (!userStore.getLoggedUser) {
-		if (user) {
+		if (user_id) {
 			await userStore.checkValidUser();
 		} else {
 			if (!publicPathNames.includes(to.name as string)) {

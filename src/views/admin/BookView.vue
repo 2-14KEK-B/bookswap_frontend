@@ -9,7 +9,7 @@
 				:filter="filter"
 				title="title"
 				:loading="loading"
-				selection="single"
+				selection="multiple"
 				:rows="data"
 				:columns="columns"
 				row-key="_id"
@@ -24,7 +24,8 @@
 					</q-tr>
 				</template>
 				<template #top-right>
-					<q-btn v-if="selected.length" class="q-mx-sm" color="red" @click.prevent="deleteData">Delete</q-btn>
+					<q-btn v-if="selected.length == 1" class="q-mx-sm" color="secondary" label="Edit" @click.prevent="editData" />
+					<q-btn v-if="selected.length" class="q-mx-sm" color="red" label="Delete" @click.prevent="deleteData" />
 					<q-input
 						v-model="filter"
 						class="q-px-lg q-ml-lg"
@@ -49,7 +50,6 @@
 							<q-card-section>
 								<div>
 									<q-checkbox v-model="props.selected" dense :label="`_id: ${props.row._id}`" />
-									<q-btn color="green" @click.prevent="editData">Edit</q-btn>
 								</div>
 							</q-card-section>
 							<q-separator />
@@ -112,8 +112,10 @@
 	}
 
 	async function deleteData() {
-		bookStore.deleteBook(selected.value[0]._id as string);
-		console.log(`DELETE :: book/${selected.value[0]._id}`);
+		selected.value.forEach(({ _id }) => {
+			bookStore.deleteBook(_id as string);
+			console.log(`DELETE :: book/${_id}`);
+		});
 	}
 
 	const columns: QTableProps["columns"] = [

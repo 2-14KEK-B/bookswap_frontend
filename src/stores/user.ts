@@ -23,7 +23,7 @@ export const useUserStore = defineStore("user", () => {
 	function saveUserData(res: AxiosResponse) {
 		const user: User = res.data;
 		// console.log(res.data);
-		localStorage.setItem("user", JSON.stringify(user));
+		localStorage.setItem("user_id", user._id as string);
 		loggedInUser.value = user;
 	}
 
@@ -53,8 +53,7 @@ export const useUserStore = defineStore("user", () => {
 			.post("auth/login", loginData)
 			.then(async (res) => {
 				saveUserData(res);
-				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
-				else router.push({ name: "home" });
+				router.push({ name: "home" });
 			})
 			.catch(handle);
 	}
@@ -63,12 +62,11 @@ export const useUserStore = defineStore("user", () => {
 			.post("auth/google", { token: token })
 			.then(async (res) => {
 				saveUserData(res);
-				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
-				else router.push({ name: "home" });
+				router.push({ name: "home" });
 			})
 			.catch(handle);
 	}
-	async function edit(userData: EditUser, id: string = loggedInUser.value?._id as string ) {
+	async function edit(userData: EditUser, id: string = loggedInUser.value?._id as string) {
 		return $axios
 			.patch(`user/${id}`, userData)
 			.then(async (res) => {
@@ -83,7 +81,6 @@ export const useUserStore = defineStore("user", () => {
 		return $axios
 			.delete(`/user/${id}`)
 			.then(async (res) => {
-				console.log(res.status);
 				saveUserData(res);
 			})
 			.catch(handle);
@@ -95,7 +92,7 @@ export const useUserStore = defineStore("user", () => {
 
 	async function logOut() {
 		$axios.post("auth/logout").catch(handle);
-		localStorage.removeItem("user");
+		localStorage.removeItem("user_id");
 		loggedInUser.value = undefined;
 		await router.push({ name: "auth" });
 	}
