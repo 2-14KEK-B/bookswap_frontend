@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createRouter, createWebHistory } from "vue-router";
 import { App } from "vue";
 import { routes } from "../routes";
-import { User } from "@interfaces/user";
-import getUserFromLocalStorage from "./../utils/localstorage";
 import { useUserStore } from "@stores/user";
 import $axios from "@api/axios";
 
@@ -15,13 +12,11 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
 	const userStore = useUserStore();
-	const user: User | null = getUserFromLocalStorage();
-	// console.log(user, userStore.getLoggedUser);
-	// console.log(getUserFromLocalStorage())
-	if (!userStore.getLoggedUser) {
-		if (user) {
+	const user_id: string | null = localStorage.getItem("user_id");
+	if (!userStore.loggedInUser) {
+		if (user_id) {
 			await userStore.checkValidUser();
 		} else {
 			if (!publicPathNames.includes(to.name as string)) {

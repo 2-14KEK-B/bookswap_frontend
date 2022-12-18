@@ -1,7 +1,7 @@
 <template>
 	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<!-- <q-table v-model:selected="selectedBook" selection="single" :rows="allBook" row-key="_id"></q-table> -->
-		<div v-if="userStore.getLoggedUser" style="max-width: 100vw">
+		<div v-if="userStore.loggedInUser" style="max-width: 100vw">
 			<q-input v-model.trim="keyWord" outlined dense style="max-width: 100%" @keydown.enter.prevent="searchByKeyword">
 				<template #append>
 					<q-icon v-if="keyWord === ''" name="search" />

@@ -6,19 +6,13 @@
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'admin_home' }">BookSwap</q-btn>
 				</q-toolbar-title>
-				<div v-if="userStore.getLoggedUser">
+				<div v-if="userStore.loggedInUser">
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
 					<q-btn-dropdown flat rounded dense class="q-ml-sm">
 						<template #label>
 							<q-avatar>
-								<q-img
-									:src="
-										userStore.getLoggedUser.picture
-											? userStore.getLoggedUser.picture
-											: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
-									"
-								></q-img>
+								<q-img :src="userStore.loggedInUser.picture || 'https://pic.onlinewebfonts.com/svg/img_329115.png'"></q-img>
 							</q-avatar>
 						</template>
 						<q-list>

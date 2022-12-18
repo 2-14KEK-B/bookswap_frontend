@@ -7,18 +7,18 @@ interface User {
 	createdAt?: Date;
 	updatedAt?: Date;
 	username: string;
-	fullname: string;
+	fullname?: string;
 	email: string;
 	email_is_verified?: boolean;
-	password: string;
+	password?: string;
 	locale?: string;
 	picture?: string;
 	role?: string;
-	books: (Book | string)[];
-	messages: (Message | string)[];
-	rated_books: string[];
-	user_ratings: string[];
-	borrows: (Borrow | string)[];
+	books?: (Book | string)[];
+	messages?: (Message | string)[];
+	rated_books?: string[];
+	user_ratings?: string[];
+	borrows?: (Borrow | string)[];
 }
 
 interface EditUser {

@@ -6,23 +6,20 @@
 					<q-btn rounded flat :to="{ name: 'home' }">BookSwap</q-btn>
 				</q-toolbar-title>
 
-				<div v-if="userStore.getLoggedUser">
+				<div v-if="userStore.loggedInUser">
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
 					<q-btn-dropdown flat rounded dense class="q-ml-sm">
 						<template #label>
 							<q-avatar>
 								<q-img
-									:src="
-										userStore.getLoggedUser.picture
-											? userStore.getLoggedUser.picture
-											: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
-									"
+									:src="userStore.loggedInUser.picture || 'https://pic.onlinewebfonts.com/svg/img_329115.png'"
+									referrerpolicy="no-referrer"
 								></q-img>
 							</q-avatar>
 						</template>
 						<q-list>
-							<q-item v-if="userStore.getLoggedUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
+							<q-item v-if="userStore.loggedInUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
