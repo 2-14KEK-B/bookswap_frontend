@@ -4,7 +4,7 @@ import { routes } from "../routes";
 import { useUserStore } from "@stores/user";
 import $axios from "@api/axios";
 
-const publicPathNames = ["home", "auth"];
+const publicPathNames = ["home", "auth", "userProfile", "book"];
 const adminPathsNames = ["admin_home", "admin_user", "admin_book", "admin_borrow", "admin_message"];
 
 const router = createRouter({

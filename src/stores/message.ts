@@ -41,9 +41,12 @@ export const useMessageStore = defineStore("message", () => {
 		selectedMessage.value?.contents.unshift(...(res.data as MessageContent[]).reverse());
 	}
 
-	async function sendMessage(message: string) {
+	async function sendMessage(message: string, to_id?: string) {
 		const userStore = useUserStore();
-		const res = await $axios.post(`message/${selectedMessage.value?.user._id}`, { content: message });
+
+		const userId = to_id || selectedMessage.value?.user._id;
+
+		const res = await $axios.post(`message/${userId}`, { content: message });
 		if (res.status < 400) {
 			socket.emit("send-msg", {
 				from: userStore.loggedInUser?._id as string,
