@@ -42,7 +42,10 @@
 					</div>
 				</q-card-section>
 
-				<q-img :src="book.picture" />
+
+	<q-img :src="book.picture" />
+
+
 
 				<q-card-actions align="around">
 					<q-btn flat @click.prevent="router.push({ name: 'book', params: { id: book._id } })">Open book</q-btn>
@@ -78,4 +81,12 @@
 	});
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped>
+	.card {
+		width: 250px;
+		height: 400px;
+	}
+	.q-img {
+		height: 400px;
+	}
+</style>

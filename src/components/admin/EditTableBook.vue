@@ -13,9 +13,9 @@
 					<q-input v-model="bookData.title" type="text" label="Title" clearable />
 					<q-input v-model="bookData.picture" type="url" label="Picture" clearable />
 					<q-input v-model="bookData.price" type="number" label="Price" suffix="Ft" step="100" min="0" />
-					<q-checkbox v-model="bookData.available" label="Available" clearable />
+					<q-toggle v-model="bookData.available" label="Available" clearable />
 					<q-select v-model="bookData.category" multiple label="Category" disable />
-					<q-checkbox v-model="bookData.for_borrow" label="For Borrow" clearable />
+					<q-toggle v-model="bookData.for_borrow" label="For Borrow" clearable />
 					<div class="flex">
 						<q-btn type="reset" label="reset" />
 						<q-space />

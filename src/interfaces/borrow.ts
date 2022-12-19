@@ -23,7 +23,6 @@ interface CreateBorrow {
 }
 
 interface ModifyBorrow {
-	books?: string[];
 	verified?: boolean;
 }
 
