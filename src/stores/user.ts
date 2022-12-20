@@ -1,14 +1,15 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { router } from "../modules/router";
-import { AxiosResponse } from "axios";
 import $axios from "@api/axios";
+import socket from "@api/socket";
+import { router } from "../modules/router";
+import { useMessageStore } from "./message";
 import { handle } from "@utils/error";
+import { setInfoFromOtherUser } from "@utils/message";
+import { AxiosResponse } from "axios";
+import { Message } from "@interfaces/message";
 import { User, EditUser } from "@interfaces/user";
 import { LoginCred, RegisterCred } from "@interfaces/auth";
-import socket from "@api/socket";
-import { useMessageStore } from "./message";
-import { Message } from "@interfaces/message";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
@@ -19,7 +20,7 @@ export const useUserStore = defineStore("user", () => {
 		// console.log(user);
 		localStorage.setItem("user_id", user._id as string);
 		loggedInUser.value = user;
-		messageStore.messages = user.messages as Message[];
+		messageStore.messages = (user.messages as Message[])?.map((message) => setInfoFromOtherUser(message));
 		socket.connect();
 		socket.emit("user-online", user._id as string);
 	}
@@ -77,6 +78,7 @@ export const useUserStore = defineStore("user", () => {
 
 	async function logOut() {
 		$axios.post("auth/logout").catch(handle);
+		socket.disconnect();
 		localStorage.removeItem("user_id");
 		loggedInUser.value = undefined;
 		await router.push({ name: "auth" });

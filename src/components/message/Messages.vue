@@ -8,12 +8,12 @@
 					</div>
 				</template>
 				<q-chat-message
-					v-for="(content, index) in messageStore.selectedMessage?.contents"
+					v-for="(content, index) in messageStore.messages[messageStore.selectedMessageIndex as number]?.message_contents"
 					:key="index"
 					class="q-py-sm"
-					:sent="content.sender_id == loggedInUser?._id"
+					:sent="content.sender_id == userStore.loggedInUser?._id"
 					:text="[content.content]"
-					:name="content.sender_id == loggedInUser?._id ? 'me' : loggedInUser?.fullname || loggedInUser?.username"
+					:name="content.sender_id == userStore.loggedInUser?._id ? 'me' : otherUser?.displayName"
 					:stamp="dayjs().to(content.createdAt)"
 				/>
 			</q-infinite-scroll>
@@ -25,10 +25,13 @@
 				<q-btn flat no-caps align="center">
 					<q-toolbar-title>
 						<q-avatar color="primary" text-color="white">
-							<q-img v-if="messageStore.selectedMessage?.user.picture" :src="messageStore.selectedMessage.user.picture" />
-							{{ messageStore.getDisplayName()?.charAt(0).toUpperCase() }}
+							<q-img
+								v-if="messageStore.messages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
+								:src="messageStore.messages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
+							/>
+							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
 						</q-avatar>
-						{{ messageStore.getDisplayName() }}
+						{{ otherUser?.displayName }}
 					</q-toolbar-title>
 				</q-btn>
 			</q-toolbar>
@@ -53,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, watch } from "vue";
 	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
@@ -64,16 +67,15 @@
 	extend(relativeTime);
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
+	const otherUser = messageStore.messages[messageStore.selectedMessageIndex as number].otherUser;
 
-	const loggedInUser = userStore.loggedInUser;
 	const input = ref("");
 	const inputRef = ref<QInput>();
 	const chatRef = ref<QScrollArea>();
 
 	async function load(index: number, done: (stop?: boolean) => void) {
 		const stop = await messageStore.loadMessage(index);
-		if (stop) done(stop);
-		done();
+		done(!!stop);
 	}
 
 	function moveToBottom() {
@@ -82,6 +84,10 @@
 			chatRef.value?.setScrollPosition("vertical", scrollAreaBottom);
 		}, 20);
 	}
+
+	watch(messageStore.messages[messageStore.selectedMessageIndex as number].message_contents, () => {
+		moveToBottom();
+	});
 
 	async function send() {
 		await messageStore.sendMessage(input.value);

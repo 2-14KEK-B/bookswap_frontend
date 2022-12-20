@@ -1,6 +1,6 @@
 import { User } from "./user";
 
-interface UserMessages {
+interface MessagesToChat {
 	_id: string;
 	user: User;
 	contents: MessageContent[];
@@ -16,6 +16,7 @@ interface MessageContent {
 interface Message {
 	_id?: string;
 	users: (User | string)[];
+	otherUser?: User;
 	message_contents: MessageContent[];
 }
 
@@ -25,4 +26,4 @@ interface CreateMessage {
 	content: string;
 }
 
-export { Message, MessageContent, CreateMessage, UserMessages };
+export { Message, MessageContent, CreateMessage, MessagesToChat };

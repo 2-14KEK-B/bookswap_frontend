@@ -8,6 +8,7 @@ interface User {
 	updatedAt?: Date | string;
 	username: string;
 	fullname?: string;
+	displayName?: string;
 	email: string;
 	email_is_verified?: boolean;
 	password?: string;
