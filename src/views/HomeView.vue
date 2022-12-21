@@ -1,11 +1,11 @@
 <template>
 	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<!-- <q-table v-model:selected="selectedBook" selection="single" :rows="allBook" row-key="_id"></q-table> -->
-		<div v-if="userStore.getLoggedUser" style="max-width: 100vw">
+		<div style="max-width: 100vw">
 			<q-input v-model.trim="keyWord" outlined dense style="max-width: 100%" @keydown.enter.prevent="searchByKeyword">
 				<template #append>
-					<q-icon v-if="keyWord === ''" name="search" />
-					<q-icon v-else name="clear" class="cursor-pointer" @click="keyWord = ''" />
+					<q-icon v-if="keyWord === ''" :name="matSearch" />
+					<q-icon v-else :name="matClear" class="cursor-pointer" @click="keyWord = ''" />
 				</template>
 			</q-input>
 		</div>
@@ -27,7 +27,7 @@
 							</q-item>
 						</div>
 						<div class="col-auto">
-							<q-btn color="grey-7" round flat icon="more_vert">
+							<q-btn color="grey-7" round flat :icon="matMoreVert">
 								<q-menu cover auto-close>
 									<q-list>
 										<q-item clickable>
@@ -42,10 +42,7 @@
 					</div>
 				</q-card-section>
 
-
-	<q-img :src="book.picture" />
-
-
+				<q-img :src="book.picture" />
 
 				<q-card-actions align="around">
 					<q-btn flat @click.prevent="router.push({ name: 'book', params: { id: book._id } })">Open book</q-btn>
@@ -61,10 +58,9 @@
 	import $axios from "@api/axios";
 	import { useRouter } from "vue-router";
 	import { Book } from "@interfaces/book";
-	import { useUserStore } from "@stores/user";
+	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
 
 	const router = useRouter();
-	const userStore = useUserStore();
 	const books = ref<Book[]>([]);
 	const keyWord = ref("");
 

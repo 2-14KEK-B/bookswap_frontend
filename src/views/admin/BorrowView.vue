@@ -36,7 +36,7 @@
 						placeholder="Search"
 					>
 						<template #append>
-							<q-icon name="search" />
+							<q-icon :name="matSearch" />
 						</template>
 					</q-input>
 				</template>
@@ -73,7 +73,6 @@
 </template>
 
 <script setup lang="ts">
-	import TableForDbData from "@components/TableForDbData.vue";
 	import { Borrow } from "@interfaces/borrow";
 	import { QTableProps } from "quasar";
 	import EditTableBorrow from "@components/admin/EditTableBorrow.vue";
@@ -82,6 +81,7 @@
 	import { AxiosError } from "axios";
 	import { handle } from "@utils/error";
 	import { useBorrowStore } from "@stores/borrow";
+	import { matSearch } from "@quasar/extras/material-icons";
 
 	const bookStore = useBorrowStore();
 	const selected = ref<Borrow[]>([]);
@@ -135,12 +135,10 @@
 		// },
 		{ field: "__v", name: "__v", label: "__v" },
 	];
-	
 
 	onMounted(() => {
 		tableRef.value.requestServerInteraction();
 	});
-
 </script>
 
 <style scoped lang="scss"></style>

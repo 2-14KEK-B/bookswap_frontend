@@ -69,7 +69,7 @@
 				</q-btn-dropdown>
 				<q-btn v-else label="Login" :to="{ name: 'auth' }" />
 				<q-btn flat @click="quasar.dark.toggle">
-					<q-icon name="mdi-theme-light-dark" />
+					<q-icon :name="mdiThemeLightDark" />
 				</q-btn>
 			</q-toolbar>
 		</q-header>
@@ -83,6 +83,7 @@
 <script setup lang="ts">
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
+	import { mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 
 	const quasar = useQuasar();
 	const userStore = useUserStore();

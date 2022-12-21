@@ -10,6 +10,7 @@ export default defineConfig({
 			template: { transformAssetUrls },
 		}),
 		quasar({
+			autoImportComponentCase: "combined",
 			sassVariables: "src/styles/quasar-variables.scss",
 		}),
 		eslint(),
@@ -30,6 +31,7 @@ export default defineConfig({
 	},
 	build: {
 		chunkSizeWarningLimit: 1024,
+		cssCodeSplit: true,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
@@ -39,6 +41,15 @@ export default defineConfig({
 						return chunk ? `vendor-${chunk}` : "vendor";
 					}
 				},
+				assetFileNames: (assetInfo) => {
+					let extType = assetInfo.name?.split(".").at(1);
+					if (extType && /png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+						extType = "img";
+					}
+					return `assets/${extType}/[name]-[hash][extname]`;
+				},
+				chunkFileNames: "static/js/[name]-[hash].js",
+				entryFileNames: "static/js/[name]-[hash].js",
 			},
 		},
 	},

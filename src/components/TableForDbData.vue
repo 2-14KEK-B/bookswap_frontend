@@ -33,7 +33,7 @@
 				placeholder="Search"
 			>
 				<template #append>
-					<q-icon name="search" />
+					<q-icon :name="matSearch" />
 				</template>
 			</q-input>
 		</template>
@@ -64,7 +64,6 @@
 				</q-card>
 			</div>
 		</template>
-		
 	</q-table>
 </template>
 
@@ -78,6 +77,7 @@
 	import { useUserStore } from "@stores/user";
 	import { useBorrowStore } from "@stores/borrow";
 	import { useMessageStore } from "@stores/message";
+	import { matSearch } from "@quasar/extras/material-icons";
 
 	const bookStore = useBookStore();
 	const userStore = useUserStore();

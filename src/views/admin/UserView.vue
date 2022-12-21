@@ -36,7 +36,7 @@
 						placeholder="Search"
 					>
 						<template #append>
-							<q-icon name="search" />
+							<q-icon :name="matSearch" />
 						</template>
 					</q-input>
 				</template>
@@ -81,6 +81,7 @@
 	import { handle } from "@utils/error";
 	import { useUserStore } from "@stores/user";
 	import EditTableDataVue from "@components/admin/EditTableUser.vue";
+	import { matSearch } from "@quasar/extras/material-icons";
 
 	const userStore = useUserStore();
 	const selected = ref<User[]>([]);

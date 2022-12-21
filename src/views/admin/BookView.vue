@@ -36,7 +36,7 @@
 						placeholder="Search"
 					>
 						<template #append>
-							<q-icon name="search" />
+							<q-icon :name="matSearch" />
 						</template>
 					</q-input>
 				</template>
@@ -81,6 +81,7 @@
 	import { AxiosError } from "axios";
 	import { handle } from "@utils/error";
 	import { useBookStore } from "@stores/book";
+	import { matSearch } from "@quasar/extras/material-icons";
 
 	const bookStore = useBookStore();
 	const selected = ref<Book[]>([]);
