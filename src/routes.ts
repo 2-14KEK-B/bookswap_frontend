@@ -12,6 +12,11 @@ export const routes: RouteRecordRaw[] = [
 				component: () => import("@views/HomeView.vue"),
 			},
 			{
+				path: "message",
+				name: "message",
+				component: () => import("@views/MessageView.vue"),
+			},
+			{
 				path: "editProfile",
 				name: "editProfile",
 				component: () => import("@views/EditProfile.vue"),

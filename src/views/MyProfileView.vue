@@ -6,8 +6,8 @@
 				<q-img
 					class="q-pa-lg"
 					:src="
-						userStore.getLoggedUser?.picture
-							? userStore.getLoggedUser.picture
+						userStore.loggedInUser?.picture
+							? userStore.loggedInUser.picture
 							: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
 					"
 					style="height: 150px; max-width: 150px"
@@ -40,7 +40,7 @@
 
 	const userStore = useUserStore();
 	const route = useRoute();
-	const me = ref(userStore.getLoggedUser);
+	const me = ref(userStore.loggedInUser);
 
 	onMounted(() => {
 		me.value = route.meta as unknown as User;

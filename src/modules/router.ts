@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createRouter, createWebHistory } from "vue-router";
 import { App } from "vue";
 import { routes } from "../routes";
 import { useUserStore } from "@stores/user";
+import $axios from "@api/axios";
 
-const publicPathNames = ["home", "auth"];
+const publicPathNames = ["home", "auth", "userProfile", "book"];
 const adminPathsNames = ["admin_home", "admin_user", "admin_book", "admin_borrow", "admin_message"];
 
 const router = createRouter({
@@ -12,10 +12,10 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
 	const userStore = useUserStore();
 	const user_id: string | null = localStorage.getItem("user_id");
-	if (!userStore.getLoggedUser) {
+	if (!userStore.loggedInUser) {
 		if (user_id) {
 			await userStore.checkValidUser();
 		} else {
@@ -24,8 +24,9 @@ router.beforeEach(async (to, from) => {
 			}
 		}
 	}
-	if (adminPathsNames.includes(to.name as string) && userStore.getLoggedUser?.role !== "admin") {
-		return "/";
+	if (adminPathsNames.includes(to.name as string)) {
+		const { data } = await $axios.get("auth");
+		if (data.role !== "admin") return "/";
 	}
 });
 

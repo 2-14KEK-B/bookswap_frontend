@@ -3,6 +3,7 @@ import path from "path";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import eslint from "vite-plugin-eslint";
+// import { checker } from "vite-plugin-checker";
 
 export default defineConfig({
 	plugins: [
@@ -13,7 +14,17 @@ export default defineConfig({
 			autoImportComponentCase: "combined",
 			sassVariables: "src/styles/quasar-variables.scss",
 		}),
-		eslint(),
+		{
+			...eslint({ failOnError: true, failOnWarning: true }),
+			apply: "build",
+		},
+		// checker({
+		// 	typescript: true,
+		// 	vueTsc: true,
+		// 	eslint: {
+		// 		lintCommand: 'eslint "./src/**/*.{ts,vue}"',
+		// 	},
+		// }),
 	],
 	resolve: {
 		alias: {
@@ -36,7 +47,7 @@ export default defineConfig({
 			output: {
 				manualChunks(id) {
 					if (id.includes("/node_modules/")) {
-						const modules = ["quasar", "@quasar", "vue", "@vue"];
+						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia"];
 						const chunk = modules.find((module) => id.includes(`/node_modules/${module}`));
 						return chunk ? `vendor-${chunk}` : "vendor";
 					}
