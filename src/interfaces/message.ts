@@ -9,12 +9,14 @@ interface MessagesToChat {
 interface MessageContent {
 	_id?: string;
 	sender_id: string;
-	createdAt?: Date;
+	createdAt?: string;
 	content: string;
 }
 
 interface Message {
 	_id?: string;
+	createdAt?: string;
+	updatedAt?: string;
 	users: (User | string)[];
 	otherUser?: User;
 	message_contents: MessageContent[];

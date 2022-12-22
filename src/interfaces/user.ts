@@ -4,8 +4,8 @@ import { Message } from "./message";
 
 interface User {
 	_id?: string;
-	createdAt?: Date | string;
-	updatedAt?: Date | string;
+	createdAt?: string;
+	updatedAt?: string;
 	username: string;
 	fullname?: string;
 	displayName?: string;

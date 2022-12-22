@@ -9,7 +9,8 @@ interface UserRating {
 
 interface Borrow {
 	_id?: string;
-	time: Date;
+	createdAt: string;
+	updatedAt: string;
 	from_id: string;
 	to_id: string;
 	books: (Book | string)[];

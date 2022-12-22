@@ -1,12 +1,13 @@
 <template>
 	<div style="padding-top: 100px">
-		<q-scroll-area class="bg-grey q-pa-xs" style="height: calc(100vh - 150px)">
-			<q-list class="full-height" separator bordered>
+		<q-scroll-area :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'" style="height: calc(100vh - 150px)">
+			<q-list class="full-height" separator>
 				<q-item
 					v-for="(message, index) in messageStore.messages"
 					:key="index"
-					v-ripple
+					:active-class="$q.dark.isActive ? 'bg-grey-7' : 'bg-grey-4'"
 					clickable
+					class="relative-position"
 					:active="messageStore.selectedMessageIndex == index"
 					@click.prevent="onSelect(index)"
 				>
@@ -18,29 +19,37 @@
 							{{ message.otherUser?.displayName?.charAt(0).toUpperCase() }}
 						</q-avatar>
 					</q-item-section>
-					<q-item-section no-wrap>
-						<q-item-label>
+					<q-item-section>
+						<q-item-label lines="1" class="text-bold">
 							{{ message.otherUser?.displayName }}
+						</q-item-label>
+						<q-item-label caption>
+							{{ message.message_contents[message.message_contents.length - 1].content }}
 						</q-item-label>
 					</q-item-section>
 					<q-item-section side>
-						<q-icon name="chat_bubble" color="green" />
+						<q-item-label caption>
+							{{ getTimeString(message.message_contents[message.message_contents.length - 1].createdAt!) }}
+						</q-item-label>
+						<q-icon name="keyboard_arrow_down" />
 					</q-item-section>
 				</q-item>
 			</q-list>
 		</q-scroll-area>
 		<q-page-sticky expand position="top">
-			<q-toolbar class="bg-grey-10">
+			<q-toolbar :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-5'">
 				<q-toolbar-title>Users</q-toolbar-title>
-				<q-btn v-if="messageStore.selectedMessageIndex" flat dense :icon="mdiClose" @click="emits('close')" />
+				<q-btn v-if="messageStore.selectedMessageIndex != null" flat dense :icon="mdiClose" @click="emits('close')" />
 			</q-toolbar>
-			<q-toolbar class="bg-grey-10">
+			<q-toolbar :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-5'">
 				<q-input
 					v-model="search"
 					rounded
+					:bg-color="$q.dark.isActive ? 'grey-7' : 'white'"
 					outlined
 					dense
-					class="WAL__field full-width"
+					:dark="$q.dark.isActive"
+					class="full-width"
 					placeholder="Search or start a new conversation"
 				>
 					<template #prepend>
@@ -60,6 +69,17 @@
 	const messageStore = useMessageStore();
 
 	const search = ref("");
+
+	function getTimeString(dateAsString: string): string {
+		const date = new Date(dateAsString);
+		const today = new Date();
+
+		if (date.toDateString() === today.toDateString()) {
+			return date.toLocaleTimeString();
+		} else {
+			return date.toLocaleString();
+		}
+	}
 
 	function onSelect(index: number) {
 		messageStore.selectedMessageIndex = index;
