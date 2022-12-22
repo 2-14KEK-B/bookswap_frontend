@@ -2,19 +2,6 @@
 	<q-layout view="hHh lpR fFf">
 		<q-header elevated class="bg-primary text-white">
 			<q-toolbar>
-				<q-btn v-if="userStore.getLoggedUser" flat round dense icon="menu">
-					<q-menu transition-show="jump-down" transition-hide="jump-up">
-						<q-list style="min-width: 100px">
-							<q-item clickable :to="{ name: 'newBook' }">
-								<q-item-section>Upload a new book</q-item-section>
-							</q-item>
-							<q-separator />
-							<q-item clickable disable>
-								<q-item-section>Forum</q-item-section>
-							</q-item>
-						</q-list>
-					</q-menu>
-				</q-btn>
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'home' }">
 						<!-- <q-avatar class="q-mr-lg">
@@ -28,15 +15,8 @@
 				<q-btn-dropdown v-if="userStore.getLoggedUser" split flat :to="{ name: 'myProfile' }">
 					<template #label>
 						<div class="flex row items-center">
-							<q-avatar>
-								<q-img
-									:src="
-										userStore.getLoggedUser.picture
-											? userStore.getLoggedUser.picture
-											: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
-									"
-								></q-img>
-							</q-avatar>
+							<ProfileAvatar :src="userStore.getLoggedUser.picture" :alt="userStore.getLoggedUser.fullname" />
+
 							<div class="q-ml-md">
 								<div v-if="userStore.getLoggedUser.username">
 									{{ `${userStore.getLoggedUser.username} ${userStore.getLoggedUser.role == "admin" ? "*" : ""}` }}
@@ -83,6 +63,7 @@
 <script setup lang="ts">
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 
 	const quasar = useQuasar();

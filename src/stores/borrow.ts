@@ -1,26 +1,35 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { handle } from "@utils/error";
 import { ModifyBorrow } from "@interfaces/borrow";
 
 export const useBorrowStore = defineStore("borrow", () => {
-
-	async function deleteBorrow(id: string) {
-		return $axios.delete(`/borrow/${id}`).then(async (res) => {
-            console.log(res.status)
-        })
-        .catch(handle)
+	async function deleteById(id: string) {
+		try {
+			const { status, data } = await $axios.delete(`/borrow/${id}`);
+			if (status < 400) {
+				console.log("deleted");
+			} else {
+				console.log(`not deleted: ${data}`);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	}
-	async function editBorrow(borrow: ModifyBorrow,id: string) {
-		return $axios.patch(`/borrow/${id}`,{...borrow}).then(async (res) => {
-            console.log(res.status)
-        })
-        .catch(handle)
+	async function editById(borrow: ModifyBorrow, id?: string) {
+		try {
+			const { status, data } = await $axios.patch(`/borrow/${id}`, { ...borrow });
+			if (status < 400) {
+				console.log("edited");
+			} else {
+				console.log(`not edited: ${data}`);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
-
-    return{
-        deleteBorrow,
-        editBorrow,
-    }
+	return {
+		deleteById,
+		editById,
+	};
 });

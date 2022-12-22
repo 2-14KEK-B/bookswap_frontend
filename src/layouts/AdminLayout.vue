@@ -2,7 +2,7 @@
 	<q-layout view="hHh lpR fFf">
 		<q-header elevated class="bg-accent text-white">
 			<q-toolbar>
-				<q-btn dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
+				<q-btn dense flat round :icon="matMenu" @click="leftDrawerOpen = !leftDrawerOpen" />
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'admin_home' }">
 						<!-- <q-avatar class="q-mr-lg">
@@ -76,7 +76,15 @@
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
 	import MenuDrawer from "@interfaces/drawer";
-	import { mdiThemeLightDark } from "@quasar/extras/mdi-v7";
+	import {
+		mdiThemeLightDark,
+		mdiHomeCircleOutline,
+		mdiAccountOutline,
+		mdiBookOpenPageVariantOutline,
+		mdiShareAllOutline,
+		mdiMessageOutline,
+	} from "@quasar/extras/mdi-v7";
+	import { matMenu } from "@quasar/extras/material-icons";
 
 	const quasar = useQuasar();
 	const { getLoggedUser, logOut } = useUserStore();
@@ -84,7 +92,7 @@
 
 	const menuItems: MenuDrawer[] = [
 		{
-			icon: "mdi-home-circle-outline",
+			icon: mdiHomeCircleOutline,
 			text: "Home Page",
 			name: "Home Page",
 			routeName: "home",
@@ -92,7 +100,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-account-circle-outline",
+			icon: mdiAccountOutline,
 			text: "User",
 			name: "User",
 			routeName: "admin_user",
@@ -100,7 +108,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-book-open-page-variant-outline",
+			icon: mdiBookOpenPageVariantOutline,
 			text: "Book",
 			name: "Book",
 			routeName: "admin_book",
@@ -108,7 +116,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-share-all-outline",
+			icon: mdiShareAllOutline,
 			text: "Borrow",
 			name: "Borrow",
 			routeName: "admin_borrow",
@@ -116,7 +124,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-message-outline",
+			icon: mdiMessageOutline,
 			text: "Message",
 			name: "Message",
 			routeName: "admin_message",

@@ -1,121 +1,129 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-			<q-table
-				ref="tableRef"
-				v-model:selected="selected"
-				grid
-				grid-header
-				:filter="filter"
-				title="title"
-				:loading="loading"
-				selection="multiple"
-				:rows="data"
+			<TableForDbData
+				:title="'Book'"
 				:columns="columns"
-				row-key="_id"
-				:no-data-label="error"
-				@request="getData"
+				:rows="books"
+				:request="getData"
+				:loading="loading"
+				@delete="deleteData"
+				@edit="openEditModal"
+				@filter="filter"
 			>
-				<template #header="props">
-					<q-tr :props="props">
-						<q-th v-for="col in props.cols" :key="col.name" :props="props">
-							{{ col.label }}
-						</q-th>
-					</q-tr>
-				</template>
-				<template #top-right>
-					<q-btn v-if="selected.length == 1" class="q-mx-sm" color="secondary" label="Edit" @click.prevent="editData" />
-					<q-btn v-if="selected.length" class="q-mx-sm" color="red" label="Delete" @click.prevent="deleteData" />
-					<q-input
-						v-model="filter"
-						class="q-px-lg q-ml-lg"
-						:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
-						borderless
-						dense
-						debounce="300"
-						placeholder="Search"
-					>
-						<template #append>
-							<q-icon :name="matSearch" />
-						</template>
-					</q-input>
-				</template>
-
-				<template #item="props">
-					<div
-						class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
-						:style="props.selected ? 'transform: scale(0.95);' : ''"
-					>
-						<q-card :class="props.selected ? ($q.dark.isActive ? 'bg-grey-10' : 'bg-gray-2') : ''">
-							<q-card-section>
-								<div>
-									<q-checkbox v-model="props.selected" dense :label="`_id: ${props.row._id}`" />
-								</div>
-							</q-card-section>
-							<q-separator />
-							<q-list dense>
-								<q-item v-for="col in props.cols.filter((col: any) => col.name !== 'desc')" :key="col.name">
-									<q-item-section style="min-width: 100px">
-										<q-item-label>{{ col.label }}:</q-item-label>
-									</q-item-section>
-									<q-item-section>
-										<q-item-label caption lines="1">{{ col.value }}</q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
-						</q-card>
-					</div>
-				</template>
-			</q-table>
+				{{ error }}
+			</TableForDbData>
 		</div>
 	</q-page>
-	<EditTableBook v-if="editing" :book="selected[0]" :edit="editing" @close="editing = false" />
+	<EditTableData
+		v-if="editing"
+		title="Borrow"
+		:edit="editing"
+		@close="closeEditModal"
+		@edit="sendEdit"
+		@reset="resetDataToDefault"
+	>
+		<q-input v-model="editedData.title" label="Title" />
+		<q-input v-model="editedData.author" type="text" label="Author" />
+		<q-input v-model="editedData.picture" type="url" label="Picture" />
+		<q-input v-model="editedData.price" type="number" label="Price" suffix="Ft" step="100" min="0" />
+		<q-toggle v-model="editedData.available" label="Available" />
+		<q-select v-model="editedData.category" multiple label="Category" disable />
+		<q-toggle v-model="editedData.for_borrow" label="For Borrow" />
+	</EditTableData>
 </template>
 
 <script setup lang="ts">
-	import EditTableBook from "@components/admin/EditTableBook.vue";
+	import { ref } from "vue";
+	import $axios from "@api/axios";
+	import { useBookStore } from "@stores/book";
+	import EditTableData from "@components/admin/EditTableData.vue";
+	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import { Book } from "@interfaces/book";
 	import { QTableProps } from "quasar";
-	import { onMounted, ref } from "vue";
-	import $axios from "@api/axios";
 	import { AxiosError } from "axios";
-	import { handle } from "@utils/error";
-	import { useBookStore } from "@stores/book";
-	import { matSearch } from "@quasar/extras/material-icons";
+
+	interface ModifiableData {
+		author?: string;
+		title?: string;
+		picture?: string;
+		price?: number;
+		category?: string[];
+		for_borrow?: boolean;
+		available?: boolean;
+	}
+	const emptyData: ModifiableData = {
+		title: "",
+		author: "",
+		picture: "",
+		price: 0,
+		category: [],
+		for_borrow: true,
+		available: true,
+	};
 
 	const bookStore = useBookStore();
-	const selected = ref<Book[]>([]);
-	const filter = ref("");
-	const loading = ref(false);
-	const data = ref([]);
+	const books = ref<Book[]>([]);
+	const editDefaultData = ref<Book>();
+	const editedData = ref<ModifiableData>(emptyData);
 	const error = ref("");
-	const tableRef = ref();
 	const editing = ref(false);
+	const loading = ref(true);
 
 	async function getData() {
-		return $axios
-			.get("book", { transformResponse: (r) => r })
-			.then((res) => {
-				// console.log(res.data);
-				data.value = JSON.parse(res.data);
-			})
-			.catch((e: AxiosError) => {
-				error.value = e.message;
-				handle(e);
-			});
+		try {
+			const { status, data } = await $axios.get("book", { transformResponse: (res) => res });
+			if (status < 400) {
+				books.value = JSON.parse(data);
+				loading.value = false;
+			} else {
+				error.value = data;
+				console.log(`failed to get books: ${data}`);
+			}
+		} catch (err) {
+			error.value = (err as AxiosError).message;
+			console.log(err);
+		}
 	}
 
-	function editData() {
+	function filter(keyword: string) {
+		console.log(keyword);
+	}
+
+	function resetDataToDefault() {
+		editedData.value = {
+			title: editDefaultData.value?.title,
+			author: editDefaultData.value?.author,
+			picture: editDefaultData.value?.picture,
+			price: editDefaultData.value?.price,
+			category: editDefaultData.value?.category,
+			for_borrow: editDefaultData.value?.for_borrow,
+			available: editDefaultData.value?.available,
+		};
+	}
+
+	async function sendEdit() {
+		await bookStore.edit(editedData.value, editDefaultData.value?._id as string);
+		closeEditModal();
+		await getData();
+	}
+
+	async function openEditModal(id: string) {
+		const { data } = await $axios.get(`book/${id}`);
+		editDefaultData.value = data;
+		resetDataToDefault();
 		editing.value = true;
-		console.log(editing.value);
-		// return $axios.patch(`${componentProps.baseUrl}/${selected.value[0]._id}`)
-		// console.log(`EDIT :: user/${selected.value[0]._id}`);
 	}
 
-	async function deleteData() {
-		selected.value.forEach(({ _id }) => {
+	function closeEditModal() {
+		editDefaultData.value = undefined;
+		editedData.value = emptyData;
+		editing.value = false;
+	}
+
+	async function deleteData(ids: string[]) {
+		ids.forEach((_id) => {
 			bookStore.deleteBook(_id as string);
-			console.log(`DELETE :: book/${_id}`);
 		});
 	}
 
@@ -138,10 +146,6 @@
 		{ field: "ratings", name: "ratings", label: "ratings", format: (rating: Book["ratings"]) => rating?.join(", ") },
 		{ field: "__v", name: "__v", label: "__v" },
 	];
-
-	onMounted(() => {
-		tableRef.value.requestServerInteraction();
-	});
 </script>
 
 <style scoped lang="scss"></style>

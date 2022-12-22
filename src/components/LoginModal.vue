@@ -9,10 +9,7 @@
 				<q-btn :disabled="isDisabled" type="submit">Login</q-btn>
 				<q-btn @click="emits('to-register')">Go to Register</q-btn>
 				<GoogleLogin :callback="googleCallback" popup-type="TOKEN" auto-login>
-					<q-btn>
-						<q-icon name="img:google_icon.png" class="q-mr-sm" />
-						Login with Google
-					</q-btn>
+					<q-btn :icon="fabGoogle" label="Login with Google" />
 				</GoogleLogin>
 			</div>
 		</q-form>
@@ -23,6 +20,7 @@
 	import { ref, computed } from "vue";
 	import { LoginCred } from "@interfaces/auth";
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
+	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
 
 	const userCred = ref<LoginCred>({ emailOrUsername: "", password: "" });
 

@@ -1,121 +1,100 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-			<q-table
-				ref="tableRef"
-				v-model:selected="selected"
-				grid
-				grid-header
-				:filter="filter"
-				title="title"
-				:loading="loading"
-				selection="multiple"
-				:rows="data"
+			<TableForDbData
+				:title="'Borrow'"
 				:columns="columns"
-				row-key="_id"
-				:no-data-label="error"
-				@request="getData"
-			>
-				<template #header="props">
-					<q-tr :props="props">
-						<q-th v-for="col in props.cols" :key="col.name" :props="props">
-							{{ col.label }}
-						</q-th>
-					</q-tr>
-				</template>
-				<template #top-right>
-					<q-btn v-if="selected.length == 1" class="q-mx-sm" color="secondary" label="Edit" @click.prevent="editData" />
-					<q-btn v-if="selected.length" class="q-mx-sm" color="red" label="Delete" @click.prevent="deleteData" />
-					<q-input
-						v-model="filter"
-						class="q-px-lg q-ml-lg"
-						:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
-						borderless
-						dense
-						debounce="300"
-						placeholder="Search"
-					>
-						<template #append>
-							<q-icon :name="matSearch" />
-						</template>
-					</q-input>
-				</template>
-
-				<template #item="props">
-					<div
-						class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
-						:style="props.selected ? 'transform: scale(0.95);' : ''"
-					>
-						<q-card :class="props.selected ? ($q.dark.isActive ? 'bg-grey-10' : 'bg-gray-2') : ''">
-							<q-card-section>
-								<div>
-									<q-checkbox v-model="props.selected" dense :label="`_id: ${props.row._id}`" />
-								</div>
-							</q-card-section>
-							<q-separator />
-							<q-list dense>
-								<q-item v-for="col in props.cols.filter((col: any) => col.name !== 'desc')" :key="col.name">
-									<q-item-section style="min-width: 100px">
-										<q-item-label>{{ col.label }}:</q-item-label>
-									</q-item-section>
-									<q-item-section>
-										<q-item-label caption lines="1">{{ col.value }}</q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
-						</q-card>
-					</div>
-				</template>
-			</q-table>
+				:rows="borrows"
+				:loading="loading"
+				:request="getData"
+				@delete="deleteData"
+				@edit="openEditModal"
+				@filter="filter"
+			/>
+			{{ error }}
 		</div>
 	</q-page>
-	<EditTableBorrow v-if="editing" :borrow="selected[0]" :edit="editing" @close="editing = false" />
+	<EditTableData
+		v-if="editing"
+		title="Borrow"
+		:edit="editing"
+		@close="closeEditModal"
+		@edit="sendEdit"
+		@reset="resetDataToDefault"
+	>
+		<q-toggle v-model="editedData.verified" label="Available" />
+	</EditTableData>
 </template>
 
 <script setup lang="ts">
-	import { Borrow } from "@interfaces/borrow";
+	import { ref } from "vue";
 	import { QTableProps } from "quasar";
-	import EditTableBorrow from "@components/admin/EditTableBorrow.vue";
-	import { onMounted, ref } from "vue";
 	import $axios from "@api/axios";
 	import { AxiosError } from "axios";
-	import { handle } from "@utils/error";
 	import { useBorrowStore } from "@stores/borrow";
-	import { matSearch } from "@quasar/extras/material-icons";
+	import TableForDbData from "@components/admin/TableForDbData.vue";
+	import EditTableData from "@components/admin/EditTableData.vue";
+	import { Borrow } from "@interfaces/borrow";
 
-	const bookStore = useBorrowStore();
-	const selected = ref<Borrow[]>([]);
-	const filter = ref("");
-	const loading = ref(false);
-	const data = ref([]);
+	interface ModifiableData {
+		verified?: boolean;
+	}
+
+	const borrowStore = useBorrowStore();
+	const editDefaultData = ref<Borrow>();
+	const editedData = ref<ModifiableData>({ verified: false });
+	const borrows = ref<Borrow[]>([]);
 	const error = ref("");
-	const tableRef = ref();
 	const editing = ref(false);
+	const loading = ref(true);
 
 	async function getData() {
-		return $axios
-			.get("borrow", { transformResponse: (r) => r })
-			.then((res) => {
-				// console.log(res.data);
-				data.value = JSON.parse(res.data);
-			})
-			.catch((e: AxiosError) => {
-				error.value = e.message;
-				handle(e);
-			});
+		try {
+			const { status, data } = await $axios.get("borrow", { transformResponse: (res) => res });
+			if (status < 400) {
+				borrows.value = JSON.parse(data);
+				loading.value = false;
+			} else {
+				console.log(`failed to get borrows: ${data}`);
+			}
+		} catch (err) {
+			error.value = (err as AxiosError).message;
+			console.log(err);
+		}
 	}
 
-	function editData() {
+	function resetDataToDefault() {
+		editedData.value = {
+			verified: editDefaultData.value?.verified,
+		};
+	}
+
+	function filter(keyword: string) {
+		console.log(keyword);
+	}
+
+	async function sendEdit() {
+		await borrowStore.editById(editedData.value, editDefaultData.value?._id);
+		closeEditModal();
+		await getData();
+	}
+
+	async function openEditModal(id: string) {
+		const { data } = await $axios.get(`borrow/${id}`);
+		editDefaultData.value = data;
+		resetDataToDefault();
 		editing.value = true;
-		console.log(editing.value);
-		// return $axios.patch(`${componentProps.baseUrl}/${selected.value[0]._id}`)
-		// console.log(`EDIT :: user/${selected.value[0]._id}`);
 	}
 
-	async function deleteData() {
-		selected.value.forEach(({ _id }) => {
-			bookStore.deleteBorrow(_id as string);
-			console.log(`DELETE :: book/${_id}`);
+	function closeEditModal() {
+		editDefaultData.value = undefined;
+		editedData.value = { verified: false };
+		editing.value = false;
+	}
+
+	async function deleteData(ids: string[]) {
+		ids.forEach((_id) => {
+			borrowStore.deleteById(_id);
 		});
 	}
 
@@ -135,10 +114,6 @@
 		// },
 		{ field: "__v", name: "__v", label: "__v" },
 	];
-
-	onMounted(() => {
-		tableRef.value.requestServerInteraction();
-	});
 </script>
 
 <style scoped lang="scss"></style>

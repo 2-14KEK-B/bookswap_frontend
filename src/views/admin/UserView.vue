@@ -1,103 +1,67 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-			<q-table
-				ref="tableRef"
-				v-model:selected="selected"
-				grid
-				grid-header
-				:filter="filter"
-				title="title"
-				:loading="loading"
-				selection="multiple"
-				:rows="data"
+			<TableForDbData
+				title="User	"
 				:columns="columns"
-				row-key="_id"
-				:no-data-label="error"
-				@request="getData"
-			>
-				<template #header="props">
-					<q-tr :props="props">
-						<q-th v-for="col in props.cols" :key="col.name" :props="props">
-							{{ col.label }}
-						</q-th>
-					</q-tr>
-				</template>
-				<template #top-right>
-					<q-btn v-if="selected.length == 1" class="q-mx-sm" color="secondary" @click.prevent="editData">Modify</q-btn>
-					<q-btn v-if="selected.length" class="q-mx-sm" color="red" @click.prevent="deleteData">Delete</q-btn>
-					<q-input
-						v-model="filter"
-						class="q-px-lg q-ml-lg"
-						:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
-						borderless
-						dense
-						debounce="300"
-						placeholder="Search"
-					>
-						<template #append>
-							<q-icon :name="matSearch" />
-						</template>
-					</q-input>
-				</template>
-
-				<template #item="props">
-					<div
-						class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
-						:style="props.selected ? 'transform: scale(0.95);' : ''"
-					>
-						<q-card :class="props.selected ? ($q.dark.isActive ? 'bg-grey-10' : 'bg-gray-2') : ''">
-							<q-card-section>
-								<div>
-									<q-checkbox v-model="props.selected" dense :label="`_id: ${props.row._id}`" />
-								</div>
-							</q-card-section>
-							<q-separator />
-							<q-list dense>
-								<q-item v-for="col in props.cols.filter((col: any) => col.name !== 'desc')" :key="col.name">
-									<q-item-section style="min-width: 100px">
-										<q-item-label>{{ col.label }}:</q-item-label>
-									</q-item-section>
-									<q-item-section>
-										<q-item-label caption lines="1">{{ col.value }}</q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
-						</q-card>
-					</div>
-				</template>
-			</q-table>
+				:rows="data"
+				:loading="loading"
+				:request="getData"
+				@delete="deleteData"
+				@edit="openEditModal"
+				@filter="filter"
+			/>
 		</div>
 	</q-page>
-	<EditTableDataVue v-if="editing" :user="selected[0]" :edit="editing" @close="editing = false" />
+	<EditTableData
+		v-if="editing"
+		title="User"
+		:edit="editing"
+		@close="closeEditModal"
+		@edit="sendEdit"
+		@reset="resetDataToDefault"
+	>
+		<q-input v-model="editedData.username" label="Username" />
+		<q-input v-model="editedData.fullname" label="Fullname" />
+		<q-input v-model="editedData.picture" label="Picture" />
+		<q-input v-model="editedData.email" label="Email" />
+		<div class="flex"></div>
+	</EditTableData>
 </template>
 
 <script setup lang="ts">
 	import { QTableProps } from "quasar";
 	import { User } from "@interfaces/user";
-	import { onMounted, ref } from "vue";
+	import { ref } from "vue";
 	import $axios from "@api/axios";
 	import { AxiosError } from "axios";
 	import { handle } from "@utils/error";
 	import { useUserStore } from "@stores/user";
-	import EditTableDataVue from "@components/admin/EditTableUser.vue";
-	import { matSearch } from "@quasar/extras/material-icons";
+	import TableForDbData from "@components/admin/TableForDbData.vue";
+	import EditTableData from "@components/admin/EditTableData.vue";
+
+	interface ModifiableData {
+		username?: string;
+		fullname?: string;
+		picture?: string;
+		email?: string;
+	}
+	const emptyData: ModifiableData = { email: "", fullname: "", picture: "", username: "" };
 
 	const userStore = useUserStore();
-	const selected = ref<User[]>([]);
-	const filter = ref("");
-	const loading = ref(false);
-	const data = ref([]);
+	const data = ref<User[]>([]);
+	const editDefaultData = ref<User>();
+	const editedData = ref<ModifiableData>(emptyData);
 	const error = ref("");
-	const tableRef = ref();
 	const editing = ref(false);
+	const loading = ref(true);
 
 	async function getData() {
 		return $axios
 			.get("user", { transformResponse: (r) => r })
 			.then((res) => {
-				// console.log(res.data);
 				data.value = JSON.parse(res.data);
+				loading.value = false;
 			})
 			.catch((e: AxiosError) => {
 				error.value = e.message;
@@ -105,17 +69,41 @@
 			});
 	}
 
-	function editData() {
-		editing.value = true;
-		console.log(editing.value);
-		// return $axios.patch(`${componentProps.baseUrl}/${selected.value[0]._id}`)
-		// console.log(`EDIT :: user/${selected.value[0]._id}`);
+	function filter(keyword: string) {
+		console.log(keyword);
 	}
 
-	async function deleteData() {
-		selected.value.forEach(({ _id }) => {
+	async function sendEdit() {
+		await userStore.edit(editedData.value, editDefaultData.value?._id);
+		closeEditModal();
+		await getData();
+	}
+
+	function resetDataToDefault() {
+		editedData.value = {
+			fullname: editDefaultData.value?.fullname,
+			email: editDefaultData.value?.email,
+			picture: editDefaultData.value?.picture,
+			username: editDefaultData.value?.username,
+		};
+	}
+
+	async function openEditModal(id: string) {
+		const { data } = await $axios.get(`user/${id}`);
+		editDefaultData.value = data;
+		resetDataToDefault();
+		editing.value = true;
+	}
+
+	function closeEditModal() {
+		editDefaultData.value = undefined;
+		editedData.value = emptyData;
+		editing.value = false;
+	}
+
+	async function deleteData(ids: string[]) {
+		ids.forEach((_id) => {
 			userStore.deleteUser(_id as string);
-			console.log(`DELETE :: user/${_id}`);
 		});
 	}
 
@@ -160,10 +148,6 @@
 		// 	format: (ratings: User["user_ratings"]) => ratings.join(", "),
 		// },
 	];
-
-	onMounted(() => {
-		tableRef.value.requestServerInteraction();
-	});
 </script>
 
 <style scoped lang="scss"></style>
