@@ -51,8 +51,8 @@
 	}
 
 	onMounted(() => {
-		if (userStore.getLoggedUser) {
-			const loggedInUser = userStore.getLoggedUser;
+		if (userStore.loggedInUser) {
+			const loggedInUser = userStore.loggedInUser;
 			defaultValue = {
 				username: loggedInUser.username || "",
 				fullname: loggedInUser.fullname || "",

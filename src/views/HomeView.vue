@@ -1,7 +1,7 @@
 <template>
 	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<!-- <q-table v-model:selected="selectedBook" selection="single" :rows="allBook" row-key="_id"></q-table> -->
-		<div v-if="userStore.getLoggedUser" style="max-width: 100vw">
+		<div v-if="userStore.loggedInUser" style="max-width: 100vw">
 			<q-input v-model.trim="keyWord" outlined dense style="max-width: 100%" @keydown.enter.prevent="searchByKeyword">
 				<template #append>
 					<q-icon v-if="keyWord === ''" name="search" />
@@ -26,7 +26,7 @@
 								</q-item-section>
 							</q-item>
 						</div>
-						<div class="col-auto">
+						<div v-if="book.uploader != userStore.loggedInUser?._id" class="col-auto">
 							<q-btn color="grey-7" round flat icon="more_vert">
 								<q-menu cover auto-close>
 									<q-list>
@@ -42,7 +42,9 @@
 					</div>
 				</q-card-section>
 
-				<q-img :src="book.picture" />
+				<q-card-section class="flex items-center justify-center">
+					<q-img :src="book.picture" fit="scale-down" style="max-width: 300px; height: 150px" />
+				</q-card-section>
 
 				<q-card-actions align="around">
 					<q-btn flat @click.prevent="router.push({ name: 'book', params: { id: book._id } })">Open book</q-btn>

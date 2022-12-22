@@ -1,30 +1,28 @@
 import { defineStore } from "pinia";
-import { computed, ref, WritableComputedRef } from "vue";
-// import { useRouter } from "vue-router";
-import { router } from "../modules/router";
-import { AxiosResponse } from "axios";
+import { ref } from "vue";
 import $axios from "@api/axios";
+import socket from "@api/socket";
+import { router } from "../modules/router";
+import { useMessageStore } from "./message";
 import { handle } from "@utils/error";
+import { setInfoFromOtherUser } from "@utils/message";
+import { AxiosResponse } from "axios";
+import { Message } from "@interfaces/message";
 import { User, EditUser } from "@interfaces/user";
 import { LoginCred, RegisterCred } from "@interfaces/auth";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
 
-	const getLoggedUser: WritableComputedRef<User | undefined> = computed({
-		get(): User | undefined {
-			return loggedInUser.value;
-		},
-		set(newUser?: User): void {
-			loggedInUser.value = newUser;
-		},
-	});
-
 	function saveUserData(res: AxiosResponse) {
+		const messageStore = useMessageStore();
 		const user: User = res.data;
-		// console.log(res.data);
-		localStorage.setItem("user", JSON.stringify(user));
+		// console.log(user);
+		localStorage.setItem("user_id", user._id as string);
 		loggedInUser.value = user;
+		messageStore.messages = (user.messages as Message[])?.map((message) => setInfoFromOtherUser(message));
+		socket.connect();
+		socket.emit("user-online", user._id as string);
 	}
 
 	async function checkValidUser() {
@@ -32,7 +30,6 @@ export const useUserStore = defineStore("user", () => {
 			.get("auth")
 			.then((res) => {
 				saveUserData(res);
-				// console.log("logged user after test: ", loggedInUser.value);
 			})
 			.catch((error) => {
 				handle(error);
@@ -53,8 +50,7 @@ export const useUserStore = defineStore("user", () => {
 			.post("auth/login", loginData)
 			.then(async (res) => {
 				saveUserData(res);
-				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
-				else router.push({ name: "home" });
+				router.push({ name: "home" });
 			})
 			.catch(handle);
 	}
@@ -63,8 +59,7 @@ export const useUserStore = defineStore("user", () => {
 			.post("auth/google", { token: token })
 			.then(async (res) => {
 				saveUserData(res);
-				if (loggedInUser.value?.role === "admin") router.push({ name: "admin_home" });
-				else router.push({ name: "home" });
+				router.push({ name: "home" });
 			})
 			.catch(handle);
 	}
@@ -83,13 +78,15 @@ export const useUserStore = defineStore("user", () => {
 
 	async function logOut() {
 		$axios.post("auth/logout").catch(handle);
-		localStorage.removeItem("user");
+		socket.disconnect();
+		localStorage.removeItem("user_id");
 		loggedInUser.value = undefined;
 		await router.push({ name: "auth" });
 	}
 
 	return {
-		getLoggedUser,
+		socket,
+		loggedInUser,
 		login,
 		loginWithGoogle,
 		register,
