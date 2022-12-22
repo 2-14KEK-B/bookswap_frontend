@@ -3,7 +3,7 @@
 		<q-scroll-area :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'" style="height: calc(100vh - 150px)">
 			<q-list class="full-height" separator>
 				<q-item
-					v-for="(message, index) in messageStore.messages"
+					v-for="(message, index) in messages"
 					:key="index"
 					:active-class="$q.dark.isActive ? 'bg-grey-7' : 'bg-grey-4'"
 					clickable
@@ -48,10 +48,10 @@
 					:bg-color="$q.dark.isActive ? 'grey-7' : 'white'"
 					outlined
 					dense
-					:dark="$q.dark.isActive"
 					class="full-width"
 					placeholder="Search or start a new conversation"
 				>
+					<!-- @keydown.enter.prevent="sort" -->
 					<template #prepend>
 						<q-icon name="search" />
 					</template>
@@ -62,13 +62,32 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, watch } from "vue";
 	import { useMessageStore } from "@stores/message";
 	import { mdiClose } from "@quasar/extras/mdi-v7";
+	import { User } from "@interfaces/user";
 
 	const messageStore = useMessageStore();
 
+	const messages = ref(messageStore.messages);
 	const search = ref("");
+
+	watch(search, (keyword) => {
+		const required: Array<keyof User> = ["fullname", "username", "email"];
+		messages.value = messageStore.messages.filter((message) => {
+			if (
+				required.some((field) => {
+					if ((message.otherUser as User)[field]) {
+						if ((message.otherUser as User)[field]?.toString().search(keyword) != -1) {
+							return true;
+						}
+					}
+				})
+			) {
+				return message;
+			}
+		});
+	});
 
 	function getTimeString(dateAsString: string): string {
 		const date = new Date(dateAsString);
