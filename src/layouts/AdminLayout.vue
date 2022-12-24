@@ -9,13 +9,14 @@
 				<div v-if="userStore.loggedInUser">
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
-					<q-btn-dropdown flat rounded dense class="q-ml-sm">
+					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
-							<q-avatar>
-								<q-img :src="userStore.loggedInUser.picture || 'https://pic.onlinewebfonts.com/svg/img_329115.png'"></q-img>
-							</q-avatar>
+							<ProfileAvatar
+								:src="userStore.loggedInUser.picture"
+								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
+							/>
 						</template>
-						<q-list>
+						<q-list separator>
 							<template v-for="button in buttons" :key="button.name">
 								<q-item v-close-popup clickable class="flex-center" @click="button.action">
 									<q-icon v-if="button.icon" :name="button.icon" size="sm" class="q-mr-sm" />
@@ -30,7 +31,7 @@
 
 		<q-drawer
 			v-model="leftDrawerOpen"
-			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
+			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-2'"
 			side="left"
 			:width="200"
 			show-if-above
@@ -39,7 +40,12 @@
 			<q-scroll-area class="fit">
 				<q-list>
 					<template v-for="(menuItem, index) in menuItems" :key="index">
-						<q-item clickable :disable="menuItem.disabled" :to="{ name: menuItem.routeName }">
+						<q-item
+							clickable
+							:disable="menuItem.disabled"
+							:to="{ name: menuItem.routeName }"
+							:active-class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-4'"
+						>
 							<q-item-section avatar>
 								<q-icon :name="menuItem.icon" />
 							</q-item-section>
@@ -64,6 +70,7 @@
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import MenuDrawer from "@interfaces/drawer";
 	import {
 		mdiThemeLightDark,

@@ -4,7 +4,6 @@
 		v-model:selected="selected"
 		grid
 		:grid-header="$q.screen.gt.sm"
-		:filter="filter"
 		:title="title"
 		selection="multiple"
 		:rows="rows"
@@ -21,7 +20,12 @@
 		</template>
 
 		<template #top-right>
-			<q-btn v-if="selected.length == 1" class="q-mx-sm" color="secondary" @click.prevent="emits('edit', selected[0]._id)">
+			<q-btn
+				v-if="selected.length == 1 && title != 'Message'"
+				class="q-mx-sm"
+				color="secondary"
+				@click.prevent="emits('edit', selected[0]._id)"
+			>
 				Modify
 			</q-btn>
 			<q-btn
@@ -39,12 +43,10 @@
 			</q-btn>
 			<q-input
 				v-model="filter"
-				class="q-px-lg q-ml-lg"
-				:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
-				borderless
 				dense
 				debounce="300"
 				placeholder="Search"
+				type="text"
 				@keydown.enter="emits('filter', filter)"
 			>
 				<template #append>
@@ -55,7 +57,7 @@
 
 		<template #item="props">
 			<div
-				class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
+				class="q-pa-xs col-xs-12 col-sm-12 col-md-6 col-lg-3 grid-style-transition"
 				:style="props.selected ? 'transform: scale(0.95);' : ''"
 			>
 				<q-card :class="props.selected ? ($q.dark.isActive ? 'bg-grey-10' : 'bg-gray-2') : ''">
@@ -67,11 +69,13 @@
 					<q-separator />
 					<q-list dense>
 						<q-item v-for="col in props.cols.filter((col: any) => col.name !== 'desc')" :key="col.name">
-							<q-item-section style="min-width: 100px">
-								<q-item-label>{{ col.label }}:</q-item-label>
+							<!-- {{ col.label }}:{{ col.value }} -->
+							<!--  side style="min-width: 120px" -->
+							<q-item-section>
+								<q-item-label overline>{{ col.label }}:</q-item-label>
 							</q-item-section>
 							<q-item-section>
-								<q-item-label caption lines="1">{{ col.value }}</q-item-label>
+								<q-item-label caption>{{ col.value }}</q-item-label>
 							</q-item-section>
 						</q-item>
 					</q-list>

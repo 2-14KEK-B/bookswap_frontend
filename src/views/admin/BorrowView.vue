@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { QTableProps } from "quasar";
+	import { QTableColumn } from "quasar";
 	import $axios from "@api/axios";
 	import { AxiosError } from "axios";
 	import { useBorrowStore } from "@stores/borrow";
@@ -98,7 +98,7 @@
 		});
 	}
 
-	const columns: QTableProps["columns"] = [
+	const columns: QTableColumn<Borrow>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
@@ -106,12 +106,12 @@
 		{ field: "to_id", name: "to_id", label: "to_id" },
 		{ field: "books", name: "books", label: "books", format: (book: Borrow["books"]) => book?.join(", ") },
 		{ field: "verified", name: "verified", label: "verified" },
-		// {
-		// 	field: "user_ratings",
-		// 	name: "user_ratings",
-		// 	label: "user_ratings",
-		// 	format: (rating: Borrow["user_ratings"]) => rating?.join(", "),
-		// },
+		{
+			field: "user_ratings",
+			name: "user_ratings",
+			label: "user_ratings",
+			format: (val) => `[${val.join(", ")}]`,
+		},
 		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>

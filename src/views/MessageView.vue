@@ -6,17 +6,11 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from "vue";
+	import { ref } from "vue";
 	import Contacts from "@components/message/Contacts.vue";
 	import Messages from "@components/message/Messages.vue";
-	import { useMessageStore } from "@stores/message";
 
-	const messageStore = useMessageStore();
 	const isContactsOpened = ref(true);
-
-	onMounted(async () => {
-		await messageStore.getLoggedInUserMessages();
-	});
 </script>
 
 <style scoped lang="scss"></style>

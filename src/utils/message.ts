@@ -13,6 +13,7 @@ export function setInfoFromOtherUser(message: Message, sender?: User) {
 			return user;
 		}
 	});
+	console.log(otherUser);
 	const updatedMessage: Message = { ...message, otherUser: otherUser };
 	return updatedMessage;
 }

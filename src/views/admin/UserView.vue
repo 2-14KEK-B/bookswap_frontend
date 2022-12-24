@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-	import { QTableProps } from "quasar";
+	import { QTableColumn } from "quasar";
 	import { User } from "@interfaces/user";
 	import { ref } from "vue";
 	import $axios from "@api/axios";
@@ -107,7 +107,7 @@
 		});
 	}
 
-	const columns: QTableProps["columns"] = [
+	const columns: QTableColumn<User>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: "createdAt" },
 		{ field: "updatedAt", name: "updatedAt", label: "updatedAt" },
@@ -116,37 +116,37 @@
 		{ field: "email", name: "email", label: "email" },
 		{ field: "email_is_verified", name: "email_is_verified", label: "email_is_verified" },
 		{ field: "locale", name: "locale", label: "locale" },
-		{ field: "role", name: "role", label: "role" },
+		// { field: "role", name: "role", label: "role", format: (val) => (val ? val : "user") },
 		{
 			field: "books",
 			name: "books",
 			label: "books",
-			format: (books: User["books"]) => books?.join(", "),
+			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "messages",
 			name: "messages",
 			label: "messages",
-			format: (messages: User["messages"]) => messages?.join(", "),
+			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "borrows",
 			name: "borrows",
 			label: "borrows",
-			format: (borrows: User["borrows"]) => borrows?.join(", "),
+			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "rated_books",
 			name: "rated_books",
 			label: "rated_books",
-			format: (rate: User["rated_books"]) => rate?.join(", "),
+			format: (val) => `[${val.join(", ")}]`,
 		},
-		// {
-		// 	field: "user_ratings",
-		// 	name: "user_ratings",
-		// 	label: "user_ratings",
-		// 	format: (ratings: User["user_ratings"]) => ratings.join(", "),
-		// },
+		{
+			field: "user_ratings",
+			name: "user_ratings",
+			label: "user_ratings",
+			format: (val) => val,
+		},
 	];
 </script>
 

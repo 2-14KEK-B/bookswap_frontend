@@ -1,15 +1,27 @@
 <template>
-	<q-avatar>
+	<q-avatar v-if="src">
 		<q-img
-			:src="src || 'https://pic.onlinewebfonts.com/svg/img_329115.png'"
+			:src="src"
 			referrerpolicy="no-referrer"
-			:alt="alt || 'profile'"
+			loading="eager"
+			:alt="alt"
+			fetchpriority="high"
+			:placeholder-src="'https://pic.onlinewebfonts.com/svg/img_329115.png'"
 		/>
+	</q-avatar>
+	<q-avatar v-else color="secondary" text-color="white">
+		{{ alt?.charAt(0).toUpperCase() }}
 	</q-avatar>
 </template>
 
 <script setup lang="ts">
-	defineProps<{ src?: string; alt?: string }>();
+	import { onMounted } from "vue";
+
+	const props = defineProps<{ src?: string; alt?: string }>();
+
+	onMounted(() => {
+		console.log(props);
+	});
 </script>
 
 <style scoped></style>

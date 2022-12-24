@@ -39,8 +39,8 @@
 	import { useBookStore } from "@stores/book";
 	import EditTableData from "@components/admin/EditTableData.vue";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
-	import { Book } from "@interfaces/book";
-	import { QTableProps } from "quasar";
+	import { Book, BookRating } from "@interfaces/book";
+	import { QTableColumn } from "quasar";
 	import { AxiosError } from "axios";
 
 	interface ModifiableData {
@@ -127,7 +127,7 @@
 		});
 	}
 
-	const columns: QTableProps["columns"] = [
+	const columns: QTableColumn<Book>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
@@ -138,12 +138,17 @@
 			field: "category",
 			name: "category",
 			label: "category",
-			format: (category: Book["ratings"]) => category?.join(", "),
+			format: (val) => `[${val.join(", ")}]`,
 		},
 		{ field: "price", name: "price", label: "price", sortable: true },
 		{ field: "available", name: "available", label: "available", sortable: true },
 		{ field: "for_borrow", name: "for_borrow", label: "for_borrow", sortable: true },
-		{ field: "ratings", name: "ratings", label: "ratings", format: (rating: Book["ratings"]) => rating?.join(", ") },
+		{
+			field: "ratings",
+			name: "ratings",
+			label: "ratings",
+			format: (val: BookRating[]) => `[${val.map((r) => r._id).join(", ")}]`,
+		},
 		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>

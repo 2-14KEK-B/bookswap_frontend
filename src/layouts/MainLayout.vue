@@ -9,12 +9,15 @@
 				<div v-if="userStore.loggedInUser">
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
-					<q-btn-dropdown flat rounded dense class="q-ml-sm">
+					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
-							<ProfileAvatar :src="userStore.loggedInUser.picture" :alt="userStore.loggedInUser.fullname" />
+							<ProfileAvatar
+								:src="userStore.loggedInUser.picture"
+								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
+							/>
 						</template>
-						<q-list>
-							<q-item v-if="userStore.loggedInUser.role === 'admin'" v-close-popup clickable :to="{ name: 'admin_home' }">
+						<q-list separator>
+							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_home' }">
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
@@ -22,7 +25,7 @@
 								</q-item-section>
 							</q-item>
 							<template v-for="button in buttons" :key="button.name">
-								<q-item v-close-popup clickable class="flex-center" @click="button.action">
+								<q-item clickable class="flex-center" @click="button.action">
 									<q-icon v-if="button.icon" :name="button.icon" size="sm" class="q-mr-sm" />
 									<q-item-section>{{ button.name }}</q-item-section>
 								</q-item>

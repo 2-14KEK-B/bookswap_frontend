@@ -16,6 +16,7 @@ interface Borrow {
 	books: (Book | string)[];
 	verified: boolean;
 	user_ratings?: (UserRating | string)[];
+	__v?: number;
 }
 
 interface CreateBorrow {
