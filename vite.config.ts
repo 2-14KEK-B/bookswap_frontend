@@ -47,20 +47,20 @@ export default defineConfig({
 			output: {
 				manualChunks(id) {
 					if (id.includes("/node_modules/")) {
-						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia"];
+						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia", "socket.io"];
 						const chunk = modules.find((module) => id.includes(`/node_modules/${module}`));
 						return chunk ? `vendor-${chunk}` : "vendor";
 					}
 				},
-				assetFileNames: (assetInfo) => {
-					let extType = assetInfo.name?.split(".").at(1);
-					if (extType && /png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-						extType = "img";
-					}
-					return `assets/${extType}/[name]-[hash][extname]`;
-				},
-				chunkFileNames: "static/js/[name]-[hash].js",
-				entryFileNames: "static/js/[name]-[hash].js",
+				// assetFileNames: (assetInfo) => {
+				// 	let extType = assetInfo.name?.split(".").at(1);
+				// 	if (extType && /png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+				// 		extType = "img";
+				// 	}
+				// 	return `assets/${extType}/[name]-[hash][extname]`;
+				// },
+				// chunkFileNames: "static/js/[name]-[hash].js",
+				// entryFileNames: "static/js/[name]-[hash].js",
 			},
 		},
 	},
