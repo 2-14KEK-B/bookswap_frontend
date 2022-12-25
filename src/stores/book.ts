@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { CreateBook, Book } from "@interfaces/book";
+import { CreateBook, Book, ModifyBook } from "@interfaces/book";
 import { AxiosResponse } from "axios";
 import { handle } from "@utils/error";
 
@@ -15,15 +15,31 @@ export const useBookStore = defineStore("book", () => {
 			.post("/book", userData)
 			.then(async (res) => {
 				handleBookSuccess(res);
-				// const user: User = res.data;
-				// console.log(res);
-				// localStorage.setItem("user", JSON.stringify(user));
-				// loggedInUser.value = user;
-				// $axios.get("test").then((res) => console.log("test: ", res));
 			})
 			.catch(handle);
 	}
+
+	async function deleteBook(id: string) {
+		return $axios
+			.delete(`/book/${id}`)
+			.then(async (res) => {
+				console.log(res.status);
+			})
+			.catch(handle);
+	}
+
+	async function edit(book: ModifyBook, id: string) {
+		return $axios
+			.patch(`/book/${id}`, book)
+			.then(async (res) => {
+				console.log(res.status);
+			})
+			.catch(handle);
+	}
+
 	return {
 		createBook,
+		deleteBook,
+		edit,
 	};
 });

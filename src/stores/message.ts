@@ -1,7 +1,8 @@
-import { ref } from "vue";
 import { defineStore } from "pinia";
-import { useUserStore } from "./user";
 import $axios from "@api/axios";
+import { handle } from "@utils/error";
+import { ref } from "vue";
+import { useUserStore } from "./user";
 import socket from "@api/socket";
 import { setInfoFromOtherUser } from "@utils/message";
 import { User } from "@interfaces/user";
@@ -74,6 +75,15 @@ export const useMessageStore = defineStore("message", () => {
 		}
 	}
 
+	async function deleteMessage(id: string) {
+		return $axios
+			.delete(`/message/${id}`)
+			.then(async (res) => {
+				console.log(res.status);
+			})
+			.catch(handle);
+	}
+
 	socket.on("msg-recieved", (data: Message | MessageContent, sender?: User) => {
 		if (sender) {
 			messages.value?.push(setInfoFromOtherUser(data as Message, sender));
@@ -94,5 +104,6 @@ export const useMessageStore = defineStore("message", () => {
 		sendMessage,
 		// convertToChat,
 		loadMessage,
+		deleteMessage,
 	};
 });

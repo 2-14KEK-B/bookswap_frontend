@@ -16,6 +16,7 @@ interface Borrow {
 	books: (Book | string)[];
 	verified: boolean;
 	user_ratings?: (UserRating | string)[];
+	__v?: number;
 }
 
 interface CreateBorrow {
@@ -24,7 +25,6 @@ interface CreateBorrow {
 }
 
 interface ModifyBorrow {
-	books?: string[];
 	verified?: boolean;
 }
 

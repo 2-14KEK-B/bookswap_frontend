@@ -23,11 +23,8 @@
 			/>
 			<q-toggle
 				v-model="input.for_borrow"
-				checked-icon="check"
 				color="green"
 				:label="input.for_borrow ? 'Upload for borrow' : 'Upload for lend'"
-				left-label
-				unchecked-icon="clear"
 			/>
 			<div>
 				<q-btn label="Submit" type="submit" color="primary" />

@@ -2,20 +2,21 @@
 	<q-layout view="hHh lpR fFf">
 		<q-header elevated class="bg-accent text-white">
 			<q-toolbar>
-				<q-btn dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
+				<q-btn dense flat round :icon="matMenu" @click="leftDrawerOpen = !leftDrawerOpen" />
 				<q-toolbar-title>
 					<q-btn flat :to="{ name: 'admin_home' }">BookSwap</q-btn>
 				</q-toolbar-title>
 				<div v-if="userStore.loggedInUser">
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
-					<q-btn-dropdown flat rounded dense class="q-ml-sm">
+					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
-							<q-avatar>
-								<q-img :src="userStore.loggedInUser.picture || 'https://pic.onlinewebfonts.com/svg/img_329115.png'"></q-img>
-							</q-avatar>
+							<ProfileAvatar
+								:src="userStore.loggedInUser.picture"
+								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
+							/>
 						</template>
-						<q-list>
+						<q-list separator>
 							<template v-for="button in buttons" :key="button.name">
 								<q-item v-close-popup clickable class="flex-center" @click="button.action">
 									<q-icon v-if="button.icon" :name="button.icon" size="sm" class="q-mr-sm" />
@@ -30,7 +31,7 @@
 
 		<q-drawer
 			v-model="leftDrawerOpen"
-			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
+			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-2'"
 			side="left"
 			:width="200"
 			show-if-above
@@ -39,7 +40,12 @@
 			<q-scroll-area class="fit">
 				<q-list>
 					<template v-for="(menuItem, index) in menuItems" :key="index">
-						<q-item clickable :disable="menuItem.disabled" :to="{ name: menuItem.routeName }">
+						<q-item
+							clickable
+							:disable="menuItem.disabled"
+							:to="{ name: menuItem.routeName }"
+							:active-class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-4'"
+						>
 							<q-item-section avatar>
 								<q-icon :name="menuItem.icon" />
 							</q-item-section>
@@ -64,8 +70,19 @@
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import MenuDrawer from "@interfaces/drawer";
-	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
+	import {
+		mdiThemeLightDark,
+		mdiHomeCircleOutline,
+		mdiAccountOutline,
+		mdiBookOpenPageVariantOutline,
+		mdiShareAllOutline,
+		mdiMessageOutline,
+		mdiBell,
+		mdiMessage,
+	} from "@quasar/extras/mdi-v7";
+	import { matMenu } from "@quasar/extras/material-icons";
 	import { matPerson, matLogout } from "@quasar/extras/material-icons";
 
 	const router = useRouter();
@@ -75,7 +92,7 @@
 
 	const menuItems: MenuDrawer[] = [
 		{
-			icon: "mdi-home-circle-outline",
+			icon: mdiHomeCircleOutline,
 			text: "Home Page",
 			name: "Home Page",
 			routeName: "home",
@@ -83,7 +100,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-account-circle-outline",
+			icon: mdiAccountOutline,
 			text: "User",
 			name: "User",
 			routeName: "admin_user",
@@ -91,7 +108,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-book-open-page-variant-outline",
+			icon: mdiBookOpenPageVariantOutline,
 			text: "Book",
 			name: "Book",
 			routeName: "admin_book",
@@ -99,7 +116,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-share-all-outline",
+			icon: mdiShareAllOutline,
 			text: "Borrow",
 			name: "Borrow",
 			routeName: "admin_borrow",
@@ -107,7 +124,7 @@
 			separator: false,
 		},
 		{
-			icon: "mdi-message-outline",
+			icon: mdiMessageOutline,
 			text: "Message",
 			name: "Message",
 			routeName: "admin_message",

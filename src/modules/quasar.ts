@@ -1,15 +1,14 @@
 import { App } from "vue";
 import { Quasar, QuasarPluginOptions, Dark } from "quasar";
+import quasarIconSet from "quasar/icon-set/svg-material-icons";
+import { matArrowDropUp, matWarning, matArrowDropDown, matClear, matError } from "@quasar/extras/material-icons";
+import { mdiPageNext, mdiPagePrevious, mdiPageFirst, mdiPageLast } from "@quasar/extras/mdi-v7";
 
-// Import icon libraries
-import "@quasar/extras/roboto-font/roboto-font.css";
-import "@quasar/extras/material-icons/material-icons.css";
-import "@quasar/extras/mdi-v6/mdi-v6.css";
-// Import Quasar css
 import "quasar/src/css/index.sass";
 
 const config: Partial<QuasarPluginOptions> = {
 	plugins: { Dark },
+	iconSet: quasarIconSet,
 	config: {
 		eslint: {
 			warnings: true,
@@ -30,6 +29,13 @@ const config: Partial<QuasarPluginOptions> = {
     }
   */
 };
+
+quasarIconSet.arrow.dropdown = matArrowDropDown;
+quasarIconSet.table.arrowUp = matArrowDropUp;
+quasarIconSet.table.warning = matWarning;
+quasarIconSet.pagination = { first: mdiPageFirst, last: mdiPageLast, next: mdiPageNext, prev: mdiPagePrevious };
+quasarIconSet.field = { error: matError, clear: matClear };
+
 export const install = (app: App) => {
 	app.use(Quasar, config);
 };

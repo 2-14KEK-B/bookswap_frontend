@@ -1,9 +1,16 @@
 <template>
 	<div style="padding-top: 50px">
-		<q-scroll-area ref="chatRef" style="height: calc(100vh - 150px)">
+		<q-scroll-area
+			ref="chatRef"
+			style="height: calc(100vh - 150px)"
+			:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-1'"
+		>
 			<q-infinite-scroll reverse class="q-pa-md" @load="load">
 				<template #loading>
-					<div class="row justify-center q-my-md">
+					<div
+						v-if="messageStore.messages[messageStore.selectedMessageIndex as number]?.message_contents.length % 25 == 0"
+						class="row justify-center q-my-md"
+					>
 						<q-spinner color="primary" name="dots" size="40px" />
 					</div>
 				</template>
@@ -19,7 +26,7 @@
 			</q-infinite-scroll>
 		</q-scroll-area>
 		<q-page-sticky expand position="top">
-			<q-toolbar class="bg-blue">
+			<q-toolbar class="bg-secondary">
 				<q-btn flat dense :icon="mdiArrowLeft" label="Back" @click="emits('openContacts')" />
 				<q-space />
 				<q-btn flat no-caps align="center">
@@ -36,8 +43,8 @@
 				</q-btn>
 			</q-toolbar>
 		</q-page-sticky>
-		<q-page-sticky expand position="bottom" class="bg-grey-8">
-			<q-form class="full-width row q-pa-xs" @submit.prevent="send">
+		<q-page-sticky expand position="bottom" class="bg-secondary">
+			<q-form class="full-width row q-pa-sm" @submit.prevent="send">
 				<q-input
 					ref="inputRef"
 					v-model="input"
@@ -45,6 +52,7 @@
 					dense
 					type="text"
 					rounded
+					:bg-color="$q.dark.isActive ? 'grey-9' : 'grey-1'"
 					outlined
 					autofocus
 					placeholder="Type your message.."
@@ -72,9 +80,12 @@
 	const input = ref("");
 	const inputRef = ref<QInput>();
 	const chatRef = ref<QScrollArea>();
+	const loading = ref(false);
 
 	async function load(index: number, done: (stop?: boolean) => void) {
+		loading.value = true;
 		const stop = await messageStore.loadMessage(index);
+		loading.value = false;
 		done(!!stop);
 	}
 
@@ -86,7 +97,7 @@
 	}
 
 	watch(messageStore.messages[messageStore.selectedMessageIndex as number].message_contents, () => {
-		moveToBottom();
+		if (!loading.value) moveToBottom();
 	});
 
 	async function send() {

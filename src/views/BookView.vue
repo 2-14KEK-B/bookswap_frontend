@@ -2,7 +2,7 @@
 	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<!-- :style="{ 'background-image': `url(${book?.picture})` }"
 			style="height: 90vh; background-repeat: no-repeat; background-color: opacity: 0.1;" -->
-		<q-card>
+		<q-card class="card">
 			<q-card-section class="text-center q-pb-none">
 				<h4>{{ book?.title }}</h4>
 				<h6>{{ book?.author }}</h6>
@@ -26,7 +26,7 @@
 				</div>
 			</q-card-section>
 			<div style="max-height: 35vh; overflow: hidden">
-				<q-img :src="book?.picture" style="max-widht: 100%; height: auto; opacity: 0.6"></q-img>
+				<q-img class="pic" :src="book?.picture" style="max-widht: 100%; height: auto; opacity: 0.6"></q-img>
 			</div>
 		</q-card>
 	</q-page>
@@ -45,4 +45,12 @@
 	});
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+	.card {
+		width: 250px;
+	}
+	.pic {
+		max-width: 250px;
+		max-width: 250px;
+	}
+</style>

@@ -4,8 +4,8 @@
 		<div v-if="userStore.loggedInUser" style="max-width: 100vw">
 			<q-input v-model.trim="keyWord" outlined dense style="max-width: 100%" @keydown.enter.prevent="searchByKeyword">
 				<template #append>
-					<q-icon v-if="keyWord === ''" name="search" />
-					<q-icon v-else name="clear" class="cursor-pointer" @click="keyWord = ''" />
+					<q-icon v-if="keyWord === ''" :name="matSearch" />
+					<q-icon v-else :name="matClear" class="cursor-pointer" @click="keyWord = ''" />
 				</template>
 			</q-input>
 		</div>
@@ -27,7 +27,7 @@
 							</q-item>
 						</div>
 						<div v-if="book.uploader != userStore.loggedInUser?._id" class="col-auto">
-							<q-btn color="grey-7" round flat icon="more_vert">
+							<q-btn color="grey-7" round flat :icon="matMoreVert">
 								<q-menu cover auto-close>
 									<q-list>
 										<q-item clickable>
@@ -61,9 +61,11 @@
 	import { useRouter } from "vue-router";
 	import { Book } from "@interfaces/book";
 	import { useUserStore } from "@stores/user";
+	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
 
 	const router = useRouter();
 	const userStore = useUserStore();
+
 	const books = ref<Book[]>([]);
 	const keyWord = ref("");
 
@@ -80,4 +82,12 @@
 	});
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped>
+	.card {
+		width: 250px;
+		height: 400px;
+	}
+	.q-img {
+		height: 400px;
+	}
+</style>

@@ -8,8 +8,8 @@ interface BookRating {
 interface Book {
 	_id?: string;
 	uploader: string;
-	created_on?: string;
-	updated_on?: string;
+	createdAt?: string;
+	updatedAt?: string;
 	author: string;
 	title: string;
 	picture: string;
@@ -24,7 +24,7 @@ interface Book {
 interface CreateBook {
 	author: string;
 	title: string;
-	picture: string;
+	picture?: string;
 	category?: string[];
 	price?: number;
 	for_borrow?: boolean;

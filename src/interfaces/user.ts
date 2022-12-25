@@ -26,6 +26,7 @@ interface EditUser {
 	username?: string;
 	fullname?: string;
 	picture?: string;
+	email?: string;
 }
 
 export { User };
