@@ -12,6 +12,7 @@
 		"lib": ["ESNext", "DOM"],
 		"skipLibCheck": true,
 		"types": ["vite/client", "pinia", "vue3-google-login"],
+		"typeRoots": ["node_modules/@types", "src/types"],
 		"baseUrl": ".",
 		"paths": {
 			"@api/*": ["src/api/*"],
