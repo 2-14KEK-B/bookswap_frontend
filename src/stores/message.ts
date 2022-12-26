@@ -5,7 +5,6 @@ import { ref } from "vue";
 import { useUserStore } from "./user";
 import socket from "@api/socket";
 import { setInfoFromOtherUser } from "@utils/message";
-import { User } from "@interfaces/user";
 import { Message, MessageContent } from "@interfaces/message";
 
 export const useMessageStore = defineStore("message", () => {
@@ -83,18 +82,6 @@ export const useMessageStore = defineStore("message", () => {
 			})
 			.catch(handle);
 	}
-
-	socket.on("msg-recieved", (data: Message | MessageContent, sender?: User) => {
-		if (sender) {
-			messages.value?.push(setInfoFromOtherUser(data as Message, sender));
-		} else {
-			messages.value?.forEach((message) => {
-				if (message.otherUser?._id == (data as MessageContent).sender_id) {
-					message.message_contents.push(data as MessageContent);
-				}
-			});
-		}
-	});
 
 	return {
 		selectedMessageIndex,

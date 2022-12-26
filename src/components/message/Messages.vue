@@ -64,13 +64,17 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, watch } from "vue";
+	import { ref } from "vue";
+	import socket from "@api/socket";
 	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
-	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
-	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
+	import { useUserStore } from "@stores/user";
+	import { User } from "@interfaces/user";
 	import { QInput, QScrollArea } from "quasar";
+	import { setInfoFromOtherUser } from "@utils/message";
+	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
+	import { Message, MessageContent } from "@interfaces/message";
 
 	extend(relativeTime);
 	const userStore = useUserStore();
@@ -96,16 +100,25 @@
 		}, 20);
 	}
 
-	watch(messageStore.messages[messageStore.selectedMessageIndex as number].message_contents, () => {
-		if (!loading.value) moveToBottom();
-	});
-
 	async function send() {
 		await messageStore.sendMessage(input.value);
 		moveToBottom();
 		input.value = "";
 		inputRef.value?.focus();
 	}
+
+	socket.on("msg-recieved", (data: Message | MessageContent, sender?: User) => {
+		if (sender) {
+			messageStore.messages.push(setInfoFromOtherUser(data as Message, sender));
+		} else {
+			messageStore.messages.forEach((message) => {
+				if (message.otherUser?._id == (data as MessageContent).sender_id) {
+					message.message_contents.push(data as MessageContent);
+					moveToBottom();
+				}
+			});
+		}
+	});
 
 	const emits = defineEmits<{ (e: "openContacts"): void }>();
 </script>
