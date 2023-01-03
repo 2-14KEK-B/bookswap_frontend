@@ -1,5 +1,5 @@
 import { App } from "vue";
-import { Quasar, QuasarPluginOptions, Dark } from "quasar";
+import { Quasar, QuasarPluginOptions, Dark, Notify, Loading } from "quasar";
 import quasarIconSet from "quasar/icon-set/svg-material-icons";
 import { matArrowDropUp, matWarning, matArrowDropDown, matClear, matError } from "@quasar/extras/material-icons";
 import { mdiPageNext, mdiPagePrevious, mdiPageFirst, mdiPageLast } from "@quasar/extras/mdi-v7";
@@ -7,7 +7,7 @@ import { mdiPageNext, mdiPagePrevious, mdiPageFirst, mdiPageLast } from "@quasar
 import "quasar/src/css/index.sass";
 
 const config: Partial<QuasarPluginOptions> = {
-	plugins: { Dark },
+	plugins: { Dark, Notify, Loading },
 	iconSet: quasarIconSet,
 	config: {
 		eslint: {

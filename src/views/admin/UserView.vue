@@ -4,12 +4,13 @@
 			<TableForDbData
 				title="User	"
 				:columns="columns"
-				:rows="data"
+				:rows="data?.docs"
 				:loading="loading"
 				:request="getData"
+				:rows-number="rowsNumber"
 				@delete="deleteData"
 				@edit="openEditModal"
-				@filter="filter"
+				@paginate="getData"
 			/>
 		</div>
 	</q-page>
@@ -33,12 +34,10 @@
 	import { QTableColumn } from "quasar";
 	import { User } from "@interfaces/user";
 	import { ref } from "vue";
-	import $axios from "@api/axios";
-	import { AxiosError } from "axios";
-	import { handle } from "@utils/error";
 	import { useUserStore } from "@stores/user";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
+	import { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		username?: string;
@@ -49,32 +48,24 @@
 	const emptyData: ModifiableData = { email: "", fullname: "", picture: "", username: "" };
 
 	const userStore = useUserStore();
-	const data = ref<User[]>([]);
+	const data = ref<PaginateResult<User>>();
 	const editDefaultData = ref<User>();
 	const editedData = ref<ModifiableData>(emptyData);
-	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
+	const rowsNumber = ref<number | undefined>();
 
-	async function getData() {
-		return $axios
-			.get("user", { transformResponse: (r) => r })
-			.then((res) => {
-				data.value = JSON.parse(res.data);
-				loading.value = false;
-			})
-			.catch((e: AxiosError) => {
-				error.value = e.message;
-				handle(e);
-			});
-	}
-
-	function filter(keyword: string) {
-		console.log(keyword);
+	async function getData(query?: PathQuery) {
+		const users = await userStore.adminGetUsers(query);
+		if (users) {
+			data.value = users;
+			rowsNumber.value = users.totalDocs;
+			loading.value = false;
+		}
 	}
 
 	async function sendEdit() {
-		await userStore.edit(editedData.value, editDefaultData.value?._id);
+		await userStore.adminEditUser(editDefaultData.value?._id as string, editedData.value);
 		closeEditModal();
 		await getData();
 	}
@@ -89,8 +80,8 @@
 	}
 
 	async function openEditModal(id: string) {
-		const { data } = await $axios.get(`user/${id}`);
-		editDefaultData.value = data;
+		const user = data.value?.docs.find((user) => user._id == id);
+		editDefaultData.value = user;
 		resetDataToDefault();
 		editing.value = true;
 	}
@@ -102,8 +93,8 @@
 	}
 
 	async function deleteData(ids: string[]) {
-		ids.forEach((_id) => {
-			userStore.deleteUser(_id as string);
+		ids.forEach(async (_id) => {
+			await userStore.adminDeleteUser(_id as string);
 		});
 	}
 
@@ -142,9 +133,9 @@
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
-			field: "user_ratings",
-			name: "user_ratings",
-			label: "user_ratings",
+			field: "user_rates",
+			name: "user_rates",
+			label: "user_rates",
 			format: (val) => val,
 		},
 	];

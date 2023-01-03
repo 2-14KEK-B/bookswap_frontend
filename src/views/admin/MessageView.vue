@@ -4,11 +4,12 @@
 			<TableForDbData
 				title="Message"
 				:columns="columns"
-				:rows="data"
+				:rows="data?.docs"
 				:loading="loading"
+				:rows-number="rowsNumber"
 				:request="getData"
 				@delete="deleteData"
-				@filter="filter"
+				@paginate="getData"
 			/>
 		</div>
 	</q-page>
@@ -16,44 +17,36 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import $axios from "@api/axios";
 	import { useMessageStore } from "@stores/message";
-	import { handle } from "@utils/error";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
-	import { AxiosError } from "axios";
 	import { QTableColumn } from "quasar";
 	import { Message, MessageContent } from "@interfaces/message";
+	import { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	const messageStore = useMessageStore();
-	const data = ref<Message[]>([]);
-	const error = ref("");
+	const data = ref<PaginateResult<Message>>();
 	const loading = ref(true);
+	const rowsNumber = ref<number | undefined>();
 
-	async function getData() {
-		return $axios
-			.get("message/all", { transformResponse: (r) => r })
-			.then((res) => {
-				data.value = JSON.parse(res.data);
-				loading.value = false;
-			})
-			.catch((e: AxiosError) => {
-				error.value = e.message;
-				handle(e);
-			});
-	}
-
-	function filter(keyword: string) {
-		console.log(keyword);
+	async function getData(query?: PathQuery) {
+		const messages = await messageStore.adminGetMessages(query);
+		if (messages) {
+			data.value = messages;
+			rowsNumber.value = messages.totalDocs;
+			loading.value = false;
+		}
 	}
 
 	async function deleteData(ids: string[]) {
-		ids.forEach((_id) => {
-			messageStore.deleteMessage(_id as string);
+		ids.forEach(async (_id) => {
+			await messageStore.adminDeleteMessage(_id as string);
 		});
 	}
 
 	const columns: QTableColumn<Message>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
+		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
+		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
 		{
 			field: "users",
 			name: "users",

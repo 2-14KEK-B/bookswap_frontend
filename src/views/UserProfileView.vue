@@ -135,21 +135,21 @@
 	}
 
 	onMounted(() => {
-		const user = route.meta as unknown as User;
+		const user = route.meta.user;
 
 		// console.log(user);
 
 		userInfo.value = {
-			_id: user._id,
-			fullname: user.fullname || "",
-			username: user.username || "",
-			email: user.email || "",
-			createdAt: user.createdAt,
+			_id: user?._id,
+			fullname: user?.fullname || "",
+			username: user?.username || "",
+			email: user?.email || "",
+			createdAt: user?.createdAt,
 		};
 
-		uploadedBooks.value = user.books as Book[];
-		(user.borrows as Borrow[])?.forEach((b: Borrow) => {
-			if (b.from_id == user?._id) {
+		uploadedBooks.value = user?.books as Book[];
+		(user?.borrows as Borrow[])?.forEach((b: Borrow) => {
+			if (b?.from == user?._id) {
 				// console.log("lended", b);
 				lendedBooks.value.push(...(b.books as Book[]));
 			} else {

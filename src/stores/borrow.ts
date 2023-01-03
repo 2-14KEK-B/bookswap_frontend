@@ -1,35 +1,112 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { ModifyBorrow } from "@interfaces/borrow";
+import { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
+import { Loading } from "quasar";
+import { ref } from "vue";
+import { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBorrowStore = defineStore("borrow", () => {
-	async function deleteById(id: string) {
+	const borrows = ref<Borrow[]>([]);
+
+	async function getLoggedInBorrows() {
 		try {
-			const { status, data } = await $axios.delete(`/borrow/${id}`);
-			if (status < 400) {
-				console.log("deleted");
-			} else {
-				console.log(`not deleted: ${data}`);
-			}
+			Loading.show();
+			await $axios.get(`/user/me/borrow`);
 		} catch (error) {
-			console.log(error);
+			return;
 		}
 	}
-	async function editById(borrow: ModifyBorrow, id?: string) {
+
+	async function getBorrowById(id: string) {
 		try {
-			const { status, data } = await $axios.patch(`/borrow/${id}`, { ...borrow });
-			if (status < 400) {
-				console.log("edited");
-			} else {
-				console.log(`not edited: ${data}`);
-			}
+			Loading.show();
+			await $axios.get(`/borrow/${id}`);
 		} catch (error) {
-			console.log(error);
+			return;
+		}
+	}
+
+	async function createBorrow(borrowData: CreateBorrow) {
+		try {
+			Loading.show();
+			await $axios.post(`/borrow`, borrowData);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function editBorrow(borrowData: ModifyBorrow, id?: string) {
+		try {
+			Loading.show();
+			await $axios.patch(`/borrow/${id}`, borrowData);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function deleteBorrow(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/borrow/${id}`);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminGetBorrows(query: PathQuery = { skip: 0, limit: 10 }) {
+		try {
+			Loading.show();
+
+			let path = `/admin/borrow?skip=${query.skip}&limit=${query.limit}`;
+			if (query.sortBy) {
+				path += `&sortBy=${query.sortBy}`;
+			}
+			if (query.keyword) {
+				path += `&keyword=${query.keyword}`;
+			}
+
+			const { data } = await $axios.get(path);
+			return data as PaginateResult<Borrow>;
+		} catch (error) {
+			return;
+		}
+	}
+	async function adminGetBorrowById(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/admin/borrow/${id}`);
+		} catch (error) {
+			return;
+		}
+	}
+	async function adminDeleteBorrow(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/admin/borrow/${id}`);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminEditBorrow(borrowData: ModifyBorrow, id?: string) {
+		try {
+			Loading.show();
+			await $axios.patch(`/admin/borrow/${id}`, borrowData);
+		} catch (error) {
+			return;
 		}
 	}
 
 	return {
-		deleteById,
-		editById,
+		borrows,
+		getLoggedInBorrows,
+		getById: getBorrowById,
+		createBorrow,
+		editBorrow,
+		deleteBorrow,
+		adminGetBorrows,
+		adminGetBorrowById,
+		adminDeleteBorrow,
+		adminEditBorrow,
 	};
 });

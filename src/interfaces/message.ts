@@ -4,6 +4,7 @@ interface MessagesToChat {
 	_id: string;
 	user: User;
 	contents: MessageContent[];
+	totalCount?: number;
 }
 
 interface MessageContent {
@@ -20,6 +21,7 @@ interface Message {
 	users: (User | string)[];
 	otherUser?: User;
 	message_contents: MessageContent[];
+	totalCount?: number;
 }
 
 interface CreateMessage {

@@ -84,12 +84,9 @@
 	const input = ref("");
 	const inputRef = ref<QInput>();
 	const chatRef = ref<QScrollArea>();
-	const loading = ref(false);
 
 	async function load(index: number, done: (stop?: boolean) => void) {
-		loading.value = true;
 		const stop = await messageStore.loadMessage(index);
-		loading.value = false;
 		done(!!stop);
 	}
 

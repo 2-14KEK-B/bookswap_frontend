@@ -41,16 +41,8 @@
 	const book = ref<Book>();
 
 	onMounted(() => {
-		book.value = route.meta as unknown as Book;
+		book.value = route.meta.book;
 	});
 </script>
 
-<style lang="scss" scoped>
-	.card {
-		width: 250px;
-	}
-	.pic {
-		max-width: 250px;
-		max-width: 250px;
-	}
-</style>
+<style scoped></style>

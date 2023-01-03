@@ -1,45 +1,113 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { CreateBook, Book, ModifyBook } from "@interfaces/book";
-import { AxiosResponse } from "axios";
-import { handle } from "@utils/error";
+import { Book, CreateBook, ModifyBook } from "@interfaces/book";
+import { Loading } from "quasar";
+import { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBookStore = defineStore("book", () => {
-	function handleBookSuccess(res: AxiosResponse) {
-		const book: Book = res.data;
-		localStorage.setItem("book", JSON.stringify(book));
+	async function getLoggedInBooks() {
+		try {
+			Loading.show();
+			const { data } = await $axios.get("/user/me/book");
+			return data as Book[];
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function getBooks(path: string) {
+		try {
+			Loading.show();
+			const { data } = await $axios.get(`/book/${path}`);
+			return data as PaginateResult<Book>;
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function getBookById(id: string) {
+		try {
+			Loading.show();
+			const { data } = await $axios.get(`/book/${id}`);
+			return data as Book;
+		} catch (error) {
+			return;
+		}
 	}
 
 	async function createBook(userData: CreateBook) {
-		return $axios
-			.post("/book", userData)
-			.then(async (res) => {
-				handleBookSuccess(res);
-			})
-			.catch(handle);
+		try {
+			Loading.show();
+			await $axios.post("/book", userData);
+		} catch (error) {
+			return;
+		}
 	}
 
-	async function deleteBook(id: string) {
-		return $axios
-			.delete(`/book/${id}`)
-			.then(async (res) => {
-				console.log(res.status);
-			})
-			.catch(handle);
+	async function deleteBookById(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/book/${id}`);
+		} catch (error) {
+			return;
+		}
 	}
 
-	async function edit(book: ModifyBook, id: string) {
-		return $axios
-			.patch(`/book/${id}`, book)
-			.then(async (res) => {
-				console.log(res.status);
-			})
-			.catch(handle);
+	async function editBookById(book: ModifyBook, id: string) {
+		try {
+			Loading.show();
+			await $axios.patch(`/book/${id}`, book);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminGetBooks(query: PathQuery = { skip: 0, limit: 10 }) {
+		try {
+			Loading.show();
+
+			let path = `/admin/book?skip=${query.skip}&limit=${query.limit}`;
+			if (query.sortBy) {
+				path += `&sortBy=${query.sortBy}`;
+			}
+			if (query.keyword) {
+				path += `&keyword=${query.keyword}`;
+			}
+
+			const { data } = await $axios.get(path);
+			return data as PaginateResult<Book>;
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminDeleteBookById(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/admin/book/${id}`);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminEditBookById(book: ModifyBook, id: string) {
+		try {
+			Loading.show();
+			await $axios.patch(`/admin/book/${id}`, book);
+		} catch (error) {
+			return;
+		}
 	}
 
 	return {
+		getBooks,
+		getLoggedInBooks,
+		getBookById,
 		createBook,
-		deleteBook,
-		edit,
+		deleteBookById,
+		editBookById,
+		adminGetBooks,
+		adminDeleteBookById,
+		adminEditBookById,
 	};
 });

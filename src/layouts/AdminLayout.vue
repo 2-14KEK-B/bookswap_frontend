@@ -1,6 +1,6 @@
 <template>
 	<q-layout view="hHh lpR fFf">
-		<q-header elevated class="bg-accent text-white">
+		<q-header class="bg-accent text-white">
 			<q-toolbar>
 				<q-btn dense flat round :icon="matMenu" @click="leftDrawerOpen = !leftDrawerOpen" />
 				<q-toolbar-title>
@@ -84,9 +84,11 @@
 	} from "@quasar/extras/mdi-v7";
 	import { matMenu } from "@quasar/extras/material-icons";
 	import { matPerson, matLogout } from "@quasar/extras/material-icons";
+	import { userAuthStore } from "@stores/auth";
 
 	const router = useRouter();
 	const userStore = useUserStore();
+	const authStore = userAuthStore();
 	const quasar = useQuasar();
 	const leftDrawerOpen = ref(false);
 
@@ -146,7 +148,7 @@
 		},
 		{
 			name: "Logout",
-			action: userStore.logOut,
+			action: authStore.logOut,
 			icon: matLogout,
 		},
 	]);

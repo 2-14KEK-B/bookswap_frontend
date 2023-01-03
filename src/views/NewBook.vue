@@ -14,13 +14,7 @@
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
 			<q-input v-model="input.picture" label="Picture" />
-			<q-input
-				v-model="input.price"
-				label="Price"
-				lazy-rules
-				type="number"
-				:rules="[(val: number) => (!isNaN(val)) || 'Please add valid price']"
-			/>
+			<q-input v-model="input.price" label="Price" type="number" />
 			<q-toggle
 				v-model="input.for_borrow"
 				color="green"
@@ -40,11 +34,19 @@
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
 
-	const defaultValue = { author: "", title: "", picture: "", price: 0, for_borrow: true };
+	type newBorrow = { author: string; title: string; picture?: string; price?: number; for_borrow: boolean };
+
+	const defaultValue: newBorrow = {
+		author: "",
+		title: "",
+		picture: undefined,
+		price: undefined,
+		for_borrow: true,
+	};
 	const bookStore = useBookStore();
 	const router = useRouter();
 
-	const input = ref(defaultValue);
+	const input = ref<newBorrow>(defaultValue);
 
 	async function bookCreating() {
 		await bookStore.createBook(input.value);
