@@ -1,9 +1,4 @@
-interface BookRating {
-	_id: string;
-	from_id: string;
-	comment?: string;
-	rating: number;
-}
+import type { BookRate } from "./bookRate";
 
 interface Book {
 	_id?: string;
@@ -17,7 +12,7 @@ interface Book {
 	price?: number;
 	available?: boolean;
 	for_borrow: boolean;
-	ratings?: (BookRating | string)[];
+	rates?: (BookRate | string)[];
 	__v?: number;
 }
 
@@ -38,7 +33,6 @@ interface ModifyBook {
 	price?: number;
 	for_borrow?: boolean;
 	available?: boolean;
-	ratings?: (BookRating | string)[];
 }
 
-export { Book, BookRating, CreateBook, ModifyBook };
+export { Book, CreateBook, ModifyBook };

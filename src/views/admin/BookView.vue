@@ -4,12 +4,13 @@
 			<TableForDbData
 				:title="'Book'"
 				:columns="columns"
-				:rows="books"
+				:rows="data?.docs"
 				:request="getData"
 				:loading="loading"
+				:rows-number="rowsNumber"
 				@delete="deleteData"
 				@edit="openEditModal"
-				@filter="filter"
+				@paginate="getData"
 			>
 				{{ error }}
 			</TableForDbData>
@@ -35,13 +36,13 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import $axios from "@api/axios";
 	import { useBookStore } from "@stores/book";
 	import EditTableData from "@components/admin/EditTableData.vue";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
-	import { Book, BookRating } from "@interfaces/book";
-	import { QTableColumn } from "quasar";
-	import { AxiosError } from "axios";
+	import type { Book } from "@interfaces/book";
+	import type { BookRate } from "@interfaces/bookRate";
+	import type { QTableColumn } from "quasar";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		author?: string;
@@ -63,31 +64,21 @@
 	};
 
 	const bookStore = useBookStore();
-	const books = ref<Book[]>([]);
+	const data = ref<PaginateResult<Book>>();
 	const editDefaultData = ref<Book>();
 	const editedData = ref<ModifiableData>(emptyData);
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
+	const rowsNumber = ref<number | undefined>();
 
-	async function getData() {
-		try {
-			const { status, data } = await $axios.get("book", { transformResponse: (res) => res });
-			if (status < 400) {
-				books.value = JSON.parse(data);
-				loading.value = false;
-			} else {
-				error.value = data;
-				console.log(`failed to get books: ${data}`);
-			}
-		} catch (err) {
-			error.value = (err as AxiosError).message;
-			console.log(err);
+	async function getData(query?: PathQuery) {
+		const books = await bookStore.adminGetBooks(query);
+		if (books) {
+			data.value = books;
+			rowsNumber.value = books.totalDocs;
+			loading.value = false;
 		}
-	}
-
-	function filter(keyword: string) {
-		console.log(keyword);
 	}
 
 	function resetDataToDefault() {
@@ -103,14 +94,14 @@
 	}
 
 	async function sendEdit() {
-		await bookStore.edit(editedData.value, editDefaultData.value?._id as string);
+		await bookStore.adminEditBookById(editedData.value, editDefaultData.value?._id as string);
 		closeEditModal();
 		await getData();
 	}
 
 	async function openEditModal(id: string) {
-		const { data } = await $axios.get(`book/${id}`);
-		editDefaultData.value = data;
+		const book = data.value?.docs.find((book) => book._id == id);
+		editDefaultData.value = book;
 		resetDataToDefault();
 		editing.value = true;
 	}
@@ -122,8 +113,11 @@
 	}
 
 	async function deleteData(ids: string[]) {
-		ids.forEach((_id) => {
-			bookStore.deleteBook(_id as string);
+		ids.forEach(async (_id) => {
+			await bookStore.adminDeleteBookById(_id);
+			if (data.value) {
+				data.value.docs = data.value.docs.filter((book) => book._id != _id);
+			}
 		});
 	}
 
@@ -144,10 +138,10 @@
 		{ field: "available", name: "available", label: "available", sortable: true },
 		{ field: "for_borrow", name: "for_borrow", label: "for_borrow", sortable: true },
 		{
-			field: "ratings",
-			name: "ratings",
-			label: "ratings",
-			format: (val: BookRating[]) => `[${val.map((r) => r._id).join(", ")}]`,
+			field: "rates",
+			name: "rates",
+			label: "rates",
+			format: (val: BookRate[]) => `[${val.map((r) => r._id).join(", ")}]`,
 		},
 		{ field: "__v", name: "__v", label: "__v" },
 	];

@@ -1,5 +1,6 @@
-import $axios from "@api/axios";
-import { RouteRecordRaw } from "vue-router";
+import { useBookStore } from "@stores/book";
+import { useUserStore } from "@stores/user";
+import type { RouteRecordRaw } from "vue-router";
 
 export const routes: RouteRecordRaw[] = [
 	{
@@ -35,8 +36,9 @@ export const routes: RouteRecordRaw[] = [
 				path: "me",
 				name: "myProfile",
 				component: () => import("@views/MyProfileView.vue"),
-				beforeEnter: async (to) => {
-					await $axios.get("user/me").then((res) => (to.meta = res.data));
+				beforeEnter: async () => {
+					const userStore = useUserStore();
+					await userStore.getLoggedIn();
 				},
 			},
 			{
@@ -44,7 +46,9 @@ export const routes: RouteRecordRaw[] = [
 				name: "userProfile",
 				component: () => import("@views/UserProfileView.vue"),
 				beforeEnter: async (to) => {
-					await $axios.get(`user/${to.params.id}`).then((res) => (to.meta = res.data));
+					const userStore = useUserStore();
+					const user = await userStore.getById(to.params.id as string);
+					to.meta.user = user;
 				},
 			},
 			{
@@ -52,7 +56,9 @@ export const routes: RouteRecordRaw[] = [
 				name: "book",
 				component: () => import("@views/BookView.vue"),
 				beforeEnter: async (to) => {
-					await $axios.get(`book/${to.params.id}`).then((res) => (to.meta = res.data));
+					const userStore = useBookStore();
+					const book = await userStore.getBookById(to.params.id as string);
+					to.meta.book = book;
 				},
 			},
 			{

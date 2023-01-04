@@ -1,19 +1,13 @@
-import { useUserStore } from "@stores/user";
-import { Message } from "@interfaces/message";
-import { User } from "@interfaces/user";
+import type { Message } from "@interfaces/message";
+import type { User } from "@interfaces/user";
 
-export function setInfoFromOtherUser(message: Message, sender?: User) {
-	if (sender) return { ...message, otherUser: sender };
-
-	const userStore = useUserStore();
-
+export function setInfoFromOtherUser(message: Message, loggedInId: string) {
 	const otherUser = (message.users as User[]).find((user): User | undefined => {
-		if (user._id != userStore.loggedInUser?._id) {
+		if (user._id != loggedInId) {
+			// console.log("otherUser: ", user._id);
 			user.displayName = user.fullname || user.username || user.email;
 			return user;
 		}
 	});
-	console.log(otherUser);
-	const updatedMessage: Message = { ...message, otherUser: otherUser };
-	return updatedMessage;
+	return { ...message, otherUser: otherUser };
 }

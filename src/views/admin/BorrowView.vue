@@ -4,12 +4,13 @@
 			<TableForDbData
 				:title="'Borrow'"
 				:columns="columns"
-				:rows="borrows"
+				:rows="data?.docs"
 				:loading="loading"
 				:request="getData"
+				:rows-number="rowsNumber"
 				@delete="deleteData"
 				@edit="openEditModal"
-				@filter="filter"
+				@paginate="getData"
 			/>
 			{{ error }}
 		</div>
@@ -28,13 +29,13 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { QTableColumn } from "quasar";
-	import $axios from "@api/axios";
-	import { AxiosError } from "axios";
 	import { useBorrowStore } from "@stores/borrow";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
-	import { Borrow } from "@interfaces/borrow";
+	import type { QTableColumn } from "quasar";
+	import type { Borrow } from "@interfaces/borrow";
+	import type { Book } from "@interfaces/book";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		verified?: boolean;
@@ -43,23 +44,18 @@
 	const borrowStore = useBorrowStore();
 	const editDefaultData = ref<Borrow>();
 	const editedData = ref<ModifiableData>({ verified: false });
-	const borrows = ref<Borrow[]>([]);
+	const data = ref<PaginateResult<Borrow>>();
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
+	const rowsNumber = ref<number | undefined>();
 
-	async function getData() {
-		try {
-			const { status, data } = await $axios.get("borrow", { transformResponse: (res) => res });
-			if (status < 400) {
-				borrows.value = JSON.parse(data);
-				loading.value = false;
-			} else {
-				console.log(`failed to get borrows: ${data}`);
-			}
-		} catch (err) {
-			error.value = (err as AxiosError).message;
-			console.log(err);
+	async function getData(query?: PathQuery) {
+		const borrows = await borrowStore.adminGetBorrows(query);
+		if (borrows) {
+			data.value = borrows;
+			rowsNumber.value = borrows.totalDocs;
+			loading.value = false;
 		}
 	}
 
@@ -69,19 +65,15 @@
 		};
 	}
 
-	function filter(keyword: string) {
-		console.log(keyword);
-	}
-
 	async function sendEdit() {
-		await borrowStore.editById(editedData.value, editDefaultData.value?._id);
+		await borrowStore.editBorrow(editedData.value, editDefaultData.value?._id);
 		closeEditModal();
 		await getData();
 	}
 
 	async function openEditModal(id: string) {
-		const { data } = await $axios.get(`borrow/${id}`);
-		editDefaultData.value = data;
+		const borrow = data.value?.docs.find((borrow) => borrow._id == id);
+		editDefaultData.value = borrow;
 		resetDataToDefault();
 		editing.value = true;
 	}
@@ -93,8 +85,8 @@
 	}
 
 	async function deleteData(ids: string[]) {
-		ids.forEach((_id) => {
-			borrowStore.deleteById(_id);
+		ids.forEach(async (_id) => {
+			await borrowStore.adminDeleteBorrow(_id);
 		});
 	}
 
@@ -102,14 +94,14 @@
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
-		{ field: "from_id", name: "from_id", label: "from_id" },
-		{ field: "to_id", name: "to_id", label: "to_id" },
-		{ field: "books", name: "books", label: "books", format: (book: Borrow["books"]) => book?.join(", ") },
+		{ field: "from", name: "from", label: "from" },
+		{ field: "to", name: "to", label: "to" },
+		{ field: "books", name: "books", label: "books", format: (book: Book[]) => book?.join(", ") },
 		{ field: "verified", name: "verified", label: "verified" },
 		{
-			field: "user_ratings",
-			name: "user_ratings",
-			label: "user_ratings",
+			field: "user_rates",
+			name: "user_rates",
+			label: "user_rates",
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{ field: "__v", name: "__v", label: "__v" },

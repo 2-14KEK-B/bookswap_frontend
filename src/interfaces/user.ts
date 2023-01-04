@@ -1,6 +1,6 @@
-import { Book } from "./book";
-import { Borrow } from "./borrow";
-import { Message } from "./message";
+import type { Book } from "./book";
+import type { Borrow } from "./borrow";
+import type { Message } from "./message";
 
 interface User {
 	_id?: string;
@@ -18,7 +18,7 @@ interface User {
 	books?: (Book | string)[];
 	messages?: (Message | string)[];
 	rated_books?: string[];
-	user_ratings?: string[];
+	user_rates?: string[];
 	borrows?: (Borrow | string)[];
 }
 
@@ -29,5 +29,4 @@ interface EditUser {
 	email?: string;
 }
 
-export { User };
-export { EditUser };
+export { User, EditUser };

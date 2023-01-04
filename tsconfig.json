@@ -9,6 +9,7 @@
 		"sourceMap": true,
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
+		"importsNotUsedAsValues": "error",
 		"lib": ["ESNext", "DOM"],
 		"skipLibCheck": true,
 		"types": ["vite/client", "pinia", "vue3-google-login"],

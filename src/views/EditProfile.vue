@@ -41,7 +41,7 @@
 		// 	console.log(userData.value[x as keyof ModifiableData], defaultValue[x as keyof ModifiableData]);
 		// });
 		if (Object.keys(userData.value).length > 0) {
-			await userStore.edit(userData.value);
+			await userStore.editLoggedIn(userData.value);
 			await router.push("/me");
 		}
 	}

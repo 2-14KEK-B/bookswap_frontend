@@ -1,5 +1,5 @@
-import { App } from "vue";
 import vue3GoogleLogin from "vue3-google-login";
+import type { App } from "vue";
 
 export const install = (app: App) => {
 	app.use(vue3GoogleLogin, {

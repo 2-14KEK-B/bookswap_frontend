@@ -1,26 +1,20 @@
-import { Book } from "./book";
-
-interface UserRating {
-	_id?: string;
-	from_id?: string;
-	rating: boolean;
-	comment?: string;
-}
+import type { Book } from "./book";
+import type { UserRate } from "./userRate";
 
 interface Borrow {
 	_id?: string;
 	createdAt: string;
 	updatedAt: string;
-	from_id: string;
-	to_id: string;
+	from: string;
+	to: string;
 	books: (Book | string)[];
 	verified: boolean;
-	user_ratings?: (UserRating | string)[];
+	user_rates?: (UserRate | string)[];
 	__v?: number;
 }
 
 interface CreateBorrow {
-	from_id: string;
+	from: string;
 	books: string[];
 }
 
@@ -28,4 +22,4 @@ interface ModifyBorrow {
 	verified?: boolean;
 }
 
-export { Borrow, CreateBorrow, ModifyBorrow, UserRating };
+export { Borrow, CreateBorrow, ModifyBorrow };
