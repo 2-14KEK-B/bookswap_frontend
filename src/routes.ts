@@ -55,6 +55,18 @@ export const routes: RouteRecordRaw[] = [
 					await $axios.get(`book/${to.params.id}`).then((res) => (to.meta = res.data));
 				},
 			},
+			{
+				path: "borrow/:id",
+				name: "borrowIt",
+				component: () => import("@views/BorrowIt.vue"),
+				beforeEnter: async (to) => {
+					await $axios.get(`book/${to.params.id}`).then(async (res) => {
+						to.meta.book = res.data; await $axios.get(`user/${res.data.uploader}`).then((res) => (to.meta.user = res.data))}
+							)
+					//  await $axios.get(`user/${to.params.book}`).then((res) => (to.meta.user = res.data)));
+					
+				},
+			},
 		],
 	},
 	{
@@ -93,4 +105,5 @@ export const routes: RouteRecordRaw[] = [
 		name: "notfound",
 		component: () => import("@views/404View.vue"),
 	},
+
 ];

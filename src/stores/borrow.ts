@@ -28,8 +28,17 @@ export const useBorrowStore = defineStore("borrow", () => {
 		}
 	}
 
+	async function sendBorrow(userid: string, bookid: string) {
+		try {
+			await $axios.post('/borrow', {from_id:userid, books:[bookid]})
+		} catch (error) {
+			console.log(error);
+		}
+	}
+	
 	return {
 		deleteById,
 		editById,
+		sendBorrow,
 	};
 });

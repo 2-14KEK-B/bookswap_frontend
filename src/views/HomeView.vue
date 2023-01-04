@@ -48,7 +48,7 @@
 
 				<q-card-actions align="around">
 					<q-btn flat @click.prevent="router.push({ name: 'book', params: { id: book._id } })">Open book</q-btn>
-					<q-btn flat :disable="!book.available">Borrow it</q-btn>
+					<q-btn flat :disable="!book.available" @click.prevent="router.push({ name: 'borrowIt', params: { id: book._id } })">Borrow it</q-btn>
 				</q-card-actions>
 			</q-card>
 		</div>
