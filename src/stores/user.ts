@@ -1,109 +1,107 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import $axios from "@api/axios";
-import socket from "@api/socket";
-import { router } from "../modules/router";
-import { useMessageStore } from "./message";
-import { handle } from "@utils/error";
-import { setInfoFromOtherUser } from "@utils/message";
-import { AxiosResponse } from "axios";
-import { Message } from "@interfaces/message";
-import { User, EditUser } from "@interfaces/user";
-import { LoginCred, RegisterCred } from "@interfaces/auth";
+import { Loading, Notify } from "quasar";
+import { matClose } from "@quasar/extras/material-icons";
+import type { User, EditUser } from "@interfaces/user";
+import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
 
-	function saveUserData(res: AxiosResponse) {
-		const messageStore = useMessageStore();
-		const user: User = res.data;
-		// console.log(user);
-		localStorage.setItem("user_id", user._id as string);
-		loggedInUser.value = user;
-		messageStore.messages = (user.messages as Message[])?.map((message) => setInfoFromOtherUser(message));
-		socket.connect();
-		socket.emit("user-online", user._id as string);
-	}
+	Notify.setDefaults({
+		progress: true,
+		position: "bottom-right",
+		timeout: 2000,
+		actions: [{ icon: matClose, color: "white" }],
+	});
 
-	async function checkValidUser() {
-		return $axios
-			.get("auth")
-			.then((res) => {
-				saveUserData(res);
-			})
-			.catch((error) => {
-				handle(error);
-			});
-	}
+	async function getById(id: string) {
+		try {
+			Loading.show();
+			const { data } = await $axios.get(`/user/${id}`);
 
-	async function login(userData: LoginCred) {
-		const isEmail = new RegExp(
-			/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
-		);
-		const loginData: { email?: string; username?: string; password: string } = { password: userData.password };
-		if (isEmail.test(userData.emailOrUsername)) {
-			loginData.email = userData.emailOrUsername;
-		} else {
-			loginData.username = userData.emailOrUsername;
+			return data as User;
+		} catch (error) {
+			return;
 		}
-		return $axios
-			.post("auth/login", loginData)
-			.then(async (res) => {
-				saveUserData(res);
-				router.push({ name: "home" });
-			})
-			.catch(handle);
-	}
-	async function loginWithGoogle(token: string) {
-		return $axios
-			.post("auth/google", { token: token })
-			.then(async (res) => {
-				saveUserData(res);
-				router.push({ name: "home" });
-			})
-			.catch(handle);
-	}
-	async function edit(userData: EditUser, id: string = loggedInUser.value?._id as string) {
-		return $axios
-			.patch(`user/${id}`, userData)
-			.then(async (res) => {
-				if (loggedInUser.value?._id === id) {
-					saveUserData(res);
-				}
-			})
-			.catch(handle);
 	}
 
-	async function deleteUser(id: string) {
-		return $axios
-			.delete(`/user/${id}`)
-			.then(async (res) => {
-				saveUserData(res);
-			})
-			.catch(handle);
+	async function getLoggedIn() {
+		try {
+			Loading.show();
+			const { data } = await $axios.get(`/user/me`);
+
+			loggedInUser.value = data;
+		} catch (error) {
+			return;
+		}
 	}
 
-	async function register(userData: RegisterCred) {
-		return $axios.post("auth/register", userData).catch(handle);
+	async function editLoggedIn(userData: EditUser) {
+		try {
+			Loading.show();
+			const { data } = await $axios.patch(`/user/me`, userData);
+
+			loggedInUser.value = data;
+		} catch (error) {
+			return;
+		}
 	}
 
-	async function logOut() {
-		$axios.post("auth/logout").catch(handle);
-		socket.disconnect();
-		localStorage.removeItem("user_id");
-		loggedInUser.value = undefined;
-		await router.push({ name: "auth" });
+	async function deleteLoggedIn() {
+		try {
+			Loading.show();
+			await $axios.delete(`/user/me`);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminGetUsers(query: PathQuery = { skip: 0, limit: 10 }) {
+		try {
+			Loading.show();
+
+			let path = `/admin/user?skip=${query.skip}&limit=${query.limit}`;
+			if (query.sortBy) {
+				path += `&sortBy=${query.sortBy}`;
+			}
+			if (query.keyword) {
+				path += `&keyword=${query.keyword}`;
+			}
+
+			const { data } = await $axios.get(path);
+			return data as PaginateResult<User>;
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function adminEditUser(id: string, userData: EditUser) {
+		try {
+			Loading.show();
+			await $axios.patch(`/admin/user/${id}`, userData);
+		} catch (error) {
+			return;
+		}
+	}
+	async function adminDeleteUser(id: string) {
+		try {
+			Loading.show();
+			await $axios.delete(`/admin/user/${id}`);
+		} catch (error) {
+			return;
+		}
 	}
 
 	return {
-		socket,
 		loggedInUser,
-		login,
-		loginWithGoogle,
-		register,
-		logOut,
-		checkValidUser,
-		edit,
-		deleteUser,
+		getById,
+		getLoggedIn,
+		editLoggedIn,
+		deleteLoggedIn,
+		adminGetUsers,
+		adminEditUser,
+		adminDeleteUser,
 	};
 });

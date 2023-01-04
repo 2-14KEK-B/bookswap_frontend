@@ -33,18 +33,11 @@
 </template>
 
 <script setup lang="ts">
-	import { User } from "@interfaces/user";
 	import { useUserStore } from "@stores/user";
-	import { onMounted, ref } from "vue";
-	import { useRoute } from "vue-router";
+	import { ref } from "vue";
 
 	const userStore = useUserStore();
-	const route = useRoute();
 	const me = ref(userStore.loggedInUser);
-
-	onMounted(() => {
-		me.value = route.meta as unknown as User;
-	});
 </script>
 
 <style scoped></style>

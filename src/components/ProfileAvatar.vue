@@ -15,13 +15,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted } from "vue";
-
-	const props = defineProps<{ src?: string; alt?: string }>();
-
-	onMounted(() => {
-		console.log(props);
-	});
+	defineProps<{ src?: string; alt?: string }>();
 </script>
 
 <style scoped></style>

@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 export async function handle(error: AxiosError) {
 	if (error.response) {

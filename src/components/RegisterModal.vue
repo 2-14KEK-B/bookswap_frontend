@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 	import { computed, reactive } from "vue";
-	import { RegisterCred } from "@interfaces/auth";
+	import type { RegisterCred } from "@interfaces/auth";
 
 	const emits = defineEmits<{ (e: "register", userCred: RegisterCred): void; (e: "to-login"): void }>();
 	const userCred = reactive<RegisterCred>({ email: "", username: "", password: "" });

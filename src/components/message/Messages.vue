@@ -70,11 +70,8 @@
 	import relativeTime from "dayjs/plugin/relativeTime";
 	import { useMessageStore } from "@stores/message";
 	import { useUserStore } from "@stores/user";
-	import { User } from "@interfaces/user";
 	import { QInput, QScrollArea } from "quasar";
-	import { setInfoFromOtherUser } from "@utils/message";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
-	import { Message, MessageContent } from "@interfaces/message";
 
 	extend(relativeTime);
 	const userStore = useUserStore();
@@ -84,12 +81,9 @@
 	const input = ref("");
 	const inputRef = ref<QInput>();
 	const chatRef = ref<QScrollArea>();
-	const loading = ref(false);
 
 	async function load(index: number, done: (stop?: boolean) => void) {
-		loading.value = true;
 		const stop = await messageStore.loadMessage(index);
-		loading.value = false;
 		done(!!stop);
 	}
 
@@ -101,23 +95,14 @@
 	}
 
 	async function send() {
-		await messageStore.sendMessage(input.value);
+		await messageStore.sendMessageToSelectedMessage(input.value);
 		moveToBottom();
 		input.value = "";
 		inputRef.value?.focus();
 	}
 
-	socket.on("msg-recieved", (data: Message | MessageContent, sender?: User) => {
-		if (sender) {
-			messageStore.messages.push(setInfoFromOtherUser(data as Message, sender));
-		} else {
-			messageStore.messages.forEach((message) => {
-				if (message.otherUser?._id == (data as MessageContent).sender_id) {
-					message.message_contents.push(data as MessageContent);
-					moveToBottom();
-				}
-			});
-		}
+	socket.on("msg-sent", () => {
+		moveToBottom();
 	});
 
 	const emits = defineEmits<{ (e: "openContacts"): void }>();

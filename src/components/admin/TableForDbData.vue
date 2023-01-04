@@ -1,7 +1,8 @@
 <template>
 	<q-table
 		ref="tableRef"
-		v-model:selected="selected"
+		v-model:pagination="pagination"
+		v-model:selected="selectedArray"
 		grid
 		:grid-header="$q.screen.gt.sm"
 		:title="title"
@@ -9,7 +10,7 @@
 		:rows="rows"
 		:columns="columns"
 		row-key="_id"
-		@request="request"
+		@request="onRequest"
 	>
 		<template #header="props">
 			<q-tr :props="props">
@@ -21,43 +22,32 @@
 
 		<template #top-right>
 			<q-btn
-				v-if="selected.length == 1 && title != 'Message'"
+				v-if="selectedArray.length == 1 && title != 'Message'"
 				class="q-mx-sm"
 				color="secondary"
-				@click.prevent="emits('edit', selected[0]._id)"
-			>
-				Modify
-			</q-btn>
-			<q-btn
-				v-if="selected.length"
-				class="q-mx-sm"
-				color="red"
-				@click.prevent="
-					emits(
-						'delete',
-						selected.map((s) => s._id),
-					)
-				"
-			>
-				Delete
-			</q-btn>
-			<q-input
-				v-model="filter"
-				dense
-				debounce="300"
-				placeholder="Search"
-				type="text"
-				@keydown.enter="emits('filter', filter)"
-			>
+				label="Modify"
+				@click.prevent="onEdit"
+			/>
+			<q-btn v-if="selectedArray.length" class="q-mx-sm" color="red" label="Delete" @click.prevent="onDelete" />
+			<q-input v-model="filter" dense debounce="300" placeholder="Search" type="text" @keydown.enter="onRequest">
 				<template #append>
-					<q-icon :name="matSearch" />
+					<q-btn flat round :icon="matSearch" @click.prevent="onRequest" />
 				</template>
 			</q-input>
+			<q-btn color="grey-7" round dense flat :icon="matMoreVert">
+				<q-menu auto-close :offset="[50, 10]">
+					<q-list>
+						<q-item clickable>
+							<q-item-section no-wrap @click="exportTable(columns, rows, title)">Export to csv</q-item-section>
+						</q-item>
+					</q-list>
+				</q-menu>
+			</q-btn>
 		</template>
 
 		<template #item="props">
 			<div
-				class="q-pa-xs col-xs-12 col-sm-12 col-md-6 col-lg-3 grid-style-transition"
+				class="q-pa-xs col-xs-12 col-sm-12 col-md-6 col-lg-6 grid-style-transition"
 				:style="props.selected ? 'transform: scale(0.95);' : ''"
 			>
 				<q-card :class="props.selected ? ($q.dark.isActive ? 'bg-grey-10' : 'bg-gray-2') : ''">
@@ -92,24 +82,61 @@
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
 	import { QTableProps, QTable } from "quasar";
-	import { matSearch } from "@quasar/extras/material-icons";
+	import { matSearch, matMoreVert } from "@quasar/extras/material-icons";
+	import exportTable from "@utils/exportTable";
+	import type { PathQuery } from "@interfaces/paginate";
 
-	const tableRef = ref();
-	const selected = ref<{ _id: string }[]>([]);
-	const filter = ref("");
-
-	defineProps<{
+	const componentProps = defineProps<{
 		columns: QTableProps["columns"];
 		title: QTableProps["title"];
 		rows: QTableProps["rows"];
-		request: () => void;
+		rowsNumber?: number;
 	}>();
+
+	const tableRef = ref();
+	const selectedArray = ref<{ _id: string }[]>([]);
+	const filter = ref("");
+	const pagination = ref<QTableProps["pagination"]>({
+		sortBy: "createdAt",
+		descending: true,
+		page: 1,
+		rowsPerPage: 10,
+		rowsNumber: componentProps.rowsNumber,
+	});
 
 	const emits = defineEmits<{
 		(e: "edit", id: string): void;
 		(e: "delete", ids: string[]): void;
-		(e: "filter", keyword: string): void;
+		(e: "paginate", quary: PathQuery): void;
 	}>();
+
+	function onEdit() {
+		emits("edit", selectedArray.value[0]._id);
+		selectedArray.value = [];
+	}
+	function onDelete() {
+		emits(
+			"delete",
+			selectedArray.value.map((selected) => selected._id),
+		);
+		selectedArray.value = [];
+	}
+
+	function onRequest() {
+		const page = pagination.value?.page as number;
+		const limit = pagination.value?.rowsPerPage as number;
+		const sort = pagination.value?.descending ? "desc" : "asc";
+
+		const query: PathQuery = {
+			skip: limit * (page - 1),
+			limit: limit,
+			sort: sort,
+			sortBy: pagination.value?.sortBy,
+			keyword: filter.value,
+		};
+
+		emits("paginate", query);
+	}
 
 	onMounted(() => {
 		tableRef.value.requestServerInteraction();

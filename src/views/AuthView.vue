@@ -23,9 +23,9 @@
 	import { ref } from "vue";
 	import Register from "@components/RegisterModal.vue";
 	import Login from "@components/LoginModal.vue";
-	import { useUserStore } from "@stores/user";
+	import { userAuthStore } from "@stores/auth";
 
-	const { login, register, loginWithGoogle } = useUserStore();
+	const { login, register, loginWithGoogle } = userAuthStore();
 	const islogin = ref(true);
 </script>
 
