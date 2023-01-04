@@ -1,4 +1,4 @@
-import { BookRate } from "./bookRate";
+import type { BookRate } from "./bookRate";
 
 interface Book {
 	_id?: string;

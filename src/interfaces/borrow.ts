@@ -1,5 +1,5 @@
-import { Book } from "./book";
-import { UserRate } from "./userRate";
+import type { Book } from "./book";
+import type { UserRate } from "./userRate";
 
 interface Borrow {
 	_id?: string;
