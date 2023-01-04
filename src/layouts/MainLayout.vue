@@ -7,8 +7,12 @@
 				</q-toolbar-title>
 
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell">
+						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
+					</q-btn>
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage">
+						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
+					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
 							<ProfileAvatar
