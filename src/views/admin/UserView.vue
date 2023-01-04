@@ -31,13 +31,13 @@
 </template>
 
 <script setup lang="ts">
-	import { QTableColumn } from "quasar";
-	import { User } from "@interfaces/user";
 	import { ref } from "vue";
 	import { useUserStore } from "@stores/user";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
-	import { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import type { User } from "@interfaces/user";
+	import type { QTableColumn } from "quasar";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		username?: string;

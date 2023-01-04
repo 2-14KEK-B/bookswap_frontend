@@ -107,9 +107,9 @@
 	import { useRoute } from "vue-router";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
-	import { User } from "@interfaces/user";
-	import { Book } from "@interfaces/book";
-	import { Borrow } from "@interfaces/borrow";
+	import type { User } from "@interfaces/user";
+	import type { Book } from "@interfaces/book";
+	import type { Borrow } from "@interfaces/borrow";
 
 	const route = useRoute();
 	const messageStore = useMessageStore();
@@ -131,13 +131,11 @@
 		if (messageInput.value.length == 0) {
 			return;
 		}
-		await messageStore.sendMessage(messageInput.value, userInfo.value?._id);
+		await messageStore.sendMessageToUserId(messageInput.value, userInfo.value?._id as string);
 	}
 
 	onMounted(() => {
 		const user = route.meta.user;
-
-		// console.log(user);
 
 		userInfo.value = {
 			_id: user?._id,

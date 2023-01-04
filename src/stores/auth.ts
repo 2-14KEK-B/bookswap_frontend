@@ -6,9 +6,9 @@ import { useUserStore } from "./user";
 import { useMessageStore } from "./message";
 import { router } from "../modules/router";
 import { setInfoFromOtherUser } from "@utils/message";
-import { LoginCred, RegisterCred } from "@interfaces/auth";
-import { Message } from "@interfaces/message";
-import { User } from "@interfaces/user";
+import type { LoginCred, RegisterCred } from "@interfaces/auth";
+import type { Message } from "@interfaces/message";
+import type { User } from "@interfaces/user";
 
 export const userAuthStore = defineStore("auth", () => {
 	async function checkValidUser() {
@@ -34,9 +34,12 @@ export const userAuthStore = defineStore("auth", () => {
 		const userStore = useUserStore();
 		const messageStore = useMessageStore();
 		localStorage.setItem("user_id", user._id as string);
+		// console.log("loggedInUser._id: ", user._id);
 
 		userStore.loggedInUser = user;
-		messageStore.messages = (user.messages as Message[])?.map((message) => setInfoFromOtherUser(message));
+		messageStore.messages = (user.messages as Message[])?.map((message) =>
+			setInfoFromOtherUser(message, user._id as string),
+		);
 		socket.connect();
 		socket.emit("user-online", user._id as string);
 	}

@@ -1,8 +1,8 @@
-import { App } from "vue";
 import { Quasar, QuasarPluginOptions, Dark, Notify, Loading } from "quasar";
 import quasarIconSet from "quasar/icon-set/svg-material-icons";
 import { matArrowDropUp, matWarning, matArrowDropDown, matClear, matError } from "@quasar/extras/material-icons";
 import { mdiPageNext, mdiPagePrevious, mdiPageFirst, mdiPageLast } from "@quasar/extras/mdi-v7";
+import type { App } from "vue";
 
 import "quasar/src/css/index.sass";
 

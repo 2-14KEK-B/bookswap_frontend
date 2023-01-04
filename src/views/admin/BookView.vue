@@ -39,10 +39,10 @@
 	import { useBookStore } from "@stores/book";
 	import EditTableData from "@components/admin/EditTableData.vue";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
-	import { Book } from "@interfaces/book";
-	import { BookRate } from "@interfaces/bookRate";
-	import { QTableColumn } from "quasar";
-	import { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import type { Book } from "@interfaces/book";
+	import type { BookRate } from "@interfaces/bookRate";
+	import type { QTableColumn } from "quasar";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		author?: string;

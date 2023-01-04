@@ -71,7 +71,6 @@
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import MenuDrawer from "@interfaces/drawer";
 	import {
 		mdiThemeLightDark,
 		mdiHomeCircleOutline,
@@ -85,6 +84,7 @@
 	import { matMenu } from "@quasar/extras/material-icons";
 	import { matPerson, matLogout } from "@quasar/extras/material-icons";
 	import { userAuthStore } from "@stores/auth";
+	import type MenuDrawer from "@interfaces/drawer";
 
 	const router = useRouter();
 	const userStore = useUserStore();

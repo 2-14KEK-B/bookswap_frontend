@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { App } from "vue";
 import { routes } from "../routes";
 import { useUserStore } from "@stores/user";
 import $axios from "@api/axios";
 import { userAuthStore } from "@stores/auth";
+import type { App } from "vue";
 
 const publicPathNames = ["home", "auth", "userProfile", "book"];
 const adminPathsNames = ["admin_home", "admin_user", "admin_book", "admin_borrow", "admin_message"];

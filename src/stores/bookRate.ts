@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
 import { Loading } from "quasar";
-import { BookRate, CreateBookRate, ModifyBookRate } from "@interfaces/bookRate";
+import type { BookRate, CreateBookRate, ModifyBookRate } from "@interfaces/bookRate";
 
 export const useBookStore = defineStore("bookRate", () => {
 	async function getBookRatesByBookId(id: string) {

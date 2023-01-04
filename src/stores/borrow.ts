@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import { Loading } from "quasar";
 import { ref } from "vue";
-import { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
+import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBorrowStore = defineStore("borrow", () => {
 	const borrows = ref<Borrow[]>([]);

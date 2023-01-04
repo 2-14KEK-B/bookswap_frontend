@@ -35,7 +35,7 @@
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
 	import { useRoute } from "vue-router";
-	import { Book } from "@interfaces/book";
+	import type { Book } from "@interfaces/book";
 
 	const route = useRoute();
 	const book = ref<Book>();

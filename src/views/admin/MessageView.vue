@@ -19,9 +19,9 @@
 	import { ref } from "vue";
 	import { useMessageStore } from "@stores/message";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
-	import { QTableColumn } from "quasar";
-	import { Message, MessageContent } from "@interfaces/message";
-	import { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import type { QTableColumn } from "quasar";
+	import type { Message, MessageContent } from "@interfaces/message";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	const messageStore = useMessageStore();
 	const data = ref<PaginateResult<Message>>();

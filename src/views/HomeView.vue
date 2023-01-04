@@ -72,10 +72,10 @@
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
 	import { useRouter } from "vue-router";
-	import { Book } from "@interfaces/book";
 	import { useUserStore } from "@stores/user";
 	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
 	import { useBookStore } from "@stores/book";
+	import type { Book } from "@interfaces/book";
 
 	const router = useRouter();
 	const userStore = useUserStore();

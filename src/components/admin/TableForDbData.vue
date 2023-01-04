@@ -83,8 +83,8 @@
 	import { onMounted, ref } from "vue";
 	import { QTableProps, QTable } from "quasar";
 	import { matSearch, matMoreVert } from "@quasar/extras/material-icons";
-	import { PathQuery } from "@interfaces/paginate";
 	import exportTable from "@utils/exportTable";
+	import type { PathQuery } from "@interfaces/paginate";
 
 	const componentProps = defineProps<{
 		columns: QTableProps["columns"];

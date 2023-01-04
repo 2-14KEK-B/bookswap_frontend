@@ -18,9 +18,9 @@
 
 <script setup lang="ts">
 	import { ref, computed } from "vue";
-	import { LoginCred } from "@interfaces/auth";
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
 	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
+	import type { LoginCred } from "@interfaces/auth";
 
 	const userCred = ref<LoginCred>({ emailOrUsername: "", password: "" });
 

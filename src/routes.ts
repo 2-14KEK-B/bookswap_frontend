@@ -1,6 +1,6 @@
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
-import { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 
 export const routes: RouteRecordRaw[] = [
 	{

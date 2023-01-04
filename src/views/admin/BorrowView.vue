@@ -29,13 +29,13 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { QTableColumn } from "quasar";
 	import { useBorrowStore } from "@stores/borrow";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
-	import { Borrow } from "@interfaces/borrow";
-	import { Book } from "@interfaces/book";
-	import { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import type { QTableColumn } from "quasar";
+	import type { Borrow } from "@interfaces/borrow";
+	import type { Book } from "@interfaces/book";
+	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 	interface ModifiableData {
 		verified?: boolean;

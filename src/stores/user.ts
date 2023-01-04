@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import $axios from "@api/axios";
 import { Loading, Notify } from "quasar";
-import { User, EditUser } from "@interfaces/user";
 import { matClose } from "@quasar/extras/material-icons";
-import { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { User, EditUser } from "@interfaces/user";
+import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
@@ -70,10 +70,7 @@ export const useUserStore = defineStore("user", () => {
 				path += `&keyword=${query.keyword}`;
 			}
 
-			console.log(path);
-
 			const { data } = await $axios.get(path);
-			console.log(data);
 			return data as PaginateResult<User>;
 		} catch (error) {
 			return;

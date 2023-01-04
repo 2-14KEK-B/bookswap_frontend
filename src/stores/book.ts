@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { Book, CreateBook, ModifyBook } from "@interfaces/book";
 import { Loading } from "quasar";
-import { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { Book, CreateBook, ModifyBook } from "@interfaces/book";
+import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBookStore = defineStore("book", () => {
 	async function getLoggedInBooks() {

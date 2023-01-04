@@ -14,6 +14,7 @@ $axios.interceptors.request.use(
 		return config;
 	},
 	function (error) {
+		// console.log("error from $axios.interceptors.request: ", error);
 		Loading.hide();
 		Notify.create({
 			message: error.response?.data as string,
@@ -39,12 +40,12 @@ $axios.interceptors.response.use(
 		// return response;
 	},
 	function (error) {
+		// console.log("error from $axios.interceptors.response: ", error);
 		Loading.hide();
 		Notify.create({
-			message: error.response?.data as string,
+			message: error.message as string,
 			color: "red",
 		});
-		console.log(error);
 		// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// Do something with response error
 		return Promise.reject(error);
