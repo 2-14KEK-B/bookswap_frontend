@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { Loading } from "quasar";
+import { Loading, Notify } from "quasar";
 import { ref } from "vue";
 import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
@@ -30,6 +30,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 		try {
 			Loading.show();
 			await $axios.post(`/borrow`, borrowData);
+			Notify.create({ message: "Successfully created a borrow" });
 		} catch (error) {
 			return;
 		}

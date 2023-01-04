@@ -14,14 +14,20 @@ $axios.interceptors.request.use(
 		return config;
 	},
 	function (error) {
-		// console.log("error from $axios.interceptors.request: ", error);
-		Loading.hide();
-		Notify.create({
-			message: error.response?.data as string,
-			color: "red",
-		});
-		console.log(error);
-		// Do something with request error
+		if (axios.isAxiosError(error)) {
+			console.log("error from $axios.interceptors.request: ", error.response);
+			Loading.hide();
+			Notify.create({
+				message: error.response?.data as string,
+				color: "red",
+			});
+		} else {
+			Loading.hide();
+			Notify.create({
+				message: error.message as string,
+				color: "red",
+			});
+		}
 		return Promise.reject(error);
 	},
 );
@@ -40,14 +46,20 @@ $axios.interceptors.response.use(
 		// return response;
 	},
 	function (error) {
-		// console.log("error from $axios.interceptors.response: ", error);
-		Loading.hide();
-		Notify.create({
-			message: error.message as string,
-			color: "red",
-		});
-		// Any status codes that falls outside the range of 2xx cause this function to trigger
-		// Do something with response error
+		if (axios.isAxiosError(error)) {
+			console.log("error from $axios.interceptors.request: ", error.response);
+			Loading.hide();
+			Notify.create({
+				message: error.response?.data as string,
+				color: "red",
+			});
+		} else {
+			Loading.hide();
+			Notify.create({
+				message: error.message as string,
+				color: "red",
+			});
+		}
 		return Promise.reject(error);
 	},
 );

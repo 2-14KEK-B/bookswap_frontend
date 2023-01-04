@@ -1,9 +1,12 @@
+import type { Borrow } from "./borrow";
+import type { User } from "./user";
+
 interface UserRate {
 	_id?: string;
 	createdAt: Date;
-	from: string;
-	to: string;
-	borrow: string;
+	from: User | string;
+	to: User | string;
+	borrow: Borrow | string;
 	rate: boolean;
 	comment?: string;
 }

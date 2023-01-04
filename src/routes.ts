@@ -56,21 +56,26 @@ export const routes: RouteRecordRaw[] = [
 				name: "book",
 				component: () => import("@views/BookView.vue"),
 				beforeEnter: async (to) => {
-					const userStore = useBookStore();
-					const book = await userStore.getBookById(to.params.id as string);
+					const bookStore = useBookStore();
+					const book = await bookStore.getBookById(to.params.id as string);
 					to.meta.book = book;
 				},
 			},
 			{
 				path: "borrow/:id",
-				name: "borrowIt",
-				component: () => import("@views/BorrowIt.vue"),
+				name: "borrowBook",
+				component: () => import("@views/BorrowBook.vue"),
 				beforeEnter: async (to) => {
-					await $axios.get(`book/${to.params.id}`).then(async (res) => {
-						to.meta.book = res.data; await $axios.get(`user/${res.data.uploader}`).then((res) => (to.meta.user = res.data))}
-							)
-					//  await $axios.get(`user/${to.params.book}`).then((res) => (to.meta.user = res.data)));
-					
+					const userStore = useUserStore();
+					const bookStore = useBookStore();
+					const book = await bookStore.getBookById(to.params.id as string);
+					if (book) {
+						const user = await userStore.getById(book?.uploader);
+						if (user) {
+							to.meta.book = book;
+							to.meta.user = user;
+						}
+					}
 				},
 			},
 		],
@@ -111,5 +116,4 @@ export const routes: RouteRecordRaw[] = [
 		name: "notfound",
 		component: () => import("@views/404View.vue"),
 	},
-
 ];

@@ -66,7 +66,7 @@
 									no-caps
 									:disable="!book.available"
 									label="Borrow it"
-									@click.prevent="router.push({ name: 'borrowIt', params: { id: book._id } })"
+									@click.prevent="router.push({ name: 'borrowBook', params: { id: book._id } })"
 								/>
 							</q-btn-group>
 						</q-card>

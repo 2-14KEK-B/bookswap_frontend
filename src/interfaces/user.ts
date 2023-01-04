@@ -1,6 +1,7 @@
 import type { Book } from "./book";
 import type { Borrow } from "./borrow";
 import type { Message } from "./message";
+import type { UserRate } from "./userRate";
 
 interface User {
 	_id?: string;
@@ -18,7 +19,7 @@ interface User {
 	books?: (Book | string)[];
 	messages?: (Message | string)[];
 	rated_books?: string[];
-	user_rates?: string[];
+	user_rates?: { from: (UserRate | string)[]; to: (UserRate | string)[] };
 	borrows?: (Borrow | string)[];
 }
 
