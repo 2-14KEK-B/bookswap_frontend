@@ -1,6 +1,8 @@
+import type { User } from "./user";
+
 interface BookRate {
 	_id: string;
-	from: string;
+	from: User | string;
 	comment?: string;
 	rate: number;
 }

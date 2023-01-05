@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
-import $axios from "@api/axios";
+import { ref } from "vue";
 import { Loading } from "quasar";
+import $axios from "@api/axios";
 import type { CreateUserRate, ModifyUserRate, UserRate } from "@interfaces/userRate";
+import { useBorrowStore } from "./borrow";
 
-export const useBookStore = defineStore("userRate", () => {
+export const useUserRateStore = defineStore("userRate", () => {
+	const loggedInRates = ref<{ from: UserRate[]; to: UserRate[] }>({ from: [], to: [] });
+
 	async function getLoggedInUserRates() {
 		try {
 			Loading.show();
@@ -37,7 +41,14 @@ export const useBookStore = defineStore("userRate", () => {
 	async function createUserRate(userRateData: CreateUserRate, userId: string, borrowId: string) {
 		try {
 			Loading.show();
-			await $axios.post(`/user/${userId}/rate`, { ...userRateData, borrow: borrowId });
+			const { data } = await $axios.post<UserRate>(`/user/${userId}/rate`, { ...userRateData, borrow: borrowId });
+			const borrowStore = useBorrowStore();
+			loggedInRates.value.from.push(data);
+			borrowStore.loggedInBorrows.forEach((b) => {
+				if (b._id == borrowId) {
+					b.user_rates?.push(data);
+				}
+			});
 		} catch (error) {
 			return;
 		}
@@ -88,6 +99,7 @@ export const useBookStore = defineStore("userRate", () => {
 	}
 
 	return {
+		loggedInRates,
 		getLoggedInUserRates,
 		getUserRatesByUserId,
 		getUserRatesByBorrowId,

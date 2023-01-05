@@ -1,6 +1,6 @@
 <template>
-	<q-page padding>
-		<div style="height: 70vh" class="flex justify-center items-center">
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+		<div class="flex justify-center items-center" style="height: calc(100vh - 50px)">
 			<!-- @login-with-google="loginWithGoogle" -->
 			<Login
 				v-if="islogin"
@@ -29,9 +29,4 @@
 	const islogin = ref(true);
 </script>
 
-<style scoped lang="scss">
-	.modal {
-		border: 1px solid;
-		border-radius: 20px;
-	}
-</style>
+<style scoped lang="scss"></style>

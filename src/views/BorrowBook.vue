@@ -3,7 +3,7 @@
 		<q-tabs v-model="tab" no-caps align="justify">
 			<q-tab name="uploader" label="Uploader" />
 			<q-tab name="book" label="Book" />
-			<q-tab name="other-books" :label="$q.platform.is.mobile ? 'Other books' : 'Other books from the uploader'" />
+			<q-tab name="other-books" :label="$q.screen.lt.sm ? 'Other books' : 'Other books from the uploader'" />
 		</q-tabs>
 		<q-tab-panels v-model="tab">
 			<q-tab-panel name="uploader" class="no-padding" style="height: calc(100vh - 100px)">
@@ -37,8 +37,8 @@
 					</q-tab-panel>
 				</q-tab-panels>
 			</q-tab-panel>
-			<q-tab-panel name="book" class="no-padding" style="height: calc(100vh - 100px)">
-				<q-card class="full-width full-height bg-grey-9">
+			<q-tab-panel name="book" class="no-padding bg-grey-9" style="height: calc(100vh - 135px)">
+				<q-card flat square class="full-width full-height">
 					<q-img class="q-pa-lg" :src="book?.picture" style="height: 300px" />
 					<q-card-section class="text-center">
 						<h4>Title: {{ book?.title }}</h4>
@@ -47,24 +47,29 @@
 					</q-card-section>
 					<q-btn-group spread class="fixed-bottom">
 						<q-btn
+							v-if="$q.screen.gt.xs"
 							class="button"
 							color="secondary"
 							no-caps
-							:label="$q.platform.is.mobile ? 'Check rates' : 'Check rates of this book'"
-							@click.prevent="sendBorrow"
+							padding="sm none"
+							:label="$q.screen.lt.sm ? 'Check rates' : 'Check rates of this book'"
 						/>
 						<q-btn
 							class="button"
 							color="primary"
 							no-caps
-							:label="$q.platform.is.mobile ? 'Borrow it' : 'Send borrow request'"
-							@click.prevent="sendBorrow"
+							padding="sm none"
+							:label="$q.screen.lt.sm ? 'Borrow it' : 'Send borrow request'"
+							@click="sendBorrow"
 						/>
 						<q-btn
+							v-if="book && book.uploader"
 							class="button"
 							color="secondary"
 							no-caps
-							:label="$q.platform.is.mobile ? 'Send message' : 'Send message to the uploader'"
+							padding="sm none"
+							:label="$q.screen.lt.sm ? 'Send message' : 'Send message to the uploader'"
+							@click="appStore.messageModal = true"
 						/>
 					</q-btn-group>
 				</q-card>
@@ -111,17 +116,21 @@
 			</q-tab-panel>
 		</q-tab-panels>
 	</q-page>
+	<NewMessage v-if="appStore.messageModal" :user-id="(user?._id as string)" :display-name="getDisplayName(user)" />
 </template>
 
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
 	import { useRoute, useRouter } from "vue-router";
+	import { useAppStore } from "@stores/app";
 	import { useBorrowStore } from "@stores/borrow";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
+	import NewMessage from "@components/NewMessage.vue";
 	import type { Book } from "@interfaces/book";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";
 
+	const appStore = useAppStore();
 	const borrowStore = useBorrowStore();
 	const route = useRoute();
 	const router = useRouter();

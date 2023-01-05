@@ -1,10 +1,12 @@
 import type { User } from "@interfaces/user";
 import type { UserRate } from "@interfaces/UserRate";
 
-function getDisplayName(user?: User) {
+function getDisplayName(user?: User): string {
+	// console.log("user: ", user);
 	if (user) {
 		return user.fullname || user.username || user.email;
 	}
+	return "";
 }
 
 function getLocalDate(date?: string) {

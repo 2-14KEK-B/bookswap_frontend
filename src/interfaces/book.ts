@@ -1,8 +1,9 @@
 import type { BookRate } from "./bookRate";
+import type { User } from "./user";
 
 interface Book {
 	_id?: string;
-	uploader: string;
+	uploader: User | string;
 	createdAt?: string;
 	updatedAt?: string;
 	author: string;

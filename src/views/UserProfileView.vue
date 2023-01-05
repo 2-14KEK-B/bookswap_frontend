@@ -1,6 +1,6 @@
 <template>
-	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-		<q-card>
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
+		<q-card flat square>
 			<q-card-section class="text-center">
 				<h3>{{ userInfo?.fullname || userInfo?.username || userInfo?.email }}'s profile</h3>
 				<q-img

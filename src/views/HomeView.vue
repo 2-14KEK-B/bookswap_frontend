@@ -24,7 +24,7 @@
 			<div class="col">
 				<div class="row q-col-gutter-md">
 					<div v-for="book in books" :key="book._id" class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<q-card square>
+						<q-card>
 							<q-img :src="book.picture" fit="cover" height="250px" />
 							<q-card-section class="q-px-none">
 								<div class="row items-center no-wrap">
@@ -41,7 +41,9 @@
 											<q-menu cover auto-close>
 												<q-list>
 													<q-item clickable>
-														<q-item-section @click.prevent="router.push({ name: 'userProfile', params: { id: book.uploader } })">
+														<q-item-section
+															@click.prevent="router.push({ name: 'userProfile', params: { id: book.uploader as string } })"
+														>
 															Uploader
 														</q-item-section>
 													</q-item>
@@ -54,18 +56,18 @@
 							<q-btn-group spread>
 								<q-btn
 									flat
-									outline
 									no-caps
 									label="Open"
+									padding="none"
 									@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 								/>
 								<q-btn
 									v-if="userStore.loggedInUser"
 									flat
-									outline
 									no-caps
 									:disable="!book.available"
 									label="Borrow it"
+									padding="sm none"
 									@click.prevent="router.push({ name: 'borrowBook', params: { id: book._id } })"
 								/>
 							</q-btn-group>

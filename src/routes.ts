@@ -1,3 +1,4 @@
+import type { User } from "@interfaces/user";
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
 import type { RouteRecordRaw } from "vue-router";
@@ -70,7 +71,7 @@ export const routes: RouteRecordRaw[] = [
 					const bookStore = useBookStore();
 					const book = await bookStore.getBookById(to.params.id as string);
 					if (book) {
-						const user = await userStore.getById(book?.uploader);
+						const user = await userStore.getById((book?.uploader as User)._id as string);
 						if (user) {
 							to.meta.book = book;
 							to.meta.user = user;

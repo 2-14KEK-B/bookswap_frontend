@@ -6,7 +6,7 @@ import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBorrowStore = defineStore("borrow", () => {
-	const borrows = ref<Borrow[]>([]);
+	const loggedInBorrows = ref<Borrow[]>([]);
 
 	async function getLoggedInBorrows() {
 		try {
@@ -99,7 +99,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 	}
 
 	return {
-		borrows,
+		loggedInBorrows,
 		getLoggedInBorrows,
 		getById: getBorrowById,
 		createBorrow,

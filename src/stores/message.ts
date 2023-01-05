@@ -10,11 +10,11 @@ import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useMessageStore = defineStore("message", () => {
 	const selectedMessageIndex = ref<number | null>(null);
-	const messages = ref<Message[]>([]);
+	const loggedInMessages = ref<Message[]>([]);
 
 	async function loadMessage(index: number): Promise<boolean | void> {
 		if (selectedMessageIndex.value == null) return;
-		const m = messages.value[selectedMessageIndex.value];
+		const m = loggedInMessages.value[selectedMessageIndex.value];
 		const total = m.totalCount as number;
 
 		if (total < 25) return;
@@ -39,7 +39,7 @@ export const useMessageStore = defineStore("message", () => {
 			Loading.show();
 			const userStore = useUserStore();
 			const { data } = await $axios.get("/user/me/message");
-			messages.value = (data as Message[])?.map((message) =>
+			loggedInMessages.value = (data as Message[])?.map((message) =>
 				setInfoFromOtherUser(message, userStore.loggedInUser?._id as string),
 			);
 		} catch (error) {
@@ -51,7 +51,7 @@ export const useMessageStore = defineStore("message", () => {
 		// console.log(selectedMessageIndex.value);
 		if (selectedMessageIndex.value != null) {
 			try {
-				const selectedMessage = messages.value[selectedMessageIndex.value];
+				const selectedMessage = loggedInMessages.value[selectedMessageIndex.value];
 				const userId = selectedMessage.otherUser?._id as string;
 				// console.log("otherUser?._id: ", userId);
 				const { data } = await $axios.post<{ message: MessageContent }>(`/user/${userId}/message`, {
@@ -78,14 +78,14 @@ export const useMessageStore = defineStore("message", () => {
 			});
 			if (data.isNew) {
 				// console.log("new: ", data.message);
-				messages.value.push(data.message as Message);
+				loggedInMessages.value.push(data.message as Message);
 				// console.log("messages after new message: ", messages.value);
 				socket.emit("send-new-msg", {
 					to: to_id,
 					message: data.message as Message,
 				});
 			} else {
-				const messageWithOtherUser = messages.value.find((m) => {
+				const messageWithOtherUser = loggedInMessages.value.find((m) => {
 					return m.otherUser?._id == to_id;
 				});
 				messageWithOtherUser?.message_contents.push(data.message as MessageContent);
@@ -178,29 +178,9 @@ export const useMessageStore = defineStore("message", () => {
 		}
 	}
 
-	//TODO: meg kell nézni, hogy miért nem kapja meg egyből a másik user
-
-	// socket.on("recieve-msg-cnt", (data: MessageContent) => {
-	// 	console.log("recieve-msg-cnt: ", data);
-	// 	const message = messages.value.find((message) => {
-	// 		console.log(message.otherUser?._id, data.sender_id, data.sender_id == message.otherUser?._id);
-	// 		if (message.otherUser?._id == data.sender_id) {
-	// 			return message;
-	// 		}
-	// 	});
-	// 	message?.message_contents.push(data);
-	// 	console.log("message after pushed content: ", message);
-	// });
-	// socket.on("recieve-new-msg", (data: Message) => {
-	// 	console.log("recieve-new-msg: ", data);
-	// 	const userStore = useUserStore();
-	// 	messages.value.push(setInfoFromOtherUser(data as Message, userStore.loggedInUser?._id as string));
-	// 	console.log("messages.value after pushed new message: ", messages.value);
-	// });
-
 	return {
 		selectedMessageIndex,
-		messages,
+		loggedInMessages,
 		getLoggedInUserMessages,
 		// getDisplayName,
 		sendMessageToSelectedMessage,
