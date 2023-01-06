@@ -48,19 +48,15 @@ export const useMessageStore = defineStore("message", () => {
 	}
 
 	async function sendMessageToSelectedMessage(message: string) {
-		// console.log(selectedMessageIndex.value);
 		if (selectedMessageIndex.value != null) {
 			try {
 				const selectedMessage = loggedInMessages.value[selectedMessageIndex.value];
 				const userId = selectedMessage.otherUser?._id as string;
-				// console.log("otherUser?._id: ", userId);
 				const { data } = await $axios.post<{ message: MessageContent }>(`/user/${userId}/message`, {
 					content: message,
 				});
-				// console.log("not new: ", data.message);
 				(selectedMessage.totalCount as number)++;
 				selectedMessage.message_contents.push(data.message);
-				// console.log("messages after NOT new message: ", messages.value);
 				socket.emit("send-msg-cnt", {
 					to: userId as string,
 					message: data.message as MessageContent,
@@ -77,9 +73,7 @@ export const useMessageStore = defineStore("message", () => {
 				content: message,
 			});
 			if (data.isNew) {
-				// console.log("new: ", data.message);
 				loggedInMessages.value.push(data.message as Message);
-				// console.log("messages after new message: ", messages.value);
 				socket.emit("send-new-msg", {
 					to: to_id,
 					message: data.message as Message,
@@ -89,7 +83,6 @@ export const useMessageStore = defineStore("message", () => {
 					return m.otherUser?._id == to_id;
 				});
 				messageWithOtherUser?.message_contents.push(data.message as MessageContent);
-				// console.log("messageWithOtherUser: ", messageWithOtherUser);
 				socket.emit("send-msg-cnt", {
 					to: to_id,
 					message: data.message as MessageContent,

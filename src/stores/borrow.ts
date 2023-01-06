@@ -29,7 +29,8 @@ export const useBorrowStore = defineStore("borrow", () => {
 	async function createBorrow(borrowData: CreateBorrow) {
 		try {
 			Loading.show();
-			await $axios.post(`/borrow`, borrowData);
+			const { data } = await $axios.post<Borrow>(`/borrow`, borrowData);
+			loggedInBorrows.value.push(data);
 			Notify.create({ message: "Successfully created a borrow" });
 		} catch (error) {
 			return;
@@ -49,6 +50,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 		try {
 			Loading.show();
 			await $axios.delete(`/borrow/${id}`);
+			loggedInBorrows.value = loggedInBorrows.value.filter((borrow) => borrow._id != id);
 		} catch (error) {
 			return;
 		}

@@ -45,7 +45,6 @@
 	}
 
 	function close() {
-		// console.log("close message");
 		appStore.messageModal = false;
 	}
 </script>

@@ -36,7 +36,7 @@ $axios.interceptors.request.use(
 $axios.interceptors.response.use(
 	function (response) {
 		Loading.hide();
-		if (response.data) {
+		if (response.status < 400) {
 			return response;
 		} else {
 			return Promise.reject(response);

@@ -36,7 +36,6 @@ export const userAuthStore = defineStore("auth", () => {
 		const messageStore = useMessageStore();
 		const userRateStore = useUserRateStore();
 		localStorage.setItem("user_id", user._id as string);
-		// console.log("loggedInUser._id: ", user._id);
 
 		userStore.loggedInUser = user;
 		bookStore.loggedInBooks = user.books as Book[];

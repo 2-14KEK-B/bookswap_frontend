@@ -9,36 +9,84 @@
 			<q-tab-panel name="uploader" class="no-padding" style="height: calc(100vh - 100px)">
 				<q-tabs v-model="userTab" no-caps align="justify">
 					<q-tab name="info" label="User information" />
-					<q-tab name="rate" :label="`${getDisplayName(user)}'s rates`" />
+					<q-tab name="rate" :label="`${getDisplayName((bookStore.openedBook?.uploader as User))}'s rates`" />
 				</q-tabs>
 				<q-tab-panels v-model="userTab">
 					<q-tab-panel name="info" class="no-padding" style="height: calc(100vh - 150px)">
 						<q-card flat class="full-height full-width bg-grey-9 q-pa-lg">
-							<p class="text-h4">Full Name: {{ user?.fullname ? user?.fullname : "Does not set his full name" }}</p>
-							<h5>User Name: {{ user?.username ? user?.username : "Does not set his username" }}</h5>
-							<h5>E-Mail: {{ user?.email }}</h5>
-							<h5>Registered: {{ getLocalDate(user?.createdAt) }}</h5>
-							<h5>Overall rates: {{ getRateSum(user?.user_rates) }}</h5>
+							<p class="text-h4">
+								Full Name:
+								{{
+									(bookStore.openedBook?.uploader as User)?.fullname
+										? (bookStore.openedBook?.uploader as User)?.fullname
+										: "Does not set his full name"
+								}}
+							</p>
+							<h5>
+								User Name:
+								{{
+									(bookStore.openedBook?.uploader as User)?.username
+										? (bookStore.openedBook?.uploader as User)?.username
+										: "Does not set his username"
+								}}
+							</h5>
+							<h5>E-Mail: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
+							<h5>Registered: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
+							<h5>Overall rates: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
 					</q-tab-panel>
 					<q-tab-panel name="rate">
-						<q-card v-for="rate in (user?.user_rates?.to as UserRate[])" :key="rate._id">
-							<q-card-section>
-								<h6>
-									From: {{ getDisplayName(rate.from as User) }}
-									<q-avatar v-if="(rate.from as User).picture">
-										<q-img :src="(rate.from as User).picture" />
-									</q-avatar>
-								</h6>
-								<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
-								<p>Comment: {{ rate.comment }}</p>
-							</q-card-section>
-						</q-card>
+						<q-scroll-area style="height: calc(100vh - 180px)">
+							<q-card
+								v-for="rate in ((bookStore.openedBook?.uploader as User)?.user_rates?.to as UserRate[])"
+								:key="rate._id"
+								flat
+								bordered
+								class="q-mb-sm"
+							>
+								<q-card-section>
+									<h6>
+										From: {{ getDisplayName(rate.from as User) }}
+										<q-avatar v-if="(rate.from as User).picture">
+											<q-img :src="(rate.from as User).picture" />
+										</q-avatar>
+									</h6>
+									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
+									<p>Comment: {{ rate.comment }}</p>
+								</q-card-section>
+							</q-card>
+						</q-scroll-area>
 					</q-tab-panel>
 				</q-tab-panels>
 			</q-tab-panel>
-			<q-tab-panel name="book" class="no-padding bg-grey-9" style="height: calc(100vh - 135px)">
-				<q-card flat square class="full-width full-height">
+			<q-tab-panel
+				name="book"
+				class="no-padding row items-stretch bg-grey-9"
+				style="min-height: calc(100vh - 150px); margin-bottom: 50px"
+			>
+				<div class="row items-stretch full-width">
+					<BookInfo v-if="bookStore.openedBook" />
+					<q-btn-group spread class="fixed-bottom">
+						<q-btn
+							class="button"
+							color="primary"
+							no-caps
+							padding="sm none"
+							:label="$q.screen.lt.sm ? 'Borrow it' : 'Send borrow request'"
+							@click="sendBorrow"
+						/>
+						<q-btn
+							v-if="bookStore.openedBook?.uploader"
+							class="button"
+							color="secondary"
+							no-caps
+							padding="sm none"
+							:label="$q.screen.lt.sm ? 'Send message' : 'Send message to the uploader'"
+							@click="appStore.messageModal = true"
+						/>
+					</q-btn-group>
+				</div>
+				<!-- <q-card flat square class="full-width full-height">
 					<q-img class="q-pa-lg" :src="book?.picture" style="height: 300px" />
 					<q-card-section class="text-center">
 						<h4>Title: {{ book?.title }}</h4>
@@ -72,27 +120,26 @@
 							@click="appStore.messageModal = true"
 						/>
 					</q-btn-group>
-				</q-card>
+				</q-card> -->
 			</q-tab-panel>
 			<q-tab-panel name="other-books" class="no-padding" style="height: calc(100vh - 100px)">
-				<q-scroll-area class="full-height full-width q-pa-xs">
+				<q-scroll-area v-if="otherBooks" class="full-height full-width q-pa-xs">
 					<div class="row">
 						<div class="col">
 							<div class="row q-col-gutter-md">
-								<div
-									v-for="usersBook in (user?.books as Book[])"
-									:key="usersBook._id"
-									class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
-								>
+								<div v-for="otherBook in otherBooks" :key="otherBook?._id" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 									<q-card square flat bordered>
-										<q-parallax :height="300" :src="usersBook.picture" />
+										<q-parallax
+											:height="300"
+											:src="otherBook?.picture || 'https://img.freepik.com/free-psd/book-cover-mockup_125540-572.jpg'"
+										/>
 										<q-card-section class="q-px-none">
 											<div class="row items-center no-wrap">
 												<div class="col">
 													<q-item>
 														<q-item-section>
-															<q-item-label lines="1">{{ usersBook.title }}</q-item-label>
-															<q-item-label lines="1" caption>{{ usersBook.author }}</q-item-label>
+															<q-item-label lines="1">{{ otherBook?.title }}</q-item-label>
+															<q-item-label lines="1" caption>{{ otherBook?.author }}</q-item-label>
 														</q-item-section>
 													</q-item>
 												</div>
@@ -104,7 +151,7 @@
 												outline
 												no-caps
 												label="Open in new tab"
-												@click.prevent="openBookInNewTab(usersBook._id as string)"
+												@click.prevent="openBookInNewTab(otherBook?._id as string)"
 											/>
 										</q-btn-group>
 									</q-card>
@@ -116,35 +163,53 @@
 			</q-tab-panel>
 		</q-tab-panels>
 	</q-page>
-	<NewMessage v-if="appStore.messageModal" :user-id="(user?._id as string)" :display-name="getDisplayName(user)" />
+	<NewMessage
+		v-if="appStore.messageModal"
+		:user-id="((bookStore.openedBook?.uploader as User)?._id as string)"
+		:display-name="getDisplayName((bookStore.openedBook?.uploader as User))"
+	/>
 </template>
 
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
-	import { useRoute, useRouter } from "vue-router";
+	import { useRouter } from "vue-router";
 	import { useAppStore } from "@stores/app";
+	import { useBookStore } from "@stores/book";
 	import { useBorrowStore } from "@stores/borrow";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
-	import NewMessage from "@components/NewMessage.vue";
+	import BookInfo from "@components/BookInfo.vue";
+	import NewMessage from "@components/message/NewMessage.vue";
 	import type { Book } from "@interfaces/book";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";
 
 	const appStore = useAppStore();
+	const bookStore = useBookStore();
 	const borrowStore = useBorrowStore();
-	const route = useRoute();
 	const router = useRouter();
-	const book = ref<Book>();
-	const user = ref<User>();
 	const tab = ref("book");
 	const userTab = ref("info");
+	const otherBooks = ref<Book[]>([]);
 
 	async function sendBorrow() {
-		if (user.value && book.value) {
-			const borrowData = { from: user.value._id as string, books: [book.value._id as string] };
+		if (bookStore.openedBook) {
+			const borrowData = {
+				from: (bookStore.openedBook.uploader as User)?._id as string,
+				books: [bookStore.openedBook?._id as string],
+			};
 			await borrowStore.createBorrow(borrowData);
 
 			router.push({ name: "home" });
+		}
+	}
+
+	function getOtherBooksOfTheUser(books?: Book[]) {
+		if (books) {
+			books.forEach((b) => {
+				if (b._id != bookStore.openedBook?._id) {
+					otherBooks.value?.push(b);
+				}
+			});
 		}
 	}
 
@@ -154,8 +219,7 @@
 	}
 
 	onMounted(() => {
-		book.value = route.meta.book;
-		user.value = route.meta.user;
+		getOtherBooksOfTheUser((bookStore.openedBook?.uploader as User)?.books as Book[]);
 	});
 </script>
 

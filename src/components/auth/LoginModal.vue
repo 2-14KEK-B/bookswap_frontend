@@ -16,7 +16,7 @@
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-					label="Go to Register"
+					:label="$q.screen.gt.xs ? 'Go to Register' : 'Register'"
 					@click="emits('to-register')"
 				/>
 				<GoogleLogin :callback="googleCallback" popup-type="TOKEN" auto-login>
@@ -24,7 +24,7 @@
 						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						:icon="fabGoogle"
-						label="Login with Google"
+						:label="$q.screen.gt.xs ? 'Login with Google' : ''"
 					/>
 				</GoogleLogin>
 			</div>

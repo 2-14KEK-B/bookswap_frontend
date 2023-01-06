@@ -3,7 +3,7 @@ import type { User } from "./user";
 import type { UserRate } from "./userRate";
 
 interface Borrow {
-	_id?: string;
+	_id: string;
 	createdAt: string;
 	updatedAt: string;
 	from: User | string;

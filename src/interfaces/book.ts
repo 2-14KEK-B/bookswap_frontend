@@ -14,6 +14,8 @@ interface Book {
 	available?: boolean;
 	for_borrow: boolean;
 	rates?: (BookRate | string)[];
+	overallRate: number;
+	loggedInAlreadyRated?: boolean;
 	__v?: number;
 }
 
@@ -22,7 +24,7 @@ interface CreateBook {
 	title: string;
 	picture?: string;
 	category?: string[];
-	price?: number;
+	price?: number | string;
 	for_borrow?: boolean;
 }
 

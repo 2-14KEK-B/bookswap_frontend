@@ -1,11 +1,11 @@
 <template>
-	<q-dialog v-model="appStore.userRate" persistent @escape-key="close">
+	<q-dialog v-model="appStore.createUserRate" persistent @escape-key="close">
 		<q-card style="min-width: 300px">
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
 						Rate
-						<span class="text-italic">{{ getDisplayName(user) }}</span>
+						<span class="text-italic">{{ getDisplayName(otherUser) }}</span>
 					</div>
 				</q-toolbar-title>
 				<q-btn v-close-popup :icon="matClose" flat round dense />
@@ -25,29 +25,41 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { useAppStore } from "@stores/app";
+	import { useUserStore } from "@stores/user";
 	import { useUserRateStore } from "@stores/userRate";
 	import { getDisplayName } from "@utils/userHelper";
 	import { matClose } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
+	import type { Borrow } from "@interfaces/borrow";
 
-	const props = defineProps<{ user?: User; borrowId?: string }>();
+	const props = defineProps<{ borrow?: Borrow }>();
 	const appStore = useAppStore();
+	const userStore = useUserStore();
 	const userRateStore = useUserRateStore();
+
+	const otherUser = getOtherUser(props.borrow);
 
 	const comment = ref("");
 	const rate = ref(true);
 
 	async function sendRate() {
-		await userRateStore.createUserRate(
-			{ rate: rate.value, comment: comment.value },
-			props.user?._id as string,
-			props.borrowId as string,
-		);
+		await userRateStore.createUserRate(otherUser?._id as string, props.borrow?._id as string, {
+			rate: rate.value,
+			comment: comment.value,
+		});
 		close();
 	}
 
+	function getOtherUser(borrow?: Borrow): User | undefined {
+		const loggedInId = userStore.loggedInUser?._id;
+
+		if (loggedInId && borrow?.from && borrow?.to) {
+			return (borrow.from as User)._id == loggedInId ? (borrow.to as User) : (borrow.from as User);
+		}
+	}
+
 	function close() {
-		appStore.userRate = false;
+		appStore.createUserRate = false;
 	}
 </script>
 

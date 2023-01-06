@@ -31,17 +31,17 @@
 			<q-tab-panels v-model="userTab" style="height: calc(100vh - 350px)">
 				<q-tab-panel name="info" class="no-padding">
 					<q-card flat class="full-height q-pa-lg">
-						<p class="text-h4">
+						<p class="text-h5">
 							Full Name:
 							{{ userStore.loggedInUser?.fullname ? userStore.loggedInUser?.fullname : "You did not set your full name" }}
 						</p>
-						<h5>
+						<div class="text-h5">
 							User Name:
 							{{ userStore.loggedInUser?.username ? userStore.loggedInUser?.username : "You did not set your username" }}
-						</h5>
-						<h5>E-Mail: {{ userStore.loggedInUser?.email }}</h5>
-						<h5>Registered: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</h5>
-						<h5>Overall rates: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</h5>
+						</div>
+						<div class="text-h5">E-Mail: {{ userStore.loggedInUser?.email }}</div>
+						<div class="text-h5">Registered: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
+						<div class="text-h5">Overall rates: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
 						<q-btn color="secondary" class="q-my-lg" label="Edit my profile" :to="{ name: 'editProfile' }" />
 					</q-card>
 				</q-tab-panel>
@@ -52,28 +52,34 @@
 					</q-tabs>
 					<q-tab-panels v-model="rateTab">
 						<q-tab-panel name="from">
-							<q-card v-for="rate in userRateStore.loggedInRates.from" :key="rate._id">
+							<q-card v-for="rate in userRateStore.loggedInRates.from" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
-									<h6>
+									<div class="text-h6">
 										To: {{ getDisplayName(rate.to as User) }}
 										<q-avatar v-if="(rate.to as User).picture">
 											<q-img :src="(rate.to as User).picture" />
 										</q-avatar>
-									</h6>
+										<span class="absolute-top-right">
+											<q-icon :name="matEdit" class="q-pr-md" @click.prevent="editUserRate(rate)" />
+											<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteUserRate(rate)" />
+										</span>
+									</div>
+									<q-separator />
 									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
 									<p>Comment: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
 						</q-tab-panel>
 						<q-tab-panel name="to">
-							<q-card v-for="rate in userRateStore.loggedInRates.to" :key="rate._id">
+							<q-card v-for="rate in userRateStore.loggedInRates.to" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
-									<h6>
+									<div class="text-h6">
 										From: {{ getDisplayName(rate.from as User) }}
 										<q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
 										</q-avatar>
-									</h6>
+									</div>
+									<q-separator />
 									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
 									<p>Comment: {{ rate.comment }}</p>
 								</q-card-section>
@@ -82,28 +88,38 @@
 					</q-tab-panels>
 				</q-tab-panel>
 				<q-tab-panel class="no-padding" name="borrow">
-					<q-card v-for="borrow in (borrowStore.loggedInBorrows as Borrow[])" :key="borrow._id" flat bordered>
+					<q-card
+						v-for="borrow in (borrowStore.loggedInBorrows as Borrow[])"
+						:key="borrow._id"
+						flat
+						bordered
+						class="q-ma-sm"
+					>
 						<q-card-section>
-							<div>
+							<div class="text-h6">
 								From: {{ getDisplayName(borrow.from as User) }}
 								<q-avatar v-if="(borrow.from as User).picture">
 									<q-img :src="(borrow.from as User).picture" />
 								</q-avatar>
+								<span v-if="!borrow.verified" class="absolute-top-right">
+									<!-- <q-icon :name="matEdit" class="q-pr-md" @click.prevent="" /> -->
+									<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteBorrow(borrow._id)" />
+								</span>
 							</div>
-							<div>
+							<div class="text-h6">
 								To: {{ getDisplayName(borrow.to as User) }}
 								<q-avatar v-if="(borrow.to as User).picture">
 									<q-img :src="(borrow.to as User).picture" />
 								</q-avatar>
 							</div>
-							<div>
+							<div class="text-h6">
 								Verified:
 								<span class="text-italic">{{ borrow.verified }}</span>
 							</div>
 							<q-list>
 								<q-expansion-item label="Books:">
 									<div class="row">
-										<q-card v-for="book in (borrow.books as Book[])" :key="book._id" class="col-6">
+										<q-card v-for="book in (borrow.books as Book[])" :key="book._id" class="col-12">
 											<q-card-section>
 												<div>Title: {{ book.title }}</div>
 												<div>Author: {{ book.author }}</div>
@@ -115,7 +131,14 @@
 								</q-expansion-item>
 								<q-expansion-item label="Rates:">
 									<div v-if="borrow.user_rates && borrow.user_rates.length > 0" class="row">
-										<q-card v-for="rate in (borrow.user_rates as UserRate[])" :key="rate._id" class="col-6" flat bordered>
+										<q-card
+											v-if="borrow.verified && !checkIfLoggedInHasRate(borrow.user_rates as UserRate[])"
+											class="col-6 flex"
+											flat
+										>
+											<q-btn class="full-width self-center" label="Rate the other user" @click="newUserRate(borrow)" />
+										</q-card>
+										<q-card v-for="rate in (borrow.user_rates as UserRate[])" :key="rate._id" class="col-12" flat bordered>
 											<q-card-section>
 												<q-list>
 													<div>
@@ -138,36 +161,33 @@
 												</q-list>
 											</q-card-section>
 										</q-card>
-										<q-card
-											v-if="borrow.verified && !checkIfLoggedInHasRate(borrow.user_rates as UserRate[])"
-											class="col-6 flex"
-											flat
-										>
-											<q-btn class="full-width self-center" label="Rate the other user" @click="appStore.userRate = true" />
-										</q-card>
 									</div>
 									<div v-else>
-										<q-btn class="full-width self-center" label="Rate the other user" @click="appStore.userRate = true" />
+										<q-btn class="full-width self-center" label="Rate the other user" @click="newUserRate(borrow)" />
 									</div>
 								</q-expansion-item>
 							</q-list>
 						</q-card-section>
-						<NewUserRate v-if="appStore.userRate" :user="getOtherUser(borrow)" :borrow-id="borrow._id" />
 					</q-card>
 				</q-tab-panel>
 			</q-tab-panels>
 		</q-card>
 	</q-page>
+	<EditUserRate v-if="appStore.editUserRate" :user-rate="userRateToEdit" />
+	<NewUserRate v-if="borrowFrorUserRateCreating && appStore.createUserRate" :borrow="borrowFrorUserRateCreating" />
 </template>
 
 <script setup lang="ts">
+	//TODO: saját borrow szerkesztése
 	import { ref } from "vue";
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useBorrowStore } from "@stores/borrow";
 	import { useUserRateStore } from "@stores/userRate";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
-	import NewUserRate from "@components/NewUserRate.vue";
+	import { matEdit, matDelete } from "@quasar/extras/material-icons";
+	import NewUserRate from "@components/userRate/NewUserRate.vue";
+	import EditUserRate from "@components/userRate/EditUserRate.vue";
 	import type { Book } from "@interfaces/book";
 	import type { Borrow } from "@interfaces/borrow";
 	import type { User } from "@interfaces/user";
@@ -177,21 +197,41 @@
 	const userStore = useUserStore();
 	const borrowStore = useBorrowStore();
 	const userRateStore = useUserRateStore();
+
 	const userTab = ref("info");
 	const rateTab = ref("to");
+	const userRateToEdit = ref<UserRate>();
+	const borrowFrorUserRateCreating = ref<Borrow>();
+
+	function newUserRate(borrow: Borrow) {
+		borrowFrorUserRateCreating.value = borrow;
+		appStore.createUserRate = true;
+	}
+
+	async function editUserRate(rate: UserRate) {
+		userRateToEdit.value = rate;
+		if (userRateToEdit.value) {
+			appStore.editUserRate = true;
+		}
+	}
+
+	async function deleteUserRate(rate: UserRate) {
+		const userId = (rate.to as User)._id,
+			rateId = rate._id,
+			borrowId = rate.borrow as string;
+		if (userId && rateId) {
+			await userRateStore.deleteUserRate(userId, rateId, borrowId);
+		}
+	}
+
+	async function deleteBorrow(borrowId: string) {
+		await borrowStore.deleteBorrow(borrowId);
+	}
 
 	function checkIfLoggedInHasRate(rates?: UserRate[]) {
 		if (rates) {
 			const loggedInId = userStore.loggedInUser?._id;
 			return rates.some((rate) => (rate.from as User)._id == loggedInId);
-		}
-	}
-
-	function getOtherUser(borrow: Borrow): User | undefined {
-		const loggedInId = userStore.loggedInUser?._id;
-
-		if (loggedInId && borrow?.from && borrow?.to) {
-			return (borrow.from as User)._id == loggedInId ? (borrow.to as User) : (borrow.from as User);
 		}
 	}
 </script>
