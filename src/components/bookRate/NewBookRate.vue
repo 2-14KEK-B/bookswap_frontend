@@ -16,7 +16,7 @@
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn v-close-popup flat label="OK" @click="sendRate" />
+				<q-btn v-close-popup flat label="OK" :disable="rate == 0" @click="sendRate" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>
@@ -35,7 +35,7 @@
 	const bookRateStore = useBookRateStore();
 
 	const comment = ref("");
-	const rate = ref(5);
+	const rate = ref<number>(5);
 
 	async function sendRate() {
 		const data: CreateBookRate = { rate: rate.value };

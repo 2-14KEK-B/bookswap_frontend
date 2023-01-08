@@ -59,11 +59,11 @@
 										flat
 										no-caps
 										label="Open"
-										padding="none"
+										padding="sm none"
 										@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 									/>
 									<q-btn
-										v-if="userStore.loggedInUser"
+										v-if="userStore.loggedInUser && book.uploader != userStore.loggedInUser._id"
 										flat
 										no-caps
 										:disable="!book.available"

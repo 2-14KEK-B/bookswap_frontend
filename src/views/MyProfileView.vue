@@ -162,7 +162,7 @@
 											</q-card-section>
 										</q-card>
 									</div>
-									<div v-else>
+									<div v-else-if="borrow.verified">
 										<q-btn class="full-width self-center" label="Rate the other user" @click="newUserRate(borrow)" />
 									</div>
 								</q-expansion-item>
