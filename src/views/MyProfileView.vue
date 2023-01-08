@@ -7,7 +7,11 @@
 			class="full-width flex-center no-padding"
 			style="height: calc(100vh - 50px)"
 		>
-			<q-card-section class="text-center q-pt-sm bg-grey-9" style="height: 250px">
+			<q-card-section
+				class="text-center q-pt-sm"
+				:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
+				style="height: 250px"
+			>
 				<p class="text-h4">My account</p>
 				<q-img
 					class="q-pa-lg"
@@ -19,7 +23,7 @@
 					style="height: 150px; max-width: 150px"
 				/>
 			</q-card-section>
-			<q-tabs v-model="userTab" no-caps align="justify" class="bg-grey-10">
+			<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 				<q-tab name="info" label="My information" />
 				<q-tab name="borrow" :label="`My's borrows`" :disable="borrowStore.loggedInBorrows.length == 0" />
 				<q-tab
@@ -28,9 +32,13 @@
 					:disable="userRateStore.loggedInRates.from.length == 0 && userRateStore.loggedInRates.to.length == 0"
 				/>
 			</q-tabs>
-			<q-tab-panels v-model="userTab" style="height: calc(100vh - 350px)">
-				<q-tab-panel name="info" class="no-padding">
-					<q-card flat class="full-height q-pa-lg">
+			<q-tab-panels
+				v-model="userTab"
+				style="height: calc(100vh - 350px)"
+				:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
+			>
+				<q-tab-panel name="info" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+					<q-card flat class="full-height q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<p class="text-h5">
 							Full Name:
 							{{ userStore.loggedInUser?.fullname ? userStore.loggedInUser?.fullname : "You did not set your full name" }}
@@ -45,12 +53,12 @@
 						<q-btn color="secondary" class="q-my-lg" label="Edit my profile" :to="{ name: 'editProfile' }" />
 					</q-card>
 				</q-tab-panel>
-				<q-tab-panel class="no-padding" name="rate">
-					<q-tabs v-model="rateTab" no-caps align="justify" class="bg-grey-9">
+				<q-tab-panel class="no-padding" name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+					<q-tabs v-model="rateTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<q-tab name="from" label="Rates from me" />
 						<q-tab name="to" label="Rates about me" />
 					</q-tabs>
-					<q-tab-panels v-model="rateTab">
+					<q-tab-panels v-model="rateTab" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<q-tab-panel name="from">
 							<q-card v-for="rate in userRateStore.loggedInRates.from" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
@@ -87,7 +95,7 @@
 						</q-tab-panel>
 					</q-tab-panels>
 				</q-tab-panel>
-				<q-tab-panel class="no-padding" name="borrow">
+				<q-tab-panel class="no-padding" name="borrow" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-card
 						v-for="borrow in (borrowStore.loggedInBorrows as Borrow[])"
 						:key="borrow._id"

@@ -1,7 +1,11 @@
 <template>
-	<q-card v-if="bookStore.openedBook" flat square class="col-12">
-		<q-img class="pic" :src="bookStore.openedBook?.picture" style="max-widht: 100%; max-height: 300px"></q-img>
-		<q-card-section>
+	<q-card v-if="bookStore.openedBook" flat square class="col-12" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+		<q-img
+			:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
+			:src="bookStore.openedBook?.picture"
+			style="max-widht: 100%; max-height: 300px"
+		/>
+		<q-card-section :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<div class="text-h5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
 				{{ bookStore.openedBook?.title }}
 			</div>
@@ -19,11 +23,11 @@
 			/>
 		</q-card-section>
 		<q-card-section class="no-padding">
-			<q-tabs v-model="tab" no-caps align="justify" class="bg-grey-10">
+			<q-tabs v-model="tab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 				<q-tab name="info">Info</q-tab>
 				<q-tab name="rate">Rate</q-tab>
 			</q-tabs>
-			<q-tab-panels v-model="tab">
+			<q-tab-panels v-model="tab" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 				<q-tab-panel name="info">
 					<div class="text-h6">
 						Available:
@@ -47,7 +51,12 @@
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="rate">
-					<q-card v-if="!bookStore.openedBook.loggedInAlreadyRated" flat class="flex justify-center items-center q-py-lg">
+					<q-card
+						v-if="!bookStore.openedBook.loggedInAlreadyRated"
+						flat
+						class="flex justify-center items-center q-py-lg"
+						:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
+					>
 						<q-btn no-caps outline color="secondary" label="Create a new rate" @click="appStore.createBookRate = true" />
 					</q-card>
 					<q-card v-for="rate in (bookStore.openedBook?.rates as BookRate[])" :key="rate._id" flat bordered class="q-mb-sm">

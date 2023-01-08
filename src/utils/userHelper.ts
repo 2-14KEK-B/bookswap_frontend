@@ -5,7 +5,12 @@ function getDisplayName(user?: User): string {
 	if (user) {
 		return user.fullname || user.username || user.email;
 	}
-	return "";
+	return "user";
+}
+
+function getAvatar(picture?: string) {
+	if (picture) return picture;
+	return "https://pic.onlinewebfonts.com/svg/img_329115.png";
 }
 
 function getLocalDate(date?: string) {
@@ -31,4 +36,4 @@ function instanceOfRate(data: any): data is UserRate {
 	return "rate" in data;
 }
 
-export { getDisplayName, getLocalDate, getRateSum };
+export { getDisplayName, getAvatar, getLocalDate, getRateSum };

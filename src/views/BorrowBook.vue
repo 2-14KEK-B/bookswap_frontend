@@ -7,13 +7,13 @@
 		</q-tabs>
 		<q-tab-panels v-model="tab">
 			<q-tab-panel name="uploader" class="no-padding" style="height: calc(100vh - 100px)">
-				<q-tabs v-model="userTab" no-caps align="justify">
+				<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-tab name="info" label="User information" />
 					<q-tab name="rate" :label="`${getDisplayName((bookStore.openedBook?.uploader as User))}'s rates`" />
 				</q-tabs>
 				<q-tab-panels v-model="userTab">
 					<q-tab-panel name="info" class="no-padding" style="height: calc(100vh - 150px)">
-						<q-card flat class="full-height full-width bg-grey-9 q-pa-lg">
+						<q-card flat square class="full-height full-width q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 							<p class="text-h4">
 								Full Name:
 								{{
@@ -35,7 +35,7 @@
 							<h5>Overall rates: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
 					</q-tab-panel>
-					<q-tab-panel name="rate">
+					<q-tab-panel name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<q-scroll-area style="height: calc(100vh - 180px)">
 							<q-card
 								v-for="rate in ((bookStore.openedBook?.uploader as User)?.user_rates?.to as UserRate[])"
@@ -122,7 +122,12 @@
 					</q-btn-group>
 				</q-card> -->
 			</q-tab-panel>
-			<q-tab-panel name="other-books" class="no-padding" style="height: calc(100vh - 100px)">
+			<q-tab-panel
+				name="other-books"
+				class="no-padding"
+				style="height: calc(100vh - 100px)"
+				:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
+			>
 				<q-scroll-area v-if="otherBooks" class="full-height full-width q-pa-xs">
 					<div class="row">
 						<div class="col">
