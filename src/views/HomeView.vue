@@ -15,6 +15,7 @@
 				</template>
 			</q-input>
 		</div>
+		{{ $t("test") }}
 		<q-btn-group flat class="full-width flex justify-evenly q-my-md">
 			<q-btn label="Offers" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
 			<q-btn label="Upload a new" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />

@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
-import path from "path";
+import path, { dirname, resolve } from "path";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import vue from "@vitejs/plugin-vue";
 import eslint from "vite-plugin-eslint";
+import { fileURLToPath } from "url";
 // import { checker } from "vite-plugin-checker";
 
 export default defineConfig({
@@ -13,6 +15,10 @@ export default defineConfig({
 		quasar({
 			autoImportComponentCase: "combined",
 			sassVariables: "src/styles/quasar-variables.scss",
+		}),
+		VueI18nPlugin({
+			include: resolve(dirname(fileURLToPath(import.meta.url)), "./src/locales/**"),
+			runtimeOnly: false,
 		}),
 		{
 			...eslint({ failOnError: true, failOnWarning: true }),

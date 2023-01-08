@@ -46,6 +46,16 @@
 						@click="buttons[1].action"
 					/>
 				</div>
+				<q-select
+					v-model="$i18n.locale"
+					:options="locales"
+					dense
+					borderless
+					emit-value
+					map-options
+					options-dense
+					@update:model-value="(locale) => setLocale(locale)"
+				/>
 			</q-toolbar>
 		</q-header>
 
@@ -61,6 +71,7 @@
 	import { useUserStore } from "@stores/user";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { useRouter } from "vue-router";
+	import { locales, setLocale } from "../modules/i18n";
 	import { computed, ComputedRef, ref } from "vue";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
