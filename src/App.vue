@@ -12,7 +12,7 @@
 	socket.on("recieve-msg-cnt", (data: MessageContent) => {
 		const messageStore = useMessageStore();
 		// console.log("recieve-msg-cnt: ", data);
-		const message = messageStore.messages.find((message) => {
+		const message = messageStore.loggedInMessages.find((message) => {
 			// console.log(message.otherUser?._id, data.sender_id, data.sender_id == message.otherUser?._id);
 			if (message.otherUser?._id == data.sender_id) {
 				return message;
@@ -25,7 +25,7 @@
 		// console.log("recieve-new-msg: ", data);
 		const userStore = useUserStore();
 		const messageStore = useMessageStore();
-		messageStore.messages.push(setInfoFromOtherUser(data as Message, userStore.loggedInUser?._id as string));
+		messageStore.loggedInMessages.push(setInfoFromOtherUser(data as Message, userStore.loggedInUser?._id as string));
 		// console.log("messages.value after pushed new message: ", messageStore.messages);
 	});
 </script>

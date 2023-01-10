@@ -8,6 +8,7 @@ import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
+	const openedUser = ref<User>();
 
 	Notify.setDefaults({
 		progress: true,
@@ -96,6 +97,7 @@ export const useUserStore = defineStore("user", () => {
 
 	return {
 		loggedInUser,
+		openedUser,
 		getById,
 		getLoggedIn,
 		editLoggedIn,

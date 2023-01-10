@@ -1,12 +1,13 @@
 import type { Book } from "./book";
+import type { User } from "./user";
 import type { UserRate } from "./userRate";
 
 interface Borrow {
-	_id?: string;
+	_id: string;
 	createdAt: string;
 	updatedAt: string;
-	from: string;
-	to: string;
+	from: User | string;
+	to: User | string;
 	books: (Book | string)[];
 	verified: boolean;
 	user_rates?: (UserRate | string)[];

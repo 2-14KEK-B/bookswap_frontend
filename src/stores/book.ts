@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
-import $axios from "@api/axios";
+import { ref } from "vue";
 import { Loading } from "quasar";
+import $axios from "@api/axios";
 import type { Book, CreateBook, ModifyBook } from "@interfaces/book";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBookStore = defineStore("book", () => {
+	const loggedInBooks = ref<Book[]>([]);
+	const openedBook = ref<Book>();
+
 	async function getLoggedInBooks() {
 		try {
 			Loading.show();
@@ -35,7 +39,7 @@ export const useBookStore = defineStore("book", () => {
 		}
 	}
 
-	async function createBook(userData: CreateBook) {
+	async function createBook(userData: Partial<CreateBook>) {
 		try {
 			Loading.show();
 			await $axios.post("/book", userData);
@@ -100,6 +104,8 @@ export const useBookStore = defineStore("book", () => {
 	}
 
 	return {
+		loggedInBooks,
+		openedBook,
 		getBooks,
 		getLoggedInBooks,
 		getBookById,

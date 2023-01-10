@@ -33,28 +33,41 @@
 	import { useBookStore } from "@stores/book";
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
+	import type { CreateBook } from "@interfaces/book";
 
-	type newBorrow = { author: string; title: string; picture?: string; price?: number; for_borrow: boolean };
-
-	const defaultValue: newBorrow = {
-		author: "",
-		title: "",
-		picture: undefined,
-		price: undefined,
-		for_borrow: true,
-	};
 	const bookStore = useBookStore();
 	const router = useRouter();
 
-	const input = ref<newBorrow>(defaultValue);
+	const input = ref<CreateBook>({
+		author: "",
+		title: "",
+		picture: "",
+		price: 0,
+		for_borrow: true,
+	});
 
 	async function bookCreating() {
-		await bookStore.createBook(input.value);
+		const newData: Partial<CreateBook> = {
+			author: input.value.author,
+			title: input.value.title,
+			price: input.value.price?.toString(),
+			for_borrow: input.value.for_borrow,
+		};
+		if (input.value.picture && input.value.picture.length > 0) {
+			newData.picture = input.value.picture;
+		}
+		await bookStore.createBook(newData);
 		await router.push("/");
 	}
 
 	function resetFields() {
-		input.value = defaultValue;
+		input.value = {
+			author: "",
+			title: "",
+			picture: "",
+			price: 0,
+			for_borrow: true,
+		};
 	}
 </script>
 
