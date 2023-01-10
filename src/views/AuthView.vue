@@ -1,6 +1,6 @@
 <template>
-	<q-page padding>
-		<div style="height: 70vh" class="flex justify-center items-center">
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+		<div class="flex justify-center items-center" style="height: calc(100vh - 50px)">
 			<!-- @login-with-google="loginWithGoogle" -->
 			<Login
 				v-if="islogin"
@@ -21,17 +21,12 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import Register from "@components/RegisterModal.vue";
-	import Login from "@components/LoginModal.vue";
+	import Register from "@components/auth/RegisterModal.vue";
+	import Login from "@components/auth/LoginModal.vue";
 	import { userAuthStore } from "@stores/auth";
 
 	const { login, register, loginWithGoogle } = userAuthStore();
 	const islogin = ref(true);
 </script>
 
-<style scoped lang="scss">
-	.modal {
-		border: 1px solid;
-		border-radius: 20px;
-	}
-</style>
+<style scoped lang="scss"></style>

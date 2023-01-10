@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { Loading } from "quasar";
+import { Loading, Notify } from "quasar";
 import { ref } from "vue";
 import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useBorrowStore = defineStore("borrow", () => {
-	const borrows = ref<Borrow[]>([]);
+	const loggedInBorrows = ref<Borrow[]>([]);
 
 	async function getLoggedInBorrows() {
 		try {
@@ -29,7 +29,9 @@ export const useBorrowStore = defineStore("borrow", () => {
 	async function createBorrow(borrowData: CreateBorrow) {
 		try {
 			Loading.show();
-			await $axios.post(`/borrow`, borrowData);
+			const { data } = await $axios.post<Borrow>(`/borrow`, borrowData);
+			loggedInBorrows.value.push(data);
+			Notify.create({ message: "Successfully created a borrow" });
 		} catch (error) {
 			return;
 		}
@@ -38,7 +40,14 @@ export const useBorrowStore = defineStore("borrow", () => {
 	async function editBorrow(borrowData: ModifyBorrow, id?: string) {
 		try {
 			Loading.show();
-			await $axios.patch(`/borrow/${id}`, borrowData);
+			const { data } = await $axios.patch<Borrow>(`/borrow/${id}`, borrowData);
+			loggedInBorrows.value.forEach((borrow) => {
+				if (borrow._id == data._id) {
+					Object.assign(borrow, data);
+					return;
+				}
+			});
+			console.log(data);
 		} catch (error) {
 			return;
 		}
@@ -48,6 +57,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 		try {
 			Loading.show();
 			await $axios.delete(`/borrow/${id}`);
+			loggedInBorrows.value = loggedInBorrows.value.filter((borrow) => borrow._id != id);
 		} catch (error) {
 			return;
 		}
@@ -98,7 +108,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 	}
 
 	return {
-		borrows,
+		loggedInBorrows,
 		getLoggedInBorrows,
 		getById: getBorrowById,
 		createBorrow,

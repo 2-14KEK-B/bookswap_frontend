@@ -1,8 +1,9 @@
 import type { BookRate } from "./bookRate";
+import type { User } from "./user";
 
 interface Book {
 	_id?: string;
-	uploader: string;
+	uploader: User | string;
 	createdAt?: string;
 	updatedAt?: string;
 	author: string;
@@ -13,6 +14,8 @@ interface Book {
 	available?: boolean;
 	for_borrow: boolean;
 	rates?: (BookRate | string)[];
+	overallRate: number;
+	loggedInAlreadyRated?: boolean;
 	__v?: number;
 }
 
@@ -21,7 +24,7 @@ interface CreateBook {
 	title: string;
 	picture?: string;
 	category?: string[];
-	price?: number;
+	price?: number | string;
 	for_borrow?: boolean;
 }
 
