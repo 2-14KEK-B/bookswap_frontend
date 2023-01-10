@@ -33,8 +33,8 @@
 										<div class="col">
 											<q-item>
 												<q-item-section>
-													<q-item-label lines="1">{{ book.title }}</q-item-label>
-													<q-item-label lines="1" caption>{{ book.author }}</q-item-label>
+													<q-item-label lines="1">Title: {{ book.title }}</q-item-label>
+													<q-item-label lines="1" caption>Author: {{ book.author }}</q-item-label>
 												</q-item-section>
 											</q-item>
 										</div>
@@ -55,6 +55,7 @@
 										</div>
 									</div>
 								</q-card-section>
+								<q-separator />
 								<q-btn-group spread :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 									<q-btn
 										flat

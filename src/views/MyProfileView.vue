@@ -110,7 +110,12 @@
 									<q-img :src="(borrow.from as User).picture" />
 								</q-avatar>
 								<span v-if="!borrow.verified" class="absolute-top-right">
-									<!-- <q-icon :name="matEdit" class="q-pr-md" @click.prevent="" /> -->
+									<q-icon
+										v-if="(borrow.from as User)._id == userStore.loggedInUser._id"
+										:name="matEdit"
+										class="q-pr-md"
+										@click.prevent="editBorrow(borrow)"
+									/>
 									<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteBorrow(borrow._id)" />
 								</span>
 							</div>
@@ -182,6 +187,7 @@
 		</q-card>
 	</q-page>
 	<EditUserRate v-if="appStore.editUserRate" :user-rate="userRateToEdit" />
+	<EditBorrow v-if="appStore.editBorrow" :borrow="borrowToEdit" />
 	<NewUserRate v-if="borrowFrorUserRateCreating && appStore.createUserRate" :borrow="borrowFrorUserRateCreating" />
 </template>
 
@@ -196,6 +202,7 @@
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
 	import NewUserRate from "@components/userRate/NewUserRate.vue";
 	import EditUserRate from "@components/userRate/EditUserRate.vue";
+	import EditBorrow from "@components/borrow/EditBorrow.vue";
 	import type { Book } from "@interfaces/book";
 	import type { Borrow } from "@interfaces/borrow";
 	import type { User } from "@interfaces/user";
@@ -209,6 +216,7 @@
 	const userTab = ref("info");
 	const rateTab = ref("to");
 	const userRateToEdit = ref<UserRate>();
+	const borrowToEdit = ref<Borrow>();
 	const borrowFrorUserRateCreating = ref<Borrow>();
 
 	function newUserRate(borrow: Borrow) {
@@ -220,6 +228,13 @@
 		userRateToEdit.value = rate;
 		if (userRateToEdit.value) {
 			appStore.editUserRate = true;
+		}
+	}
+
+	async function editBorrow(borrow: Borrow) {
+		borrowToEdit.value = borrow;
+		if (borrowToEdit.value) {
+			appStore.editBorrow = true;
 		}
 	}
 
