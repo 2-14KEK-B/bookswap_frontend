@@ -56,34 +56,55 @@
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
 	import axios, { AxiosProgressEvent } from "axios";
+	import type { CreateBook } from "@interfaces/book";
 
-	type newBorrow = { author: string; title: string; picture?: string; price?: number; for_borrow: boolean };
-
-	const defaultValue: newBorrow = {
-		author: "",
-		title: "",
-		picture: undefined,
-		price: undefined,
-		for_borrow: true,
-	};
 	const bookStore = useBookStore();
 	const router = useRouter();
 
 	const tab = ref<"link" | "upload">("upload");
 	const uploaderRef = ref<QUploader>();
 	const fileRef = ref<File>();
-	const input = ref<newBorrow>(defaultValue);
+	const input = ref<CreateBook>({
+		author: "",
+		title: "",
+		picture: "",
+		price: 0,
+		for_borrow: true,
+	});
+
+	// async function bookCreating() {
+	// 	if (uploaderRef.value && fileRef.value) {
+	// 		const url = await uploadImage();
+	// 		if (url) {
+	// 			uploaderRef.value?.updateFileStatus(fileRef.value as File, "uploaded", fileRef.value.size);
+
+	// 			await bookStore.createBook({ ...input.value, picture: url });
+	// 		}
+	// 	}
+	// 	await bookStore.createBook(input.value);
+	// }
 
 	async function bookCreating() {
+		const newData: Partial<CreateBook> = {
+			author: input.value.author,
+			title: input.value.title,
+			price: input.value.price?.toString(),
+			for_borrow: input.value.for_borrow,
+		};
 		if (uploaderRef.value && fileRef.value) {
 			const url = await uploadImage();
 			if (url) {
 				uploaderRef.value?.updateFileStatus(fileRef.value as File, "uploaded", fileRef.value.size);
 
-				await bookStore.createBook({ ...input.value, picture: url });
+				await bookStore.createBook({ ...newData, picture: url });
 			}
+		} else {
+			if (input.value.picture && input.value.picture.length > 0) {
+				newData.picture = input.value.picture;
+			}
+			await bookStore.createBook(newData);
 		}
-		await bookStore.createBook(input.value);
+
 		await router.push("/");
 	}
 
@@ -116,7 +137,13 @@
 	}
 
 	function resetFields() {
-		input.value = defaultValue;
+		input.value = {
+			author: "",
+			title: "",
+			picture: "",
+			price: 0,
+			for_borrow: true,
+		};
 	}
 </script>
 

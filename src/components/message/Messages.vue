@@ -8,14 +8,14 @@
 			<q-infinite-scroll reverse class="q-pa-md" @load="load">
 				<template #loading>
 					<div
-						v-if="messageStore.messages[messageStore.selectedMessageIndex as number]?.message_contents.length % 25 == 0"
+						v-if="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.message_contents.length % 25 == 0"
 						class="row justify-center q-my-md"
 					>
 						<q-spinner color="primary" name="dots" size="40px" />
 					</div>
 				</template>
 				<q-chat-message
-					v-for="(content, index) in messageStore.messages[messageStore.selectedMessageIndex as number]?.message_contents"
+					v-for="(content, index) in messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.message_contents"
 					:key="index"
 					class="q-py-sm"
 					:sent="content.sender_id == userStore.loggedInUser?._id"
@@ -33,8 +33,8 @@
 					<q-toolbar-title>
 						<q-avatar color="primary" text-color="white">
 							<q-img
-								v-if="messageStore.messages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
-								:src="messageStore.messages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
+								v-if="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
+								:src="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
 							/>
 							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
 						</q-avatar>
@@ -76,7 +76,7 @@
 	extend(relativeTime);
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
-	const otherUser = messageStore.messages[messageStore.selectedMessageIndex as number].otherUser;
+	const otherUser = messageStore.loggedInMessages[messageStore.selectedMessageIndex as number].otherUser;
 
 	const input = ref("");
 	const inputRef = ref<QInput>();

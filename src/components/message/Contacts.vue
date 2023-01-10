@@ -34,7 +34,7 @@
 				</q-list>
 				<q-list v-else class="full-height" separator>
 					<q-item
-						v-for="(message, index) in messageStore.messages"
+						v-for="(message, index) in messageStore.loggedInMessages"
 						:key="index"
 						:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
 						:active-class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
@@ -106,7 +106,7 @@
 	watch(search, (keyword) => {
 		if (keyword.length == 0) filteredMessages.value = undefined;
 		const required: Array<keyof User> = ["fullname", "username", "email"];
-		filteredMessages.value = messageStore.messages.filter((message) => {
+		filteredMessages.value = messageStore.loggedInMessages.filter((message) => {
 			if (
 				required.some((field) => {
 					if ((message.otherUser as User)[field]) {

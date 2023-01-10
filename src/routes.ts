@@ -1,5 +1,7 @@
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
+import { getOverallRate, isLoggedInUserAlreadyRated } from "@utils/bookHelper";
+import type { User } from "@interfaces/user";
 import type { RouteRecordRaw } from "vue-router";
 
 export const routes: RouteRecordRaw[] = [
@@ -48,7 +50,9 @@ export const routes: RouteRecordRaw[] = [
 				beforeEnter: async (to) => {
 					const userStore = useUserStore();
 					const user = await userStore.getById(to.params.id as string);
-					to.meta.user = user;
+					if (user) {
+						userStore.openedUser = user;
+					}
 				},
 			},
 			{
@@ -56,9 +60,35 @@ export const routes: RouteRecordRaw[] = [
 				name: "book",
 				component: () => import("@views/BookView.vue"),
 				beforeEnter: async (to) => {
-					const userStore = useBookStore();
-					const book = await userStore.getBookById(to.params.id as string);
-					to.meta.book = book;
+					const bookStore = useBookStore();
+					const book = await bookStore.getBookById(to.params.id as string);
+					if (book) {
+						bookStore.openedBook = book;
+						bookStore.openedBook.overallRate = getOverallRate(bookStore.openedBook.rates);
+						const userStore = useUserStore();
+						if (userStore.loggedInUser) {
+							bookStore.openedBook.loggedInAlreadyRated = isLoggedInUserAlreadyRated(bookStore.openedBook.rates);
+						}
+					}
+				},
+			},
+			{
+				path: "borrow/:id",
+				name: "borrowBook",
+				component: () => import("@views/BorrowBook.vue"),
+				beforeEnter: async (to) => {
+					const bookStore = useBookStore();
+					const book = await bookStore.getBookById(to.params.id as string);
+					if (book) {
+						bookStore.openedBook = book;
+						bookStore.openedBook.overallRate = getOverallRate(bookStore.openedBook.rates);
+						const userStore = useUserStore();
+						const user = await userStore.getById((book?.uploader as User)._id as string);
+						if (user && bookStore.openedBook) {
+							bookStore.openedBook.uploader = user;
+							bookStore.openedBook.loggedInAlreadyRated = isLoggedInUserAlreadyRated(bookStore.openedBook.rates);
+						}
+					}
 				},
 			},
 		],

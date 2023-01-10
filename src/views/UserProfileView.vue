@@ -1,11 +1,13 @@
 <template>
-	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-		<q-card>
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
+		<q-card flat square>
 			<q-card-section class="text-center">
-				<h3>{{ userInfo?.fullname || userInfo?.username || userInfo?.email }}'s profile</h3>
+				<div class="text-h3">{{ getDisplayName(userStore.openedUser) }}'s profile</div>
 				<q-img
 					class="q-pa-sm"
-					:src="userInfo?.picture ? userInfo.picture : 'https://pic.onlinewebfonts.com/svg/img_329115.png'"
+					:src="
+						userStore.openedUser?.picture ? userStore.openedUser.picture : 'https://pic.onlinewebfonts.com/svg/img_329115.png'
+					"
 					width="100px"
 				/>
 			</q-card-section>
@@ -29,13 +31,13 @@
 					</template>
 					<template #after>
 						<q-tab-panels v-model="tabs" animated swipeable>
-							<q-tab-panel v-if="userInfo" name="user_info">
-								<q-input v-model="userInfo.fullname" type="text" readonly label="Full name" />
-								<q-input v-model="userInfo.username" type="text" readonly label="Username" />
-								<q-input v-model="userInfo.email" type="email" readonly label="Username" />
+							<q-tab-panel v-if="userStore.openedUser" name="user_info">
+								<q-input v-model="userStore.openedUser.fullname" type="text" readonly label="Full name" />
+								<q-input v-model="userStore.openedUser.username" type="text" readonly label="Username" />
+								<q-input v-model="userStore.openedUser.email" type="email" readonly label="Username" />
 
 								<q-input
-									v-model="new Date(userInfo.createdAt as string).toString().split('GMT')[0]"
+									v-model="new Date(userStore.openedUser.createdAt as string).toString().split('GMT')[0]"
 									type="text"
 									readonly
 									label="Registered at"
@@ -104,14 +106,12 @@
 
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
-	import { useRoute } from "vue-router";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
-	import type { User } from "@interfaces/user";
+	import { getDisplayName } from "@utils/userHelper";
 	import type { Book } from "@interfaces/book";
 	import type { Borrow } from "@interfaces/borrow";
 
-	const route = useRoute();
 	const messageStore = useMessageStore();
 	const userStore = useUserStore();
 
@@ -120,7 +120,6 @@
 	type TabNames = "user_info" | "uploaded_books" | "borrowed_books" | "lended_books" | "message";
 	const tabs = ref<TabNames>("user_info");
 
-	const userInfo = ref<User>();
 	const uploadedBooks = ref<Book[]>([]);
 	const borrowedBooks = ref<Book[]>([]);
 	const lendedBooks = ref<Book[]>([]);
@@ -131,27 +130,15 @@
 		if (messageInput.value.length == 0) {
 			return;
 		}
-		await messageStore.sendMessageToUserId(messageInput.value, userInfo.value?._id as string);
+		await messageStore.sendMessageToUserId(messageInput.value, userStore.openedUser?._id as string);
 	}
 
 	onMounted(() => {
-		const user = route.meta.user;
-
-		userInfo.value = {
-			_id: user?._id,
-			fullname: user?.fullname || "",
-			username: user?.username || "",
-			email: user?.email || "",
-			createdAt: user?.createdAt,
-		};
-
-		uploadedBooks.value = user?.books as Book[];
-		(user?.borrows as Borrow[])?.forEach((b: Borrow) => {
-			if (b?.from == user?._id) {
-				// console.log("lended", b);
+		uploadedBooks.value = userStore.openedUser?.books as Book[];
+		(userStore.openedUser?.borrows as Borrow[])?.forEach((b: Borrow) => {
+			if (b?.from == userStore.openedUser?._id) {
 				lendedBooks.value.push(...(b.books as Book[]));
 			} else {
-				// console.log("borrowed", b);
 				borrowedBooks.value.push(...(b.books as Book[]));
 			}
 		});
