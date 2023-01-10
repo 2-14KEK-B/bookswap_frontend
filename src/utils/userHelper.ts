@@ -1,5 +1,5 @@
 import type { User } from "@interfaces/user";
-import type { UserRate } from "@interfaces/UserRate";
+import type { UserRate } from "@interfaces/userRate";
 
 function getDisplayName(user?: User): string {
 	if (user) {
