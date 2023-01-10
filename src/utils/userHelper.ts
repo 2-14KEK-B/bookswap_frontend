@@ -25,7 +25,7 @@ function getRateSum(rates?: User["user_rates"]) {
 		let rateSum = 0;
 		rates.to.forEach((rate) => {
 			if (instanceOfRate(rate)) {
-				rateSum += rate.rate ? 1 : -1;
+				rateSum += (rate as UserRate).rate ? 1 : -1;
 			}
 		});
 		return rateSum;
