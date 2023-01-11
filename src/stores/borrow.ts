@@ -47,7 +47,6 @@ export const useBorrowStore = defineStore("borrow", () => {
 					return;
 				}
 			});
-			console.log(data);
 		} catch (error) {
 			return;
 		}

@@ -11,7 +11,13 @@
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage">
-						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
+						<q-badge
+							v-if="messageStore.notSeenMessages > 0"
+							color="red"
+							:label="messageStore.notSeenMessages"
+							class="absolute-top-left"
+							style="border-radius: 10px"
+						/>
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
@@ -59,6 +65,7 @@
 	import { useQuasar } from "quasar";
 	import { userAuthStore } from "@stores/auth";
 	import { useUserStore } from "@stores/user";
+	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { useRouter } from "vue-router";
 	import { computed, ComputedRef, ref } from "vue";
@@ -69,6 +76,7 @@
 	const quasar = useQuasar();
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
+	const messageStore = useMessageStore();
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
