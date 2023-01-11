@@ -17,7 +17,7 @@ function setInitialMessageInfo(message: Message) {
 function countNotSeenMessages(messages?: Message[]) {
 	let count = 0;
 	if (messages) {
-		messages.every((message) => {
+		messages.forEach((message) => {
 			if (!message.seen) {
 				count++;
 				return false;
