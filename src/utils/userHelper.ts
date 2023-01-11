@@ -23,7 +23,7 @@ function getLocalDate(date?: string) {
 function getRateSum(rates?: User["user_rates"]) {
 	if (rates) {
 		let rateSum = 0;
-		rates.to.forEach((rate) => {
+		rates.to.every((rate) => {
 			if (instanceOfRate(rate)) {
 				rateSum += (rate as UserRate).rate ? 1 : -1;
 			}

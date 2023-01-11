@@ -1,5 +1,5 @@
 <template>
-	<div style="padding-top: 50px">
+	<div v-if="appStore.isMessageOpened" style="padding-top: 50px">
 		<q-scroll-area
 			ref="chatRef"
 			style="height: calc(100vh - 150px)"
@@ -64,16 +64,18 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, onUnmounted } from "vue";
 	import socket from "@api/socket";
 	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
-	import { useMessageStore } from "@stores/message";
+	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
+	import { useMessageStore } from "@stores/message";
 	import { QInput, QScrollArea } from "quasar";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
 
 	extend(relativeTime);
+	const appStore = useAppStore();
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
 	const otherUser = messageStore.loggedInMessages[messageStore.selectedMessageIndex as number].otherUser;
@@ -102,10 +104,17 @@
 	}
 
 	socket.on("msg-sent", () => {
-		moveToBottom();
+		if (appStore.isMessageOpened) {
+			messageStore.setMessageToSeen(messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]._id);
+			moveToBottom();
+		}
 	});
 
 	const emits = defineEmits<{ (e: "openContacts"): void }>();
+
+	onUnmounted(() => {
+		appStore.isMessageOpened = false;
+	});
 </script>
 
 <style scoped></style>

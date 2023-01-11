@@ -7,7 +7,7 @@ function getOverallRate(rates?: (string | BookRate)[]) {
 		if (isImplementsBookRate(rates)) {
 			let all = 0;
 			let count = 0;
-			rates.forEach((rate) => {
+			rates.every((rate) => {
 				all += rate.rate;
 				count++;
 			});
