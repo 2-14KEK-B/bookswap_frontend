@@ -71,7 +71,7 @@ export const useMessageStore = defineStore("message", () => {
 				content: message,
 			});
 			if (data.isNew) {
-				loggedInMessages.value.push(data.message as Message);
+				loggedInMessages.value.push({ ...(data.message as Message), seen: true });
 				socket.emit("send-new-msg", {
 					to: to_id,
 					message: data.message as Message,
