@@ -27,6 +27,7 @@
 			</q-item-label>
 			<q-item-label caption>
 				{{ message.message_contents[message.message_contents.length - 1].content }}
+				<q-icon v-if="message.seen" :name="mdiCheckBold" />
 			</q-item-label>
 		</q-item-section>
 		<q-item-section side>
@@ -42,6 +43,7 @@
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "../ProfileAvatar.vue";
 	import { matKeyboardArrowDown } from "@quasar/extras/material-icons";
+	import { mdiCheckBold } from "@quasar/extras/mdi-v7";
 	import type { Message } from "@interfaces/message";
 
 	const props = defineProps<{ messages: Message[] }>();

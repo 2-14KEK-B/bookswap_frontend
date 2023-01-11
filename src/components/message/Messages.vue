@@ -114,7 +114,6 @@
 
 	onUnmounted(() => {
 		appStore.isMessageOpened = false;
-		messageStore.selectedMessageIndex = null;
 	});
 </script>
 
