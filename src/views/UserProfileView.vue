@@ -135,7 +135,7 @@
 
 	onMounted(() => {
 		uploadedBooks.value = userStore.openedUser?.books as Book[];
-		(userStore.openedUser?.borrows as Borrow[])?.forEach((b: Borrow) => {
+		(userStore.openedUser?.borrows as Borrow[])?.every((b: Borrow) => {
 			if (b?.from == userStore.openedUser?._id) {
 				lendedBooks.value.push(...(b.books as Book[]));
 			} else {

@@ -3,71 +3,23 @@
 		<q-pull-to-refresh @refresh="loadMessages">
 			<q-scroll-area :class="$q.dark.isActive ? 'bg-grey-7' : 'bg-grey-3'" style="height: calc(100vh - 150px)">
 				<q-list v-if="filteredMessages" class="full-height" separator>
-					<q-item
-						v-for="(message, index) in filteredMessages"
-						:key="index"
-						:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
-						:active-class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
-						clickable
-						class="relative-position"
-						:active="messageStore.selectedMessageIndex == index"
-						@click.prevent="onSelect(index)"
-					>
-						<q-item-section avatar>
-							<ProfileAvatar :src="message.otherUser?.picture" :alt="message.otherUser?.displayName" />
-						</q-item-section>
-						<q-item-section>
-							<q-item-label lines="1" :class="$q.dark.isActive ? 'text-white' : 'text-black'">
-								{{ message.otherUser?.displayName }}
-							</q-item-label>
-							<q-item-label caption>
-								{{ message.message_contents[message.message_contents.length - 1].content }}
-							</q-item-label>
-						</q-item-section>
-						<q-item-section side>
-							<q-item-label caption>
-								{{ getTimeString(message.message_contents[message.message_contents.length - 1].createdAt!) }}
-							</q-item-label>
-							<q-icon :name="matKeyboardArrowDown" />
-						</q-item-section>
-					</q-item>
+					<ContactItem :messages="filteredMessages" @close="emits('closeContacts')" />
 				</q-list>
 				<q-list v-else class="full-height" separator>
-					<q-item
-						v-for="(message, index) in messageStore.loggedInMessages"
-						:key="index"
-						:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
-						:active-class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
-						clickable
-						class="relative-position"
-						:active="messageStore.selectedMessageIndex == index"
-						@click.prevent="onSelect(index)"
-					>
-						<q-item-section avatar>
-							<ProfileAvatar :src="message.otherUser?.picture" :alt="message.otherUser?.displayName" />
-						</q-item-section>
-						<q-item-section>
-							<q-item-label lines="1" :class="$q.dark.isActive ? 'text-white' : 'text-black'">
-								{{ message.otherUser?.displayName }}
-							</q-item-label>
-							<q-item-label caption>
-								{{ message.message_contents[message.message_contents.length - 1].content }}
-							</q-item-label>
-						</q-item-section>
-						<q-item-section side>
-							<q-item-label caption>
-								{{ getTimeString(message.message_contents[message.message_contents.length - 1].createdAt!) }}
-							</q-item-label>
-							<q-icon :name="matKeyboardArrowDown" />
-						</q-item-section>
-					</q-item>
+					<ContactItem :messages="messageStore.loggedInMessages" @close="emits('closeContacts')" />
 				</q-list>
 			</q-scroll-area>
 		</q-pull-to-refresh>
 		<q-page-sticky expand position="top">
 			<q-toolbar class="bg-secondary">
 				<q-toolbar-title>Users</q-toolbar-title>
-				<q-btn v-if="messageStore.selectedMessageIndex != null" flat dense :icon="mdiClose" @click="emits('close')" />
+				<q-btn
+					v-if="messageStore.selectedMessageIndex != null"
+					flat
+					dense
+					:icon="mdiClose"
+					@click="emits('closeContacts')"
+				/>
 			</q-toolbar>
 			<q-toolbar class="bg-secondary">
 				<q-input
@@ -92,9 +44,9 @@
 <script setup lang="ts">
 	import { onMounted, ref, watch } from "vue";
 	import { useMessageStore } from "@stores/message";
-	import ProfileAvatar from "../ProfileAvatar.vue";
+	import ContactItem from "./ContactItem.vue";
 	import { mdiClose } from "@quasar/extras/mdi-v7";
-	import { matSearch, matKeyboardArrowDown } from "@quasar/extras/material-icons";
+	import { matSearch } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
 	import type { Message } from "@interfaces/message";
 
@@ -121,28 +73,12 @@
 		});
 	});
 
-	function getTimeString(dateAsString: string): string {
-		const date = new Date(dateAsString);
-		const today = new Date();
-
-		if (date.toDateString() === today.toDateString()) {
-			return date.toLocaleTimeString();
-		} else {
-			return date.toLocaleString();
-		}
-	}
-
-	function onSelect(index: number) {
-		messageStore.selectedMessageIndex = index;
-		emits("close");
-	}
-
 	async function loadMessages(done: () => void) {
 		await messageStore.getLoggedInUserMessages();
 		done();
 	}
 
-	const emits = defineEmits<{ (e: "close"): void }>();
+	const emits = defineEmits<{ (e: "closeContacts"): void }>();
 
 	onMounted(async () => {
 		await messageStore.getLoggedInUserMessages();

@@ -41,13 +41,13 @@ export const useBorrowStore = defineStore("borrow", () => {
 		try {
 			Loading.show();
 			const { data } = await $axios.patch<Borrow>(`/borrow/${id}`, borrowData);
-			loggedInBorrows.value.forEach((borrow) => {
+			loggedInBorrows.value.some((borrow) => {
 				if (borrow._id == data._id) {
 					Object.assign(borrow, data);
-					return;
+					return true;
 				}
+				return false;
 			});
-			console.log(data);
 		} catch (error) {
 			return;
 		}
