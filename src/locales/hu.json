@@ -1,3 +1,22 @@
 {
-    "test": "hu"
+    "main": {
+        "notificatons": "Értesítések",
+        "message": "Üzenetek",
+        "adminPage": "Admin oldal",
+        "myProfile": "Profilom",
+        "lightMode": "Világos mód",
+        "logout": "Kijelentkezés"
+
+    },
+
+    "home": {
+        "search": "Keresés cím vagy író alapján",
+        "offers": "Kölcsönzés",
+        "uploadNew": "Könyv feltöltés",
+        "wishes": "Kérések",
+        "open": "Megnyitás",
+        "borrowIt": "Kölcsönzés",
+        "uploader": "Feltöltő"
+    }
+
 }

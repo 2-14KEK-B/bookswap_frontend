@@ -1,3 +1,23 @@
 {
-    "test": "en"
+    "main": {
+        "notificatons": "Notificatons",
+        "message": "Messages",
+        "adminPage": "Admin page",
+        "myProfile": "My profile",
+        "lightMode": "Light mode",
+        "logout": "Logout"
+
+    },
+
+
+"home": {
+        "search": "Search by title or author",
+        "offers": "Offers",
+        "uploadNew": "Upload new",
+        "wishes": "Wishes",
+        "open": "Open",
+        "borrowIt": "Borrow it",
+        "uploader": "Uploader"
+    }
 }
+

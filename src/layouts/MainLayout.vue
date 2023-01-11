@@ -7,10 +7,10 @@
 				</q-toolbar-title>
 
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('main.notificatons') : ''" :icon="mdiBell">
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('main.notificatons') : ''" :to="{ name: 'message' }" :icon="mdiMessage">
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
@@ -25,7 +25,7 @@
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
-									<q-item-label>Go to admin page</q-item-label>
+									<q-item-label>{{ $t('main.adminPage') }}</q-item-label>
 								</q-item-section>
 							</q-item>
 							<template v-for="button in buttons" :key="button.name">
@@ -75,15 +75,17 @@
 	import { computed, ComputedRef, ref } from "vue";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
+	import { useI18n } from "vue-i18n";
 
 	const router = useRouter();
 	const quasar = useQuasar();
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
+	const {t} = useI18n({useScope:'global'})
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: "My profile",
+			name: t('main.myProfile'),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},

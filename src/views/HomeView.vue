@@ -6,7 +6,7 @@
 				outlined
 				dense
 				style="max-width: 100%"
-				placeholder="Search by title or author"
+				:placeholder="$t('home.search')"
 				:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-3'"
 				@keydown.enter.prevent="searchByKeyword"
 			>
@@ -16,11 +16,10 @@
 				</template>
 			</q-input>
 		</div>
-		{{ $t("test") }}
 		<q-btn-group flat class="full-width flex justify-evenly q-my-md">
-			<q-btn label="Offers" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
-			<q-btn label="Upload a new" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />
-			<q-btn label="Wishes" color="secondary" class="q-px-lg" @click.prevent="selectBooks('lend')" />
+			<q-btn :label="$t('home.offers')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
+			<q-btn :label="$t('home.uploadNew')" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />
+			<q-btn :label="$t('home.wishes')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('lend')" />
 		</q-btn-group>
 		<q-scroll-area style="height: calc(100vh - 180px)">
 			<div class="row">
@@ -47,7 +46,7 @@
 															<q-item-section
 																@click.prevent="router.push({ name: 'userProfile', params: { id: book.uploader as string } })"
 															>
-																Uploader
+															{{$t("home.uploader")}}
 															</q-item-section>
 														</q-item>
 													</q-list>
@@ -61,7 +60,7 @@
 									<q-btn
 										flat
 										no-caps
-										label="Open"
+										:label="$t('home.open')"
 										padding="sm none"
 										@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 									/>
@@ -70,7 +69,7 @@
 										flat
 										no-caps
 										:disable="!book.available"
-										:label="selected == 'borrow' ? 'Borrow it' : 'Lend it'"
+										:label="selected == 'borrow' ? $t('home.borrowIt') : 'Lend it'"
 										padding="sm none"
 										@click.prevent="router.push({ name: 'borrowBook', params: { id: book._id } })"
 									/>
