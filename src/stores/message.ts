@@ -100,10 +100,12 @@ export const useMessageStore = defineStore("message", () => {
 				if (message) {
 					const userStore = useUserStore();
 					message.seen = true;
-					message.message_contents.forEach((content) => {
+					message.message_contents.some((content) => {
 						if (content.sender_id != userStore.loggedInUser?._id) {
 							content.seen = true;
+							return true;
 						}
+						return false;
 					});
 				}
 			}

@@ -210,10 +210,12 @@
 
 	function getOtherBooksOfTheUser(books?: Book[]) {
 		if (books) {
-			books.forEach((b) => {
+			books.some((b) => {
 				if (b._id != bookStore.openedBook?._id) {
 					otherBooks.value?.push(b);
+					return true;
 				}
+				return false;
 			});
 		}
 	}
