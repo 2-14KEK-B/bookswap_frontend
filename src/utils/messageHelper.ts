@@ -44,4 +44,17 @@ function isMessageSeen(message: Message) {
 	return seen;
 }
 
-export { setInitialMessageInfo, countNotSeenMessages, isMessageSeen };
+function getIndexById(messages: Message[], messageId: string) {
+	const index = messages.findIndex((m) => m._id == messageId);
+	return index;
+}
+
+function sortMessagesByContentUpdatedAt(messages: Message[]) {
+	return messages.sort((a, b) => {
+		const aLastMessageDate = Date.parse(a.message_contents[a.message_contents.length - 1].createdAt as string);
+		const bLastMessageDate = Date.parse(b.message_contents[b.message_contents.length - 1].createdAt as string);
+		return bLastMessageDate - aLastMessageDate;
+	});
+}
+
+export { setInitialMessageInfo, countNotSeenMessages, isMessageSeen, getIndexById, sortMessagesByContentUpdatedAt };

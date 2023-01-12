@@ -1,8 +1,7 @@
 <template>
-	<!-- $q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3' -->
 	<q-item
-		v-for="(message, index) in messages"
-		:key="index"
+		v-for="message in messages"
+		:key="message._id"
 		:class="
 			message.seen
 				? $q.dark.isActive
@@ -15,8 +14,8 @@
 		:active-class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 		clickable
 		class="relative-position"
-		:active="messageStore.selectedMessageIndex == index"
-		@click.prevent="onSelect(index)"
+		:active="messageStore.selectedMessage?._id == message._id"
+		@click.prevent="onSelect(message._id)"
 	>
 		<q-item-section avatar>
 			<ProfileAvatar :src="message.otherUser?.picture" :alt="message.otherUser?.displayName" />
@@ -27,7 +26,7 @@
 			</q-item-label>
 			<q-item-label caption>
 				{{ message.message_contents[message.message_contents.length - 1].content }}
-				<q-icon v-if="message.seen" :name="mdiCheckBold" />
+				<!-- <q-icon v-if="message.seen" :name="mdiCheckBold" /> -->
 			</q-item-label>
 		</q-item-section>
 		<q-item-section side>
@@ -42,8 +41,9 @@
 <script setup lang="ts">
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "../ProfileAvatar.vue";
+	import { getIndexById } from "@utils/messageHelper";
 	import { matKeyboardArrowDown } from "@quasar/extras/material-icons";
-	import { mdiCheckBold } from "@quasar/extras/mdi-v7";
+	// import { mdiCheckBold } from "@quasar/extras/mdi-v7";
 	import type { Message } from "@interfaces/message";
 
 	const props = defineProps<{ messages: Message[] }>();
@@ -60,10 +60,13 @@
 		}
 	}
 
-	function onSelect(index: number) {
-		messageStore.selectedMessageIndex = index;
-		messageStore.setMessageToSeen(props.messages[index]._id);
-		emits("close");
+	function onSelect(messageId?: string) {
+		if (messageId) {
+			const index = getIndexById(messageStore.loggedInMessages, messageId);
+			messageStore.selectedMessage = { _id: messageId, index: index };
+			messageStore.setMessageToSeen(props.messages[index]._id);
+			emits("close");
+		}
 	}
 
 	const emits = defineEmits<{ (e: "close"): void }>();

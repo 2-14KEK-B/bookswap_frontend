@@ -26,7 +26,7 @@
 
 	onUnmounted(() => {
 		const messageStore = useMessageStore();
-		messageStore.selectedMessageIndex = null;
+		messageStore.selectedMessage = null;
 	});
 </script>
 

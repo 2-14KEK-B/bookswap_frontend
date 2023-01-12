@@ -14,6 +14,7 @@
 			if (message.otherUser?._id == data.sender_id) {
 				message.seen = false;
 				message.message_contents.push(data);
+				(message.totalCount as number)++;
 				return message;
 			} else {
 				return message;

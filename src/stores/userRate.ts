@@ -89,7 +89,6 @@ export const useUserRateStore = defineStore("userRate", () => {
 	async function deleteUserRate(userId: string, rateId: string, borrowId: string) {
 		try {
 			Loading.show();
-			console.log(rateId);
 			const { status } = await $axios.delete(`/user/${userId}/rate/${rateId}`);
 			if (status == 204) {
 				loggedInRates.value.from = loggedInRates.value.from.filter((rate) => rate._id != rateId);

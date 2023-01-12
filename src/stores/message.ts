@@ -4,18 +4,19 @@ import { ref, computed } from "vue";
 import socket from "@api/socket";
 import { Loading } from "quasar";
 import { useUserStore } from "@stores/user";
-import { setInitialMessageInfo, countNotSeenMessages } from "@utils/messageHelper";
+import { setInitialMessageInfo, countNotSeenMessages, sortMessagesByContentUpdatedAt } from "@utils/messageHelper";
 import type { Message, MessageContent } from "@interfaces/message";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useMessageStore = defineStore("message", () => {
-	const selectedMessageIndex = ref<number | null>(null);
+	const selectedMessage = ref<{ _id: string; index: number } | null>(null);
 	const loggedInMessages = ref<Message[]>([]);
 	const notSeenMessages = computed(() => countNotSeenMessages(loggedInMessages.value));
+	const loggedInMessagesSorted = computed(() => sortMessagesByContentUpdatedAt(loggedInMessages.value));
 
 	async function loadMessage(index: number): Promise<boolean | void> {
-		if (selectedMessageIndex.value == null) return;
-		const m = loggedInMessages.value[selectedMessageIndex.value];
+		if (selectedMessage.value == null) return;
+		const m = loggedInMessages.value[selectedMessage.value.index];
 		const total = m.totalCount as number;
 
 		if (total < 25) return;
@@ -45,16 +46,16 @@ export const useMessageStore = defineStore("message", () => {
 		}
 	}
 
-	async function sendMessageToSelectedMessage(message: string) {
-		if (selectedMessageIndex.value != null) {
+	async function sendMessageToSelectedMessage(content: string) {
+		if (selectedMessage.value != null) {
 			try {
-				const selectedMessage = loggedInMessages.value[selectedMessageIndex.value];
-				const userId = selectedMessage.otherUser?._id as string;
+				const message = loggedInMessages.value[selectedMessage.value.index];
+				const userId = message.otherUser?._id as string;
 				const { data } = await $axios.post<{ message: MessageContent }>(`/user/${userId}/message`, {
-					content: message,
+					content: content,
 				});
-				(selectedMessage.totalCount as number)++;
-				selectedMessage.message_contents.push(data.message);
+				(message.totalCount as number)++;
+				message.message_contents.push(data.message);
 				socket.emit("send-msg-cnt", {
 					to: userId as string,
 					message: data.message as MessageContent,
@@ -160,9 +161,10 @@ export const useMessageStore = defineStore("message", () => {
 	}
 
 	return {
-		selectedMessageIndex,
+		selectedMessage,
 		loggedInMessages,
 		notSeenMessages,
+		loggedInMessagesSorted,
 		getLoggedInUserMessages,
 		// getDisplayName,
 		sendMessageToSelectedMessage,

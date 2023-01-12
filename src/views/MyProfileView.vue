@@ -239,7 +239,6 @@
 	}
 
 	async function deleteUserRate(rate: UserRate) {
-		console.log(rate);
 		const userId = (rate.to as User)._id,
 			rateId = rate._id,
 			borrowId = rate.borrow as string;
