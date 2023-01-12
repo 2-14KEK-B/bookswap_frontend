@@ -112,15 +112,19 @@
 	}
 
 	async function send() {
+		if (input.value.length == 0) {
+			inputRef.value?.focus();
+			return;
+		}
 		await messageStore.sendMessageToSelectedMessage(input.value);
 		moveToBottom();
 		input.value = "";
 		inputRef.value?.focus();
 	}
 
-	socket.on("msg-sent", () => {
+	socket.on("msg-sent", async () => {
 		if (appStore.isMessageOpened) {
-			messageStore.setMessageToSeen(messageStore.selectedMessage?._id);
+			await messageStore.setMessageToSeen(messageStore.selectedMessage?._id);
 			moveToBottom();
 		}
 	});

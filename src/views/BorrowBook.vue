@@ -86,41 +86,6 @@
 						/>
 					</q-btn-group>
 				</div>
-				<!-- <q-card flat square class="full-width full-height">
-					<q-img class="q-pa-lg" :src="book?.picture" style="height: 300px" />
-					<q-card-section class="text-center">
-						<h4>Title: {{ book?.title }}</h4>
-						<h5>Author: {{ book?.author }}</h5>
-						<p>Price: {{ book?.price }}HUF</p>
-					</q-card-section>
-					<q-btn-group spread class="fixed-bottom">
-						<q-btn
-							v-if="$q.screen.gt.xs"
-							class="button"
-							color="secondary"
-							no-caps
-							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Check rates' : 'Check rates of this book'"
-						/>
-						<q-btn
-							class="button"
-							color="primary"
-							no-caps
-							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Borrow it' : 'Send borrow request'"
-							@click="sendBorrow"
-						/>
-						<q-btn
-							v-if="book && book.uploader"
-							class="button"
-							color="secondary"
-							no-caps
-							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Send message' : 'Send message to the uploader'"
-							@click="appStore.messageModal = true"
-						/>
-					</q-btn-group>
-				</q-card> -->
 			</q-tab-panel>
 			<q-tab-panel
 				name="other-books"

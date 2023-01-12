@@ -25,6 +25,10 @@
 				{{ message.otherUser?.displayName }}
 			</q-item-label>
 			<q-item-label caption>
+				<q-icon
+					v-if="message.message_contents[message.message_contents.length - 1].sender_id != userStore.loggedInUser?._id"
+					:name="mdiArrowTopLeft"
+				/>
 				{{ message.message_contents[message.message_contents.length - 1].content }}
 				<q-icon
 					v-if="
@@ -50,7 +54,7 @@
 	import ProfileAvatar from "../ProfileAvatar.vue";
 	import { getIndexById } from "@utils/messageHelper";
 	import { matKeyboardArrowDown } from "@quasar/extras/material-icons";
-	import { mdiCheckBold } from "@quasar/extras/mdi-v7";
+	import { mdiCheckBold, mdiArrowTopLeft } from "@quasar/extras/mdi-v7";
 	import type { Message } from "@interfaces/message";
 
 	const props = defineProps<{ messages: Message[] }>();

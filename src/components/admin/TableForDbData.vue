@@ -59,8 +59,6 @@
 					<q-separator />
 					<q-list dense>
 						<q-item v-for="col in props.cols.filter((col: any) => col.name !== 'desc')" :key="col.name">
-							<!-- {{ col.label }}:{{ col.value }} -->
-							<!--  side style="min-width: 120px" -->
 							<q-item-section>
 								<q-item-label overline>{{ col.label }}:</q-item-label>
 							</q-item-section>
@@ -72,10 +70,6 @@
 				</q-card>
 			</div>
 		</template>
-
-		<!-- <template #no-data>
-			<slot></slot>
-		</template> -->
 	</q-table>
 </template>
 

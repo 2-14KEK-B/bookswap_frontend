@@ -25,7 +25,6 @@
 					class="full-width"
 					placeholder="Search or start a new conversation"
 				>
-					<!-- @keydown.enter.prevent="sort" -->
 					<template #prepend>
 						<q-icon :name="matSearch" />
 					</template>
