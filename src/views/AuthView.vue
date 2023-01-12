@@ -1,7 +1,6 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
 		<div class="flex justify-center items-center" style="height: calc(100vh - 50px)">
-			<!-- @login-with-google="loginWithGoogle" -->
 			<Login
 				v-if="islogin"
 				class="q-pa-lg modal"

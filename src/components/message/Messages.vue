@@ -22,7 +22,22 @@
 					:text="[content.content]"
 					:name="content.sender_id == userStore.loggedInUser?._id ? 'me' : otherUser?.displayName"
 					:stamp="dayjs().to(content.createdAt)"
-				/>
+				>
+					<template #avatar>
+						<q-avatar
+							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
+							color="primary"
+							text-color="white"
+							class="q-message-avatar q-message-avatar--received"
+						>
+							<q-img
+								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+							/>
+							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
+						</q-avatar>
+					</template>
+				</q-chat-message>
 			</q-infinite-scroll>
 		</q-scroll-area>
 		<q-page-sticky expand position="top">
@@ -97,15 +112,19 @@
 	}
 
 	async function send() {
+		if (input.value.length == 0) {
+			inputRef.value?.focus();
+			return;
+		}
 		await messageStore.sendMessageToSelectedMessage(input.value);
 		moveToBottom();
 		input.value = "";
 		inputRef.value?.focus();
 	}
 
-	socket.on("msg-sent", () => {
+	socket.on("msg-sent", async () => {
 		if (appStore.isMessageOpened) {
-			messageStore.setMessageToSeen(messageStore.selectedMessage?._id);
+			await messageStore.setMessageToSeen(messageStore.selectedMessage?._id);
 			moveToBottom();
 		}
 	});

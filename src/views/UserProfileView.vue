@@ -84,22 +84,6 @@
 					</template>
 				</q-splitter>
 			</q-card-section>
-
-			<!-- <q-card-section></q-card-section>
-
-			<q-separator dark inset />
-
-			<q-card-section class="q-pa-md row items-start q-gutter-md">
-				<q-card v-for="book in userBooks" :key="book._id" class="">
-					<q-card-section>{{ book.title }}</q-card-section>
-					<q-card-section>
-						<q-img :src="book.picture" sizes="xs" width="20%"></q-img>
-					</q-card-section>
-				</q-card>
-			</q-card-section>
-			<q-card-actions align="center">
-				<q-btn label="Send Message" @click="sendMessage" />
-			</q-card-actions> -->
 		</q-card>
 	</q-page>
 </template>

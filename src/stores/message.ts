@@ -56,10 +56,7 @@ export const useMessageStore = defineStore("message", () => {
 				});
 				(message.totalCount as number)++;
 				message.message_contents.push(data.message);
-				socket.emit("send-msg-cnt", {
-					to: userId as string,
-					message: data.message as MessageContent,
-				});
+				socket.emit("send-msg-cnt", userId, data.message);
 			} catch (error) {
 				return;
 			}
@@ -72,20 +69,14 @@ export const useMessageStore = defineStore("message", () => {
 				content: message,
 			});
 			if (data.isNew) {
-				loggedInMessages.value.push({ ...(data.message as Message), seen: true });
-				socket.emit("send-new-msg", {
-					to: to_id,
-					message: data.message as Message,
-				});
+				loggedInMessages.value.push({ ...(data.message as Message), seenByLoggedInUser: true });
+				socket.emit("send-new-msg", to_id, data.message as Message);
 			} else {
 				const messageWithOtherUser = loggedInMessages.value.find((m) => {
 					return m.otherUser?._id == to_id;
 				});
 				messageWithOtherUser?.message_contents.push(data.message as MessageContent);
-				socket.emit("send-msg-cnt", {
-					to: to_id,
-					message: data.message as MessageContent,
-				});
+				socket.emit("send-msg-cnt", to_id, data.message as MessageContent);
 			}
 		} catch (error) {
 			return;
@@ -100,7 +91,13 @@ export const useMessageStore = defineStore("message", () => {
 				const message = loggedInMessages.value.find((message) => message._id == messageId);
 				if (message) {
 					const userStore = useUserStore();
-					message.seen = true;
+					socket.emit(
+						"msg-seen",
+						userStore.loggedInUser?._id as string,
+						message.otherUser?._id as string,
+						message._id as string,
+					);
+					message.seenByLoggedInUser = true;
 					message.message_contents.some((content) => {
 						if (content.sender_id != userStore.loggedInUser?._id) {
 							content.seen = true;
