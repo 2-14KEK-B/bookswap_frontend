@@ -11,14 +11,14 @@ function setInitialMessageInfo(message: Message) {
 			return user;
 		}
 	});
-	return { ...message, otherUser: otherUser, seen: isMessageSeen(message) };
+	return { ...message, otherUser: otherUser, seenByLoggedInUser: isMessageSeen(message) };
 }
 
 function countNotSeenMessages(messages?: Message[]) {
 	let count = 0;
 	if (messages) {
 		messages.forEach((message) => {
-			if (!message.seen) {
+			if (!message.seenByLoggedInUser) {
 				count++;
 				return false;
 			}

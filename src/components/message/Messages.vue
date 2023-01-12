@@ -22,7 +22,22 @@
 					:text="[content.content]"
 					:name="content.sender_id == userStore.loggedInUser?._id ? 'me' : otherUser?.displayName"
 					:stamp="dayjs().to(content.createdAt)"
-				/>
+				>
+					<template #avatar>
+						<q-avatar
+							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
+							color="primary"
+							text-color="white"
+							class="q-message-avatar q-message-avatar--received"
+						>
+							<q-img
+								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+							/>
+							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
+						</q-avatar>
+					</template>
+				</q-chat-message>
 			</q-infinite-scroll>
 		</q-scroll-area>
 		<q-page-sticky expand position="top">

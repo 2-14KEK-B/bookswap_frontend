@@ -23,7 +23,7 @@ interface Message {
 	otherUser?: User;
 	message_contents: MessageContent[];
 	totalCount?: number;
-	seen?: boolean;
+	seenByLoggedInUser?: boolean;
 }
 
 interface CreateMessage {
