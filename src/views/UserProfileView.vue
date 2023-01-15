@@ -18,8 +18,8 @@
 						<q-tabs v-model="tabs" vertical align="left" class="full-width">
 							<q-tab label="User information" name="user_info" no-caps style="justify-content: initial; text-align: left" />
 							<q-tab label="Upload books" name="uploaded_books" no-caps style="justify-content: initial; text-align: left" />
-							<q-tab label="Borrowed books" name="borrowed_books" no-caps style="justify-content: initial; text-align: left" />
-							<q-tab label="Lended books" name="lended_books" no-caps style="justify-content: initial; text-align: left" />
+							<!-- <q-tab label="Borrowed books" name="borrowed_books" no-caps style="justify-content: initial; text-align: left" />
+							<q-tab label="Lended books" name="lended_books" no-caps style="justify-content: initial; text-align: left" /> -->
 							<q-tab
 								v-if="userStore.loggedInUser"
 								label="Send a message"
@@ -51,7 +51,7 @@
 									</q-card-section>
 								</q-card>
 							</q-tab-panel>
-							<q-tab-panel name="borrowed_books" class="q-pa-md row items-start q-gutter-md">
+							<!-- <q-tab-panel name="borrowed_books" class="q-pa-md row items-start q-gutter-md">
 								<q-card v-for="book in borrowedBooks" :key="book._id">
 									<q-card-section>{{ book.title }}</q-card-section>
 									<q-card-section>
@@ -66,7 +66,7 @@
 										<q-img :src="book.picture" width="50%"></q-img>
 									</q-card-section>
 								</q-card>
-							</q-tab-panel>
+							</q-tab-panel> -->
 							<q-tab-panel v-if="userStore.loggedInUser" name="message" class="q-pa-md row items-start q-gutter-md">
 								<q-form class="q-pl-lg full-width" @submit="sendMessage">
 									<q-input
@@ -94,7 +94,7 @@
 	import { useMessageStore } from "@stores/message";
 	import { getDisplayName } from "@utils/userHelper";
 	import type { Book } from "@interfaces/book";
-	import type { Borrow } from "@interfaces/borrow";
+	// import type { Borrow } from "@interfaces/borrow";
 
 	const messageStore = useMessageStore();
 	const userStore = useUserStore();
@@ -105,8 +105,8 @@
 	const tabs = ref<TabNames>("user_info");
 
 	const uploadedBooks = ref<Book[]>([]);
-	const borrowedBooks = ref<Book[]>([]);
-	const lendedBooks = ref<Book[]>([]);
+	// const borrowedBooks = ref<Book[]>([]);
+	// const lendedBooks = ref<Book[]>([]);
 	const messageInput = ref("");
 	const splitterWidth = ref(150);
 
@@ -119,13 +119,17 @@
 
 	onMounted(() => {
 		uploadedBooks.value = userStore.openedUser?.books as Book[];
-		(userStore.openedUser?.borrows as Borrow[])?.every((b: Borrow) => {
-			if (b?.from == userStore.openedUser?._id) {
-				lendedBooks.value.push(...(b.books as Book[]));
-			} else {
-				borrowedBooks.value.push(...(b.books as Book[]));
-			}
-		});
+		// console.log(userStore.openedUser?.borrows);
+		// (userStore.openedUser?.borrows as Borrow[])?.forEach((b: Borrow) => {
+		// 	if (b.verified) {
+		// 		console.log(b);
+		// 		if (b?.from == userStore.openedUser?._id) {
+		// 			lendedBooks.value.push(...(b.books as Book[]));
+		// 		} else {
+		// 			borrowedBooks.value.push(...(b.books as Book[]));
+		// 		}
+		// 	}
+		// });
 	});
 </script>
 

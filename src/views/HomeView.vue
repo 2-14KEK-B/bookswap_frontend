@@ -17,9 +17,9 @@
 			</q-input>
 		</div>
 		<q-btn-group flat class="full-width flex justify-evenly q-my-md">
-			<q-btn label="Offers" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
-			<q-btn label="Upload a new" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />
-			<q-btn label="Wishes" color="secondary" class="q-px-lg" @click.prevent="selectBooks('lend')" />
+			<q-btn no-caps label="Offers" color="secondary" @click.prevent="selectBooks('borrow')" />
+			<q-btn no-caps label="Upload a new" :to="{ name: 'newBook' }" color="primary" />
+			<q-btn no-caps label="Wishes" color="secondary" @click.prevent="selectBooks('lend')" />
 		</q-btn-group>
 		<q-scroll-area style="height: calc(100vh - 180px)">
 			<div class="row">
@@ -65,7 +65,11 @@
 										@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 									/>
 									<q-btn
-										v-if="userStore.loggedInUser && book.uploader != userStore.loggedInUser._id"
+										v-if="
+											userStore.loggedInUser &&
+											book.uploader != userStore.loggedInUser._id &&
+											!isBookAlreadyInLoggedInBorrows(book._id, (userStore.loggedInUser.borrows as Borrow[]))
+										"
 										flat
 										no-caps
 										:disable="!book.available"
@@ -87,9 +91,11 @@
 	import { onMounted, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useUserStore } from "@stores/user";
-	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
 	import { useBookStore } from "@stores/book";
+	import { isBookAlreadyInLoggedInBorrows } from "@utils/bookHelper";
+	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
 	import type { Book } from "@interfaces/book";
+	import type { Borrow } from "@interfaces/borrow";
 
 	const router = useRouter();
 	const userStore = useUserStore();

@@ -62,7 +62,7 @@
 			<q-tab-panel
 				name="book"
 				class="no-padding row items-stretch bg-grey-9"
-				style="min-height: calc(100vh - 150px); margin-bottom: 50px"
+				style="min-height: calc(100vh - 140px); margin-bottom: 40px"
 			>
 				<div class="row items-stretch full-width">
 					<BookInfo v-if="bookStore.openedBook" />

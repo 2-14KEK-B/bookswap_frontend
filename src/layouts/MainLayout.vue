@@ -7,9 +7,31 @@
 				</q-toolbar-title>
 
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell">
-						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
-					</q-btn>
+					<q-btn-dropdown
+						flat
+						rounded
+						class="notification"
+						:icon="mdiBell"
+						no-icon-animation
+						dropdown-icon="none"
+						menu-anchor="bottom middle"
+						menu-self="top middle"
+						:menu-offset="[0, 10]"
+						content-style="width: 400px"
+					>
+						<template #label>
+							{{ quasar.screen.gt.sm ? "Notifications" : "" }}
+							<q-badge
+								v-if="userStore.notificationSum > 0"
+								color="red"
+								:label="userStore.notificationSum"
+								class="absolute-top-left"
+								style="border-radius: 10px"
+							/>
+						</template>
+
+						<NotificationList />
+					</q-btn-dropdown>
 					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage">
 						<q-badge
 							v-if="messageStore.notSeenMessages > 0"
@@ -67,6 +89,7 @@
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
+	import NotificationList from "@components/NotificationList.vue";
 	import { useRouter } from "vue-router";
 	import { computed, ComputedRef, ref } from "vue";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
@@ -96,3 +119,9 @@
 		},
 	]);
 </script>
+
+<style>
+	button.notification i {
+		display: none;
+	}
+</style>
