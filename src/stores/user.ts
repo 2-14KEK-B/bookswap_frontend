@@ -1,21 +1,15 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import $axios from "@api/axios";
-import { Loading, Notify } from "quasar";
-import { matClose } from "@quasar/extras/material-icons";
+import { Loading } from "quasar";
+import { getNotSeenNotificationsCount } from "@utils/userHelper";
 import type { User, EditUser } from "@interfaces/user";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
 	const openedUser = ref<User>();
-
-	Notify.setDefaults({
-		progress: true,
-		position: "bottom-right",
-		timeout: 2000,
-		actions: [{ icon: matClose, color: "white" }],
-	});
+	const notificationSum = computed(() => getNotSeenNotificationsCount(loggedInUser.value?.notifications));
 
 	async function getById(id: string) {
 		try {
@@ -23,6 +17,35 @@ export const useUserStore = defineStore("user", () => {
 			const { data } = await $axios.get(`/user/${id}`);
 
 			return data as User;
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function setNotificationSeen(notificationId?: string) {
+		try {
+			if (loggedInUser.value && notificationId) {
+				await $axios.patch(`/user/me/notification/${notificationId}`);
+				loggedInUser.value.notifications.some((n) => {
+					if (n._id == notificationId) {
+						n.seen = true;
+						n.updatedAt = new Date().toISOString();
+						return true;
+					}
+					return false;
+				});
+			}
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function deleteNotification(notificationId?: string) {
+		try {
+			if (loggedInUser.value && notificationId) {
+				await $axios.delete(`/user/me/notification/${notificationId}`);
+				loggedInUser.value.notifications = loggedInUser.value.notifications.filter((n) => n._id != notificationId);
+			}
 		} catch (error) {
 			return;
 		}
@@ -98,7 +121,10 @@ export const useUserStore = defineStore("user", () => {
 	return {
 		loggedInUser,
 		openedUser,
+		notificationSum,
 		getById,
+		setNotificationSeen,
+		deleteNotification,
 		getLoggedIn,
 		editLoggedIn,
 		deleteLoggedIn,

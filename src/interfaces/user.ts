@@ -2,6 +2,7 @@ import type { Book } from "./book";
 import type { Borrow } from "./borrow";
 import type { Message } from "./message";
 import type { UserRate } from "./userRate";
+import type { Notification } from "./notification";
 
 interface User {
 	_id?: string;
@@ -21,6 +22,7 @@ interface User {
 	rated_books?: string[];
 	user_rates?: { from: (UserRate | string)[]; to: (UserRate | string)[] };
 	borrows?: (Borrow | string)[];
+	notifications: Notification[];
 }
 
 interface EditUser {

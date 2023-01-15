@@ -12,7 +12,7 @@
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn v-close-popup flat label="OK" @click="sendUpdate" />
+				<q-btn v-if="verified" v-close-popup flat label="OK" @click="sendUpdate" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>
@@ -34,7 +34,7 @@
 
 	async function sendUpdate() {
 		if (props.borrow) {
-			await borrowStore.editBorrow({ verified: verified.value }, props.borrow?._id);
+			await borrowStore.verifyBorrow(props.borrow?._id);
 			close();
 		}
 	}

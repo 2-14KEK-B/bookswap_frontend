@@ -1,8 +1,9 @@
 import type { User } from "@interfaces/user";
 import type { UserRate } from "@interfaces/userRate";
+import type { Notification } from "@interfaces/notification";
 
-function getDisplayName(user?: User): string {
-	if (user) {
+function getDisplayName(user?: User | Partial<User>): string {
+	if (user && user.email) {
 		return user.fullname || user.username || user.email;
 	}
 	return "user";
@@ -21,19 +22,31 @@ function getLocalDate(date?: string) {
 }
 
 function getRateSum(rates?: User["user_rates"]) {
+	let rateSum = 0;
 	if (rates) {
-		let rateSum = 0;
-		rates.to.every((rate) => {
+		rates.to.forEach((rate) => {
 			if (instanceOfRate(rate)) {
 				rateSum += (rate as UserRate).rate ? 1 : -1;
 			}
 		});
-		return rateSum;
 	}
+	return rateSum;
+}
+
+function getNotSeenNotificationsCount(notifications?: Notification[]) {
+	let notificationSum = 0;
+	if (notifications) {
+		notifications.forEach((n) => {
+			if (n.seen == false) {
+				notificationSum++;
+			}
+		});
+	}
+	return notificationSum;
 }
 
 function instanceOfRate(data: any): data is UserRate {
 	return "rate" in data;
 }
 
-export { getDisplayName, getAvatar, getLocalDate, getRateSum };
+export { getDisplayName, getAvatar, getLocalDate, getRateSum, getNotSeenNotificationsCount };
