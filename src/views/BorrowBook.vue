@@ -1,38 +1,38 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<q-tabs v-model="tab" no-caps align="justify">
-			<q-tab name="uploader" label="Uploader" />
-			<q-tab name="book" label="Book" />
-			<q-tab name="other-books" :label="$q.screen.lt.sm ? 'Other books' : 'Other books from the uploader'" />
+			<q-tab name="uploader" :label="$t('uploader')" />
+			<q-tab name="book" :label="$t('book')" />
+			<q-tab name="other-books" :label="$q.screen.lt.sm ? $t('otherBooks') : $t('otherBooksFromTheUploader')" />
 		</q-tabs>
 		<q-tab-panels v-model="tab">
 			<q-tab-panel name="uploader" class="no-padding" style="height: calc(100vh - 100px)">
 				<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-					<q-tab name="info" label="User information" />
+					<q-tab name="info" :label="$t('userInformation')" />
 					<q-tab name="rate" :label="`${getDisplayName((bookStore.openedBook?.uploader as User))}'s rates`" />
 				</q-tabs>
 				<q-tab-panels v-model="userTab">
 					<q-tab-panel name="info" class="no-padding" style="height: calc(100vh - 150px)">
 						<q-card flat square class="full-height full-width q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 							<p class="text-h4">
-								Full Name:
+								{{ $t("fullname") }}:
 								{{
 									(bookStore.openedBook?.uploader as User)?.fullname
 										? (bookStore.openedBook?.uploader as User)?.fullname
-										: "Does not set his full name"
+										: $t("doesNotSetHisFullName")
 								}}
 							</p>
 							<h5>
-								User Name:
+								{{ $t("username") }}:
 								{{
 									(bookStore.openedBook?.uploader as User)?.username
 										? (bookStore.openedBook?.uploader as User)?.username
-										: "Does not set his username"
+										: $t("doesNotSetHisUsername")
 								}}
 							</h5>
 							<h5>E-Mail: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
-							<h5>Registered: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
-							<h5>Overall rates: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
+							<h5>{{ $t("registered") }}: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
+							<h5>{{ $t("overallRate") }}: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
 					</q-tab-panel>
 					<q-tab-panel name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
@@ -46,7 +46,7 @@
 							>
 								<q-card-section>
 									<h6>
-										From: {{ getDisplayName(rate.from as User) }}
+										{{ $t("from") }}: {{ getDisplayName(rate.from as User) }}
 										<q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
 										</q-avatar>
@@ -72,7 +72,7 @@
 							color="primary"
 							no-caps
 							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Borrow it' : 'Send borrow request'"
+							:label="$q.screen.lt.sm ? $t('borrowIt') : $t('sendBorrowRequest')"
 							@click="sendBorrow"
 						/>
 						<q-btn
@@ -81,7 +81,7 @@
 							color="secondary"
 							no-caps
 							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Send message' : 'Send message to the uploader'"
+							:label="$q.screen.lt.sm ? $t('sendMessage') : $t('sendMessageToTheUploader')"
 							@click="appStore.messageModal = true"
 						/>
 					</q-btn-group>
@@ -155,7 +155,7 @@
 												flat
 												outline
 												no-caps
-												label="Open in new tab"
+												:label="$t('Open in new tab')"
 												@click.prevent="openBookInNewTab(otherBook?._id as string)"
 											/>
 										</q-btn-group>

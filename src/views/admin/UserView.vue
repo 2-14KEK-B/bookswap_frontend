@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				title="User	"
+				:title="$t('user')"
 				:columns="columns"
 				:rows="data?.docs"
 				:loading="loading"
@@ -16,16 +16,16 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		title="User"
+		:title="$t('user')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-input v-model="editedData.username" label="Username" />
-		<q-input v-model="editedData.fullname" label="Fullname" />
-		<q-input v-model="editedData.picture" label="Picture" />
-		<q-input v-model="editedData.email" label="Email" />
+		<q-input v-model="editedData.username" :label="$t('username')" />
+		<q-input v-model="editedData.fullname" :label="$t('fullname')" />
+		<q-input v-model="editedData.picture" :label="$t('picture')" />
+		<q-input v-model="editedData.email" :label="$t('email')" />
 		<div class="flex"></div>
 	</EditTableData>
 </template>
@@ -38,6 +38,7 @@
 	import type { User } from "@interfaces/user";
 	import type { QTableColumn } from "quasar";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import { useI18n } from "vue-i18n";
 
 	interface ModifiableData {
 		username?: string;
@@ -54,6 +55,7 @@
 	const editing = ref(false);
 	const loading = ref(true);
 	const rowsNumber = ref<number | undefined>();
+	const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const users = await userStore.adminGetUsers(query);
@@ -100,42 +102,42 @@
 
 	const columns: QTableColumn<User>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "createdAt", name: "createdAt", label: "createdAt" },
-		{ field: "updatedAt", name: "updatedAt", label: "updatedAt" },
-		{ field: "fullname", name: "fullname", label: "fullname" },
-		{ field: "username", name: "username", label: "username" },
-		{ field: "email", name: "email", label: "email" },
-		{ field: "email_is_verified", name: "email_is_verified", label: "email_is_verified" },
-		{ field: "locale", name: "locale", label: "locale" },
+		{ field: "createdAt", name: "createdAt", label: t("createdAt") },
+		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt") },
+		{ field: "fullname", name: "fullname", label: t("fullname") },
+		{ field: "username", name: "username", label: t("username") },
+		{ field: "email", name: "email", label: t("email") },
+		{ field: "email_is_verified", name: "email_is_verified", label: t("emailVerified") },
+		{ field: "locale", name: "locale", label: t("locale") },
 		// { field: "role", name: "role", label: "role", format: (val) => (val ? val : "user") },
 		{
 			field: "books",
 			name: "books",
-			label: "books",
+			label: t("books"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "messages",
 			name: "messages",
-			label: "messages",
+			label: t("messages"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "borrows",
 			name: "borrows",
-			label: "borrows",
+			label: t("borrows"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "rated_books",
 			name: "rated_books",
-			label: "rated_books",
+			label: t("ratedBooks"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{
 			field: "user_rates",
 			name: "user_rates",
-			label: "user_rates",
+			label: t("userRates"),
 			format: (val) => val,
 		},
 	];

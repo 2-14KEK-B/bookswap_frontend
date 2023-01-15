@@ -7,10 +7,10 @@
 				</q-toolbar-title>
 
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('main.notificatons') : ''" :icon="mdiBell">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('notificatons') : ''" :icon="mdiBell">
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('main.notificatons') : ''" :to="{ name: 'message' }" :icon="mdiMessage">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('message') : ''" :to="{ name: 'message' }" :icon="mdiMessage">
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
@@ -25,7 +25,7 @@
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
-									<q-item-label>{{ $t('main.adminPage') }}</q-item-label>
+									<q-item-label>{{ $t("adminPage") }}</q-item-label>
 								</q-item-section>
 							</q-item>
 							<template v-for="button in buttons" :key="button.name">
@@ -38,7 +38,7 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat label="Login" :to="{ name: 'auth' }" />
+					<q-btn flat :label="$t('login')" :to="{ name: 'auth' }" />
 					<q-btn
 						flat
 						:icon="buttons[1].icon"
@@ -81,11 +81,11 @@
 	const quasar = useQuasar();
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
-	const {t} = useI18n({useScope:'global'})
-
+	const { t } = useI18n({ useScope: "global" });
+	//TODO: mód váltót befejezni
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: t('main.myProfile'),
+			name: t("myProfile"),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
@@ -95,7 +95,7 @@
 			icon: mdiThemeLightDark,
 		},
 		{
-			name: "Logout",
+			name: t("logout"),
 			action: authStore.logOut,
 			icon: matLogout,
 		},

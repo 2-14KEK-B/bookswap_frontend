@@ -6,7 +6,7 @@
 				outlined
 				dense
 				style="max-width: 100%"
-				:placeholder="$t('home.search')"
+				:placeholder="$t('searchBy')"
 				:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-3'"
 				@keydown.enter.prevent="searchByKeyword"
 			>
@@ -17,9 +17,9 @@
 			</q-input>
 		</div>
 		<q-btn-group flat class="full-width flex justify-evenly q-my-md">
-			<q-btn :label="$t('home.offers')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
-			<q-btn :label="$t('home.uploadNew')" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />
-			<q-btn :label="$t('home.wishes')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('lend')" />
+			<q-btn :label="$t('offers')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('borrow')" />
+			<q-btn :label="$t('uploadNew')" :to="{ name: 'newBook' }" color="primary" class="q-px-lg" />
+			<q-btn :label="$t('wishes')" color="secondary" class="q-px-lg" @click.prevent="selectBooks('lend')" />
 		</q-btn-group>
 		<q-scroll-area style="height: calc(100vh - 180px)">
 			<div class="row">
@@ -33,8 +33,8 @@
 										<div class="col">
 											<q-item>
 												<q-item-section>
-													<q-item-label lines="1">Title: {{ book.title }}</q-item-label>
-													<q-item-label lines="1" caption>Author: {{ book.author }}</q-item-label>
+													<q-item-label lines="1">{{ $t("title") }}: {{ book.title }}</q-item-label>
+													<q-item-label lines="1" caption>{{ $t("author") }}: {{ book.author }}</q-item-label>
 												</q-item-section>
 											</q-item>
 										</div>
@@ -46,7 +46,7 @@
 															<q-item-section
 																@click.prevent="router.push({ name: 'userProfile', params: { id: book.uploader as string } })"
 															>
-															{{$t("home.uploader")}}
+																{{ $t("uploader") }}
 															</q-item-section>
 														</q-item>
 													</q-list>
@@ -60,7 +60,7 @@
 									<q-btn
 										flat
 										no-caps
-										:label="$t('home.open')"
+										:label="$t('open')"
 										padding="sm none"
 										@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 									/>
@@ -69,7 +69,7 @@
 										flat
 										no-caps
 										:disable="!book.available"
-										:label="selected == 'borrow' ? $t('home.borrowIt') : 'Lend it'"
+										:label="selected == 'borrow' ? $t('borrowIt') : $t('lendIt')"
 										padding="sm none"
 										@click.prevent="router.push({ name: 'borrowBook', params: { id: book._id } })"
 									/>

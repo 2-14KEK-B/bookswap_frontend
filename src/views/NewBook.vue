@@ -3,26 +3,26 @@
 		<q-form @submit.prevent="bookCreating" @reset="resetFields">
 			<q-input
 				v-model="input.author"
-				label="Author"
+				:label="$t('author')"
 				lazy-rules
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
 			<q-input
 				v-model="input.title"
-				label="Title"
+				:label="$t('title')"
 				lazy-rules
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
-			<q-input v-model="input.picture" label="Picture" />
-			<q-input v-model="input.price" label="Price" type="number" />
+			<q-input v-model="input.picture" :label="$t('picture')" />
+			<q-input v-model="input.price" :label="$t('price')" type="number" />
 			<q-toggle
 				v-model="input.for_borrow"
 				color="green"
-				:label="input.for_borrow ? 'Upload for borrow' : 'Upload for lend'"
+				:label="input.for_borrow ? $t('upForBorrow') : $t('upForLend')"
 			/>
 			<div>
-				<q-btn label="Submit" type="submit" color="primary" />
-				<q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+				<q-btn :label="$t('submit')" type="submit" color="primary" />
+				<q-btn :label="$t('reset')" type="reset" color="primary" flat class="q-ml-sm" />
 			</div>
 		</q-form>
 	</div>

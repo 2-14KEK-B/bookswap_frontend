@@ -5,8 +5,8 @@
 		<h1>404</h1>
 	</div>
 	<h4>
-		Page not found, go to
-		<RouterLink :to="{ name: 'home' }">Home page</RouterLink>
+		{{$t('Page not found, go to')}}
+		<RouterLink :to="{ name: 'home' }">{{$t('homepagere')}}</RouterLink>
 	</h4>
 </template>
 

@@ -1,15 +1,15 @@
 <template>
 	<div class="q-mx-lg">
-		<h4>Edit profil</h4>
+		<h4>{{$t('editMyProfile')}}</h4>
 	</div>
 	<div class="q-pa-lg">
 		<q-form @submit.prevent="editUser" @reset="reset">
-			<q-input v-model="userData.username" label="Username" />
-			<q-input v-model="userData.fullname" label="Fullname" />
-			<q-input v-model="userData.picture" label="Picture" />
+			<q-input v-model="userData.username" :label="$t('username')" />
+			<q-input v-model="userData.fullname" :label="$t('fullname')" />
+			<q-input v-model="userData.picture" :label="$t('picture')" />
 			<div class="q-my-lg">
-				<q-btn label="Submit" type="submit" color="primary" />
-				<q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+				<q-btn :label="$t('submit')" type="submit" color="primary" />
+				<q-btn :label="$t('reset')" type="reset" color="primary" flat class="q-ml-sm" />
 			</div>
 		</q-form>
 	</div>

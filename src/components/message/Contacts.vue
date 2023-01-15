@@ -66,7 +66,7 @@
 		</q-pull-to-refresh>
 		<q-page-sticky expand position="top">
 			<q-toolbar class="bg-secondary">
-				<q-toolbar-title>Users</q-toolbar-title>
+				<q-toolbar-title>{{$t('users')}}</q-toolbar-title>
 				<q-btn v-if="messageStore.selectedMessageIndex != null" flat dense :icon="mdiClose" @click="emits('close')" />
 			</q-toolbar>
 			<q-toolbar class="bg-secondary">
@@ -77,7 +77,7 @@
 					outlined
 					dense
 					class="full-width"
-					placeholder="Search or start a new conversation"
+					:placeholder="$t('Search or start a new conversation')"
 				>
 					<!-- @keydown.enter.prevent="sort" -->
 					<template #prepend>

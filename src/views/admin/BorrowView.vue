@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				:title="'Borrow'"
+				:title="$t('borrows')"
 				:columns="columns"
 				:rows="data?.docs"
 				:loading="loading"
@@ -17,13 +17,13 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		title="Borrow"
+		:title="$t('borrows')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-toggle v-model="editedData.verified" label="Available" />
+		<q-toggle v-model="editedData.verified" :label="$t('available')" />
 	</EditTableData>
 </template>
 
@@ -36,6 +36,7 @@
 	import type { Borrow } from "@interfaces/borrow";
 	import type { Book } from "@interfaces/book";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import { useI18n } from "vue-i18n";
 
 	interface ModifiableData {
 		verified?: boolean;
@@ -49,6 +50,7 @@
 	const editing = ref(false);
 	const loading = ref(true);
 	const rowsNumber = ref<number | undefined>();
+	const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const borrows = await borrowStore.adminGetBorrows(query);
@@ -92,16 +94,16 @@
 
 	const columns: QTableColumn<Borrow>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
-		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
-		{ field: "from", name: "from", label: "from" },
-		{ field: "to", name: "to", label: "to" },
-		{ field: "books", name: "books", label: "books", format: (book: Book[]) => book?.join(", ") },
-		{ field: "verified", name: "verified", label: "verified" },
+		{ field: "createdAt", name: "createdAt", label: t("createdAt"), sortable: true },
+		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt"), sortable: true },
+		{ field: "from", name: "from", label: t("from") },
+		{ field: "to", name: "to", label: t("to") },
+		{ field: "books", name: "books", label: t("books"), format: (book: Book[]) => book?.join(", ") },
+		{ field: "verified", name: "verified", label: t("verified") },
 		{
 			field: "user_rates",
 			name: "user_rates",
-			label: "user_rates",
+			label: t("userRates"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
 		{ field: "__v", name: "__v", label: "__v" },

@@ -7,8 +7,14 @@
 					<q-btn flat :to="{ name: 'admin_home' }">BookSwap</q-btn>
 				</q-toolbar-title>
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Notifications' : ''" :icon="mdiBell" />
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage" />
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('notificatons') : ''" :icon="mdiBell" />
+					<q-btn
+						flat
+						rounded
+						:label="quasar.screen.gt.sm ? $t('message') : ''"
+						:to="{ name: 'message' }"
+						:icon="mdiMessage"
+					/>
 					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
 							<ProfileAvatar
@@ -85,7 +91,9 @@
 	import { matPerson, matLogout } from "@quasar/extras/material-icons";
 	import { userAuthStore } from "@stores/auth";
 	import type MenuDrawer from "@interfaces/drawer";
+	import { useI18n } from "vue-i18n";
 
+	const { t } = useI18n({ useScope: "global" });
 	const router = useRouter();
 	const userStore = useUserStore();
 	const authStore = userAuthStore();
@@ -95,7 +103,7 @@
 	const menuItems: MenuDrawer[] = [
 		{
 			icon: mdiHomeCircleOutline,
-			text: "Home Page",
+			text: t("homePage"),
 			name: "Home Page",
 			routeName: "home",
 			disabled: false,
@@ -103,7 +111,7 @@
 		},
 		{
 			icon: mdiAccountOutline,
-			text: "User",
+			text: t("users"),
 			name: "User",
 			routeName: "admin_user",
 			disabled: false,
@@ -111,7 +119,7 @@
 		},
 		{
 			icon: mdiBookOpenPageVariantOutline,
-			text: "Book",
+			text: t("books"),
 			name: "Book",
 			routeName: "admin_book",
 			disabled: false,
@@ -119,7 +127,7 @@
 		},
 		{
 			icon: mdiShareAllOutline,
-			text: "Borrow",
+			text: t("borrows"),
 			name: "Borrow",
 			routeName: "admin_borrow",
 			disabled: false,
@@ -127,7 +135,7 @@
 		},
 		{
 			icon: mdiMessageOutline,
-			text: "Message",
+			text: t("message"),
 			name: "Message",
 			routeName: "admin_message",
 			disabled: false,
@@ -137,7 +145,7 @@
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: "My profile",
+			name: t("myProfile"),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
@@ -147,7 +155,7 @@
 			icon: mdiThemeLightDark,
 		},
 		{
-			name: "Logout",
+			name: t("logout"),
 			action: authStore.logOut,
 			icon: matLogout,
 		},

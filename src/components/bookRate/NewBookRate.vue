@@ -4,15 +4,15 @@
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
-						Rate
+						{{$t('rate')}}
 						<span class="text-italic">{{ book?.title }}</span>
 					</div>
 				</q-toolbar-title>
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-toolbar>
 			<q-card-section class="q-pt-none">
-				<q-rating v-model="rate" label="Rate" />
-				<q-input v-model="comment" label="Comment" />
+				<q-rating v-model="rate" :label="$t('rate')" />
+				<q-input v-model="comment" :label="$t('comment')" />
 			</q-card-section>
 
 			<q-card-actions align="right">

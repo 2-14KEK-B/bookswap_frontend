@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				:title="'Book'"
+				:title="$t('book')"
 				:columns="columns"
 				:rows="data?.docs"
 				:request="getData"
@@ -18,19 +18,19 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		title="Borrow"
+		:title="$t('book')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-input v-model="editedData.title" label="Title" />
-		<q-input v-model="editedData.author" type="text" label="Author" />
-		<q-input v-model="editedData.picture" type="url" label="Picture" />
-		<q-input v-model="editedData.price" type="number" label="Price" suffix="Ft" step="100" min="0" />
-		<q-toggle v-model="editedData.available" label="Available" />
-		<q-select v-model="editedData.category" multiple label="Category" disable />
-		<q-toggle v-model="editedData.for_borrow" label="For Borrow" />
+		<q-input v-model="editedData.title" :label="$t('title')" />
+		<q-input v-model="editedData.author" type="text" :label="$t('author')" />
+		<q-input v-model="editedData.picture" type="url" :label="$t('picture')" />
+		<q-input v-model="editedData.price" type="number" :label="$t('price')" suffix="Ft" step="100" min="0" />
+		<q-toggle v-model="editedData.available" :label="$t('available')" />
+		<q-select v-model="editedData.category" multiple :label="$t('category')" disable />
+		<q-toggle v-model="editedData.for_borrow" :label="$t('forBorrow')" />
 	</EditTableData>
 </template>
 
@@ -43,6 +43,7 @@
 	import type { BookRate } from "@interfaces/bookRate";
 	import type { QTableColumn } from "quasar";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+	import { useI18n } from "vue-i18n";
 
 	interface ModifiableData {
 		author?: string;
@@ -71,6 +72,7 @@
 	const editing = ref(false);
 	const loading = ref(true);
 	const rowsNumber = ref<number | undefined>();
+	const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const books = await bookStore.adminGetBooks(query);
@@ -123,24 +125,24 @@
 
 	const columns: QTableColumn<Book>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
-		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
-		{ field: "author", name: "author", label: "author", sortable: true },
-		{ field: "title", name: "title", label: "title", sortable: true },
-		{ field: "picture", name: "picture", label: "picture" },
+		{ field: "createdAt", name: "createdAt", label: t("createdAt"), sortable: true },
+		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt"), sortable: true },
+		{ field: "author", name: "author", label: t("author"), sortable: true },
+		{ field: "title", name: "title", label: t("title"), sortable: true },
+		{ field: "picture", name: "picture", label: t("picture") },
 		{
 			field: "category",
 			name: "category",
-			label: "category",
+			label: t("category"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
-		{ field: "price", name: "price", label: "price", sortable: true },
-		{ field: "available", name: "available", label: "available", sortable: true },
-		{ field: "for_borrow", name: "for_borrow", label: "for_borrow", sortable: true },
+		{ field: "price", name: "price", label: t("price"), sortable: true },
+		{ field: "available", name: "available", label: t("available"), sortable: true },
+		{ field: "for_borrow", name: "for_borrow", label: t("forBorrow"), sortable: true },
 		{
 			field: "rates",
 			name: "rates",
-			label: "rates",
+			label: t("rates"),
 			format: (val: BookRate[]) => `[${val.map((r) => r._id).join(", ")}]`,
 		},
 		{ field: "__v", name: "__v", label: "__v" },

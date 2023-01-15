@@ -12,7 +12,7 @@
 				:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 				style="height: 250px"
 			>
-				<p class="text-h4">My account</p>
+				<p class="text-h4">{{$t('myAccount')}}</p>
 				<q-img
 					class="q-pa-lg"
 					:src="
@@ -24,11 +24,11 @@
 				/>
 			</q-card-section>
 			<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-				<q-tab name="info" label="My information" />
-				<q-tab name="borrow" :label="`My's borrows`" :disable="borrowStore.loggedInBorrows.length == 0" />
+				<q-tab name="info" :label="$t('myInformation')" />
+				<q-tab name="borrow" :label="$t(`mysBorrows`)" :disable="borrowStore.loggedInBorrows.length == 0" />
 				<q-tab
 					name="rate"
-					:label="`My's rates`"
+					:label="$t(`mysRates`)"
 					:disable="userRateStore.loggedInRates.from.length == 0 && userRateStore.loggedInRates.to.length == 0"
 				/>
 			</q-tabs>
@@ -40,30 +40,30 @@
 				<q-tab-panel name="info" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-card flat class="full-height q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<p class="text-h5">
-							Full Name:
-							{{ userStore.loggedInUser?.fullname ? userStore.loggedInUser?.fullname : "You did not set your full name" }}
+							{{$t('fullname')}}: 
+							{{ userStore.loggedInUser?.fullname ? userStore.loggedInUser?.fullname : $t("youDidNotSetYourFullName") }}
 						</p>
 						<div class="text-h5">
-							User Name:
-							{{ userStore.loggedInUser?.username ? userStore.loggedInUser?.username : "You did not set your username" }}
+							{{$t('username')}}:
+							{{ userStore.loggedInUser?.username ? userStore.loggedInUser?.username : "youDidNotSetYourUsername" }}
 						</div>
 						<div class="text-h5">E-Mail: {{ userStore.loggedInUser?.email }}</div>
-						<div class="text-h5">Registered: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
-						<div class="text-h5">Overall rates: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
-						<q-btn color="secondary" class="q-my-lg" label="Edit my profile" :to="{ name: 'editProfile' }" />
+						<div class="text-h5">{{$t('registered')}}: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
+						<div class="text-h5">{{$t('overallRate')}}: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
+						<q-btn color="secondary" class="q-my-lg" :label="$t('editMyProfile')" :to="{ name: 'editProfile' }" />
 					</q-card>
 				</q-tab-panel>
 				<q-tab-panel class="no-padding" name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-tabs v-model="rateTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-						<q-tab name="from" label="Rates from me" />
-						<q-tab name="to" label="Rates about me" />
+						<q-tab name="from" :label="$t('ratesFromMe')" />
+						<q-tab name="to" :label="$t('ratesAboutMe')" />
 					</q-tabs>
 					<q-tab-panels v-model="rateTab" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<q-tab-panel name="from">
 							<q-card v-for="rate in userRateStore.loggedInRates.from" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
 									<div class="text-h6">
-										To: {{ getDisplayName(rate.to as User) }}
+										{{$t('to')}}: {{ getDisplayName(rate.to as User) }}
 										<q-avatar v-if="(rate.to as User).picture">
 											<q-img :src="(rate.to as User).picture" />
 										</q-avatar>
@@ -73,8 +73,8 @@
 										</span>
 									</div>
 									<q-separator />
-									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
-									<p>Comment: {{ rate.comment }}</p>
+									<p>{{$t('rate')}}: {{ rate.rate ? $t('upVoted') : $t('downVoted') }}</p>
+									<p>{{$t('comment')}}: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
 						</q-tab-panel>
@@ -82,14 +82,14 @@
 							<q-card v-for="rate in userRateStore.loggedInRates.to" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
 									<div class="text-h6">
-										From: {{ getDisplayName(rate.from as User) }}
+										{{$t('from')}}: {{ getDisplayName(rate.from as User) }}
 										<q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
 										</q-avatar>
 									</div>
 									<q-separator />
-									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
-									<p>Comment: {{ rate.comment }}</p>
+									<p>{{$t('rate')}} {{ rate.rate ? $t('upVoted') : $t('downVoted') }}</p>
+									<p>{{$t('comment')}}: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
 						</q-tab-panel>
@@ -105,7 +105,7 @@
 					>
 						<q-card-section>
 							<div class="text-h6">
-								From: {{ getDisplayName(borrow.from as User) }}
+								{{$t('from')}}: {{ getDisplayName(borrow.from as User) }}
 								<q-avatar v-if="(borrow.from as User).picture">
 									<q-img :src="(borrow.from as User).picture" />
 								</q-avatar>
@@ -120,55 +120,55 @@
 								</span>
 							</div>
 							<div class="text-h6">
-								To: {{ getDisplayName(borrow.to as User) }}
+								{{$t('to')}}: {{ getDisplayName(borrow.to as User) }}
 								<q-avatar v-if="(borrow.to as User).picture">
 									<q-img :src="(borrow.to as User).picture" />
 								</q-avatar>
 							</div>
 							<div class="text-h6">
-								Verified:
+								{{$t('verified')}}:
 								<span class="text-italic">{{ borrow.verified }}</span>
 							</div>
 							<q-list>
-								<q-expansion-item label="Books:">
+								<q-expansion-item :label="$t('books')" >
 									<div class="row">
 										<q-card v-for="book in (borrow.books as Book[])" :key="book._id" class="col-12">
 											<q-card-section>
-												<div>Title: {{ book.title }}</div>
-												<div>Author: {{ book.author }}</div>
+												<div>{{$t('title')}}: {{ book.title }}</div>
+												<div>{{$t('author')}}: {{ book.author }}</div>
 											</q-card-section>
 											<q-img v-if="book.picture" :src="book.picture" style="max-height: 100px" />
 											<q-skeleton v-else height="100px" />
 										</q-card>
 									</div>
 								</q-expansion-item>
-								<q-expansion-item label="Rates:">
+								<q-expansion-item :label="$t('rates')">
 									<div v-if="borrow.user_rates && borrow.user_rates.length > 0" class="row">
 										<q-card
 											v-if="borrow.verified && !checkIfLoggedInHasRate(borrow.user_rates as UserRate[])"
 											class="col-6 flex"
 											flat
 										>
-											<q-btn class="full-width self-center" label="Rate the other user" @click="newUserRate(borrow)" />
+											<q-btn class="full-width self-center" :label="$t('rateTheOtherUser')" @click="newUserRate(borrow)" />
 										</q-card>
 										<q-card v-for="rate in (borrow.user_rates as UserRate[])" :key="rate._id" class="col-12" flat bordered>
 											<q-card-section>
 												<q-list>
 													<div>
-														From: {{ getDisplayName(rate.from as User) }}
+														{{$t('from')}}: {{ getDisplayName(rate.from as User) }}
 														<q-avatar v-if="(rate.from as User).picture">
 															<q-img :src="(rate.from as User).picture" />
 														</q-avatar>
 													</div>
 													<div>
-														To: {{ getDisplayName(rate.to as User) }}
+														{{$t('to')}}: {{ getDisplayName(rate.to as User) }}
 														<q-avatar v-if="(rate.to as User).picture">
 															<q-img :src="(rate.to as User).picture" />
 														</q-avatar>
 													</div>
-													<div>Rate: {{ rate.rate ? "Upvote" : "Downvote" }}</div>
+													<div>{{$t('rate')}}: {{ rate.rate ? $t('upVoted') : $t('downVoted') }}</div>
 													<div>
-														Comment:
+														{{$t('comment')}}:
 														<span class="text-italic">{{ rate.comment }}</span>
 													</div>
 												</q-list>

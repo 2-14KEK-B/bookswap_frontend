@@ -25,11 +25,11 @@
 				v-if="selectedArray.length == 1 && title != 'Message'"
 				class="q-mx-sm"
 				color="secondary"
-				label="Modify"
+				:label="$t('modify')"
 				@click.prevent="onEdit"
 			/>
-			<q-btn v-if="selectedArray.length" class="q-mx-sm" color="red" label="Delete" @click.prevent="onDelete" />
-			<q-input v-model="filter" dense debounce="300" placeholder="Search" type="text" @keydown.enter="onRequest">
+			<q-btn v-if="selectedArray.length" class="q-mx-sm" color="red" :label="$t('delete')" @click.prevent="onDelete" />
+			<q-input v-model="filter" dense debounce="300" :placeholder="$t('search')" type="text" @keydown.enter="onRequest">
 				<template #append>
 					<q-btn flat round :icon="matSearch" @click.prevent="onRequest" />
 				</template>
@@ -38,7 +38,7 @@
 				<q-menu auto-close :offset="[50, 10]">
 					<q-list>
 						<q-item clickable>
-							<q-item-section no-wrap @click="exportTable(columns, rows, title)">Export to csv</q-item-section>
+							<q-item-section no-wrap @click="exportTable(columns, rows, title)">{{$t('exportCSV')}}</q-item-section>
 						</q-item>
 					</q-list>
 				</q-menu>

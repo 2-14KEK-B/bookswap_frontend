@@ -4,7 +4,7 @@
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
-						Send message to
+						{{$t('Send message to')}}
 						<span class="text-italic">{{ displayName }}</span>
 					</div>
 				</q-toolbar-title>
