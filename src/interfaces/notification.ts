@@ -1,6 +1,6 @@
 import type { User } from "./user";
 
-export type docType = "borrow" | "user_rate";
+export type docType = "lend" | "borrow" | "user_rate";
 export type notiType = "create" | "update" | "delete" | "verify";
 
 interface Notification {

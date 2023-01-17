@@ -8,6 +8,7 @@ interface Borrow {
 	updatedAt: string;
 	from: User | string;
 	to: User | string;
+	type: "borrow" | "lend";
 	books: (Book | string)[];
 	verified: boolean;
 	user_rates?: (UserRate | string)[];
@@ -15,12 +16,14 @@ interface Borrow {
 }
 
 interface CreateBorrow {
-	from: string;
+	from?: string;
+	to?: string;
 	books: string[];
 }
 
 interface ModifyBorrow {
 	verified?: boolean;
+	books?: string[];
 }
 
 export { Borrow, CreateBorrow, ModifyBorrow };

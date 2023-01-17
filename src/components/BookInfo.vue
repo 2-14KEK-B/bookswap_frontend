@@ -34,6 +34,13 @@
 						<span>{{ bookStore.openedBook?.available }}</span>
 					</div>
 					<div class="text-h6">
+						Uploader:
+						<span class="q-mr-sm">{{ getDisplayName(bookStore.openedBook.uploader as User) }}</span>
+						<q-avatar v-if="(bookStore.openedBook.uploader as User).picture">
+							<q-img :src="(bookStore.openedBook.uploader as User).picture" />
+						</q-avatar>
+					</div>
+					<div class="text-h6">
 						Uploaded at:
 						<span>{{ new Date(bookStore.openedBook?.createdAt as string).toLocaleString() }}</span>
 					</div>

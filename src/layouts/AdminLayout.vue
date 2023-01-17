@@ -32,10 +32,7 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
-							<ProfileAvatar
-								:src="userStore.loggedInUser.picture"
-								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
-							/>
+							<ProfileAvatar :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
 							<template v-for="button in buttons" :key="button.name">
@@ -95,6 +92,7 @@
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NotificationList from "@components/NotificationList.vue";
+	import { getDisplayName } from "@utils/userHelper";
 	import {
 		mdiThemeLightDark,
 		mdiHomeCircleOutline,

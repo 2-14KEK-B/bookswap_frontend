@@ -43,10 +43,7 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
-							<ProfileAvatar
-								:src="userStore.loggedInUser.picture"
-								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
-							/>
+							<ProfileAvatar :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
 							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_home' }">
@@ -84,14 +81,15 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ComputedRef, ref } from "vue";
+	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { userAuthStore } from "@stores/auth";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NotificationList from "@components/NotificationList.vue";
-	import { useRouter } from "vue-router";
-	import { computed, ComputedRef, ref } from "vue";
+	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
 

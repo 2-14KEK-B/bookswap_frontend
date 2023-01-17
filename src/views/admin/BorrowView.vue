@@ -66,7 +66,7 @@
 	}
 
 	async function sendEdit() {
-		await borrowStore.editBorrow(editedData.value, editDefaultData.value?._id);
+		await borrowStore.editBorrow(editedData.value, editDefaultData.value?._id as string);
 		closeEditModal();
 		await getData();
 	}
@@ -96,6 +96,7 @@
 		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
 		{ field: "from", name: "from", label: "from" },
 		{ field: "to", name: "to", label: "to" },
+		{ field: "type", name: "type", label: "type" },
 		{ field: "books", name: "books", label: "books", format: (book: Book[]) => book?.join(", ") },
 		{ field: "verified", name: "verified", label: "verified" },
 		{
@@ -104,7 +105,6 @@
 			label: "user_rates",
 			format: (val) => `[${val.join(", ")}]`,
 		},
-		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>
 

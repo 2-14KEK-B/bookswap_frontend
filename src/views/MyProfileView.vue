@@ -111,12 +111,16 @@
 								</q-avatar>
 								<span v-if="!borrow.verified" class="absolute-top-right">
 									<q-icon
-										v-if="(borrow.from as User)._id == userStore.loggedInUser._id && !borrow?.verified"
+										v-if="canLoggedInVerifyBorrow(borrow)"
 										:name="matEdit"
 										class="q-pr-md"
 										@click.prevent="editBorrow(borrow)"
 									/>
-									<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteBorrow(borrow._id)" />
+									<q-icon
+										:name="matDelete"
+										class="q-pr-md"
+										@click.prevent="deleteBorrow(borrow.type, (borrow.from as User)._id as string, borrow._id)"
+									/>
 								</span>
 							</div>
 							<div class="text-h6">
@@ -247,8 +251,18 @@
 		}
 	}
 
-	async function deleteBorrow(borrowId: string) {
-		await borrowStore.deleteBorrow(borrowId);
+	async function deleteBorrow(type: "borrow" | "lend", userId: string, borrowId: string) {
+		await borrowStore.deleteBorrow(type, userId, borrowId);
+	}
+
+	function canLoggedInVerifyBorrow(borrow: Borrow) {
+		let userWhoCanModify: User;
+		if (borrow.type == "borrow") {
+			userWhoCanModify = borrow.from as User;
+		} else {
+			userWhoCanModify = borrow.to as User;
+		}
+		return userWhoCanModify._id == userStore.loggedInUser?._id;
 	}
 
 	function checkIfLoggedInHasRate(rates?: UserRate[]) {

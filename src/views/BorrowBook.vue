@@ -72,7 +72,15 @@
 							color="primary"
 							no-caps
 							padding="sm none"
-							:label="$q.screen.lt.sm ? 'Borrow it' : 'Send borrow request'"
+							:label="
+								bookStore.openedBook?.for_borrow
+									? $q.screen.lt.sm
+										? 'Borrow it'
+										: 'Send borrow request'
+									: $q.screen.lt.sm
+									? 'Lend it'
+									: 'Send lend request'
+							"
 							@click="sendBorrow"
 						/>
 						<q-btn
@@ -152,6 +160,7 @@
 	import type { Book } from "@interfaces/book";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";
+	import type { CreateBorrow } from "@interfaces/borrow";
 
 	const appStore = useAppStore();
 	const bookStore = useBookStore();
@@ -162,11 +171,17 @@
 	const otherBooks = ref<Book[]>([]);
 
 	async function sendBorrow() {
-		if (bookStore.openedBook) {
-			const borrowData = {
-				from: (bookStore.openedBook.uploader as User)?._id as string,
-				books: [bookStore.openedBook?._id as string],
+		const book = bookStore.openedBook;
+		if (book) {
+			const borrowData: CreateBorrow = {
+				books: [book._id as string],
 			};
+			const uploader = (book.uploader as User)._id as string;
+			if (book.for_borrow) {
+				borrowData["from"] = uploader;
+			} else {
+				borrowData["to"] = uploader;
+			}
 			await borrowStore.createBorrow(borrowData);
 
 			router.push({ name: "home" });
