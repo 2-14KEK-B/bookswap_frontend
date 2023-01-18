@@ -32,7 +32,7 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
-							<ProfileAvatar :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
+							<ProfileAvatar title :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
 							<template v-for="button in buttons" :key="button.name">

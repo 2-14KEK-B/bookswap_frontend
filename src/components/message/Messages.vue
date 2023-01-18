@@ -24,7 +24,13 @@
 					:stamp="dayjs().to(content.createdAt)"
 				>
 					<template #avatar>
-						<q-avatar
+						<span v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id">
+							<ProfileAvatar
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
+							/>
+						</span>
+						<!-- <q-avatar
 							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
 							color="primary"
 							text-color="white"
@@ -35,7 +41,7 @@
 								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
 							/>
 							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar>
+						</q-avatar> -->
 					</template>
 				</q-chat-message>
 			</q-infinite-scroll>
@@ -46,13 +52,19 @@
 				<q-space />
 				<q-btn flat no-caps align="center">
 					<q-toolbar-title>
-						<q-avatar v-if="messageStore.selectedMessage" color="primary" text-color="white">
+						<span v-if="messageStore.selectedMessage">
+							<ProfileAvatar
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
+							/>
+						</span>
+						<!-- <q-avatar v-if="messageStore.selectedMessage" color="primary" text-color="white">
 							<q-img
 								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
 								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
 							/>
 							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar>
+						</q-avatar> -->
 						{{ otherUser?.displayName }}
 					</q-toolbar-title>
 				</q-btn>
@@ -86,6 +98,8 @@
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
+	import { getDisplayName } from "@utils/userHelper";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { QInput, QScrollArea } from "quasar";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
 

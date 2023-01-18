@@ -36,9 +36,10 @@
 					<div class="text-h6">
 						Uploader:
 						<span class="q-mr-sm">{{ getDisplayName(bookStore.openedBook.uploader as User) }}</span>
-						<q-avatar v-if="(bookStore.openedBook.uploader as User).picture">
-							<q-img :src="(bookStore.openedBook.uploader as User).picture" />
-						</q-avatar>
+						<ProfileAvatar
+							:src="(bookStore.openedBook.uploader as User).picture"
+							:alt="getDisplayName(bookStore.openedBook.uploader as User)"
+						/>
 					</div>
 					<div class="text-h6">
 						Uploaded at:
@@ -53,8 +54,14 @@
 						<span>{{ bookStore.openedBook?.price }}</span>
 					</div>
 					<div class="text-h6">
+						<!-- :color="$q.dark.isActive ? 'yellow' : 'dark-yellow'" -->
 						Overall rate:
-						<q-rating v-model="bookStore.openedBook.overallRate" readonly />
+						<q-rating
+							v-model="bookStore.openedBook.overallRate"
+							readonly
+							color="grey-10"
+							:color-selected="$q.dark.isActive ? 'yellow' : 'yellow-8'"
+						/>
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="rate">
@@ -70,9 +77,7 @@
 						<q-card-section>
 							<div class="text-h6">
 								From: {{ getDisplayName(rate.from as User) }}
-								<q-avatar v-if="(rate.from as User).picture">
-									<q-img :src="(rate.from as User).picture" />
-								</q-avatar>
+								<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
 								<span v-if="isRateFromLoggedIn(rate)" class="absolute-top-right">
 									<q-icon dense :name="matEdit" class="q-pr-md" @click.prevent="openRateForEdit(rate)" />
 									<q-icon dense :name="matDelete" class="q-pr-md" @click.prevent="deleteRate(rate._id)" />
@@ -80,7 +85,12 @@
 							</div>
 							<p>
 								Rate:
-								<q-rating v-model="rate.rate" readonly />
+								<q-rating
+									v-model="rate.rate"
+									readonly
+									:color="$q.dark.isActive ? 'grey-6' : 'grey-10'"
+									:color-selected="$q.dark.isActive ? 'yellow' : 'yellow-8'"
+								/>
 							</p>
 							<p>Comment: {{ rate.comment }}</p>
 						</q-card-section>
@@ -101,6 +111,7 @@
 	import { useBookRateStore } from "@stores/bookRate";
 	import { isRateFromLoggedIn } from "@utils/bookHelper";
 	import { getDisplayName } from "@utils/userHelper";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NewBookRate from "@components/bookRate/NewBookRate.vue";
 	import EditBookRate from "@components/bookRate/EditBookRate.vue";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";

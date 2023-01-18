@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import $axios from "@api/axios";
 import { Loading } from "quasar";
-import { getNotSeenNotificationsCount } from "@utils/userHelper";
+import { getNotSeenNotificationsCount, sortNotificationsByCreatedAt } from "@utils/userHelper";
 import type { User, EditUser } from "@interfaces/user";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
 	const openedUser = ref<User>();
 	const notificationSum = computed(() => getNotSeenNotificationsCount(loggedInUser.value?.notifications));
+	const sortedNotifications = computed(() => sortNotificationsByCreatedAt(loggedInUser.value?.notifications));
 
 	async function getById(id: string) {
 		try {
@@ -122,6 +123,7 @@ export const useUserStore = defineStore("user", () => {
 		loggedInUser,
 		openedUser,
 		notificationSum,
+		sortedNotifications,
 		getById,
 		setNotificationSeen,
 		deleteNotification,

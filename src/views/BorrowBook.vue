@@ -47,9 +47,10 @@
 								<q-card-section>
 									<h6>
 										From: {{ getDisplayName(rate.from as User) }}
-										<q-avatar v-if="(rate.from as User).picture">
+										<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
+										<!-- <q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
-										</q-avatar>
+										</q-avatar> -->
 									</h6>
 									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
 									<p>Comment: {{ rate.comment }}</p>
@@ -155,6 +156,7 @@
 	import { useBookStore } from "@stores/book";
 	import { useBorrowStore } from "@stores/borrow";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import BookInfo from "@components/BookInfo.vue";
 	import NewMessage from "@components/message/NewMessage.vue";
 	import type { Book } from "@interfaces/book";

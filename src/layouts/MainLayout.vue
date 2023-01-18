@@ -43,10 +43,10 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
-							<ProfileAvatar :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
+							<ProfileAvatar title :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
-							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_home' }">
+							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_user' }">
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
@@ -91,7 +91,7 @@
 	import NotificationList from "@components/NotificationList.vue";
 	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
-	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
+	import { matAdminPanelSettings, matPerson, matLogout, matBook } from "@quasar/extras/material-icons";
 
 	const router = useRouter();
 	const quasar = useQuasar();
@@ -104,6 +104,11 @@
 			name: "My profile",
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
+		},
+		{
+			name: "My books",
+			action: () => router.push({ name: "myBooks" }),
+			icon: matBook,
 		},
 		{
 			name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),

@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "editProfile",
 				name: "editProfile",
-				component: () => import("@views/EditProfile.vue"),
+				component: () => import("@views/loggedIn/EditProfile.vue"),
 			},
 			{
 				path: "auth",
@@ -37,11 +37,16 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "me",
 				name: "myProfile",
-				component: () => import("@views/MyProfileView.vue"),
+				component: () => import("@views/loggedIn/MyProfileView.vue"),
 				beforeEnter: async () => {
 					const userStore = useUserStore();
 					await userStore.getLoggedIn();
 				},
+			},
+			{
+				path: "books",
+				name: "myBooks",
+				component: () => import("@views/loggedIn/LoggedInBooks.vue"),
 			},
 			{
 				path: "user/:id",
@@ -99,11 +104,6 @@ export const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: "",
-				name: "admin_home",
-				component: () => import("@views/HomeView.vue"),
-			},
-			{
-				path: "user",
 				name: "admin_user",
 				component: () => import("@views/admin/UserView.vue"),
 			},

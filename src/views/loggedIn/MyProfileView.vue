@@ -64,9 +64,10 @@
 								<q-card-section>
 									<div class="text-h6">
 										To: {{ getDisplayName(rate.to as User) }}
-										<q-avatar v-if="(rate.to as User).picture">
+										<ProfileAvatar :src="(rate.to as User).picture" :alt="getDisplayName(rate.to as User)" />
+										<!-- <q-avatar v-if="(rate.to as User).picture">
 											<q-img :src="(rate.to as User).picture" />
-										</q-avatar>
+										</q-avatar> -->
 										<span class="absolute-top-right">
 											<q-icon :name="matEdit" class="q-pr-md" @click.prevent="editUserRate(rate)" />
 											<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteUserRate(rate)" />
@@ -83,9 +84,10 @@
 								<q-card-section>
 									<div class="text-h6">
 										From: {{ getDisplayName(rate.from as User) }}
-										<q-avatar v-if="(rate.from as User).picture">
+										<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
+										<!-- <q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
-										</q-avatar>
+										</q-avatar> -->
 									</div>
 									<q-separator />
 									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
@@ -106,9 +108,10 @@
 						<q-card-section>
 							<div class="text-h6">
 								From: {{ getDisplayName(borrow.from as User) }}
-								<q-avatar v-if="(borrow.from as User).picture">
+								<ProfileAvatar :src="(borrow.from as User).picture" :alt="getDisplayName(borrow.from as User)" />
+								<!-- <q-avatar v-if="(borrow.from as User).picture">
 									<q-img :src="(borrow.from as User).picture" />
-								</q-avatar>
+								</q-avatar> -->
 								<span v-if="!borrow.verified" class="absolute-top-right">
 									<q-icon
 										v-if="canLoggedInVerifyBorrow(borrow)"
@@ -125,9 +128,10 @@
 							</div>
 							<div class="text-h6">
 								To: {{ getDisplayName(borrow.to as User) }}
-								<q-avatar v-if="(borrow.to as User).picture">
+								<ProfileAvatar :src="(borrow.to as User).picture" :alt="getDisplayName(borrow.to as User)" />
+								<!-- <q-avatar v-if="(borrow.to as User).picture">
 									<q-img :src="(borrow.to as User).picture" />
-								</q-avatar>
+								</q-avatar> -->
 							</div>
 							<div class="text-h6">
 								Verified:
@@ -160,15 +164,17 @@
 												<q-list>
 													<div>
 														From: {{ getDisplayName(rate.from as User) }}
-														<q-avatar v-if="(rate.from as User).picture">
+														<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
+														<!-- <q-avatar v-if="(rate.from as User).picture">
 															<q-img :src="(rate.from as User).picture" />
-														</q-avatar>
+														</q-avatar> -->
 													</div>
 													<div>
 														To: {{ getDisplayName(rate.to as User) }}
-														<q-avatar v-if="(rate.to as User).picture">
+														<ProfileAvatar :src="(rate.to as User).picture" :alt="getDisplayName(rate.to as User)" />
+														<!-- <q-avatar v-if="(rate.to as User).picture">
 															<q-img :src="(rate.to as User).picture" />
-														</q-avatar>
+														</q-avatar> -->
 													</div>
 													<div>Rate: {{ rate.rate ? "Upvote" : "Downvote" }}</div>
 													<div>
@@ -198,12 +204,15 @@
 <script setup lang="ts">
 	//TODO: saját borrow szerkesztése
 	import { ref } from "vue";
+	import { Notify } from "quasar";
+	import socket from "@api/socket";
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useBorrowStore } from "@stores/borrow";
 	import { useUserRateStore } from "@stores/userRate";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NewUserRate from "@components/userRate/NewUserRate.vue";
 	import EditUserRate from "@components/userRate/EditUserRate.vue";
 	import EditBorrow from "@components/borrow/EditBorrow.vue";
@@ -271,6 +280,39 @@
 			return rates.some((rate) => (rate.from as User)._id == loggedInId);
 		}
 	}
+
+	socket.on("borrow-updated", async () => {
+		Notify.create({
+			message: "Borrows are changed",
+			position: "bottom",
+			multiLine: false,
+			timeout: 10000,
+			actions: [
+				{
+					label: "Reload data",
+					handler: async () => {
+						await userStore.getLoggedIn();
+					},
+				},
+			],
+		});
+	});
+	socket.on("user-rate-updated", async () => {
+		Notify.create({
+			message: "User rates are changed",
+			position: "bottom",
+			multiLine: false,
+			timeout: 10000,
+			actions: [
+				{
+					label: "Reload data",
+					handler: async () => {
+						await userStore.getLoggedIn();
+					},
+				},
+			],
+		});
+	});
 </script>
 
 <style scoped></style>

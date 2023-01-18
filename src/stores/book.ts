@@ -42,7 +42,8 @@ export const useBookStore = defineStore("book", () => {
 	async function createBook(userData: Partial<CreateBook>) {
 		try {
 			Loading.show();
-			await $axios.post("/book", userData);
+			const { data } = await $axios.post("/book", userData);
+			loggedInBooks.value.push(data);
 		} catch (error) {
 			return;
 		}

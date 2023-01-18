@@ -1,8 +1,8 @@
 <template>
 	<q-list v-if="userStore.loggedInUser" bordered :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-		<div v-if="userStore.loggedInUser.notifications.length > 0">
+		<q-scroll-area v-if="userStore.loggedInUser.notifications.length > 0" style="height: 300px">
 			<q-item
-				v-for="notification in userStore.loggedInUser.notifications"
+				v-for="notification in userStore.sortedNotifications"
 				:key="notification._id"
 				v-close-popup
 				:class="
@@ -31,7 +31,7 @@
 					</q-btn>
 				</q-item-section>
 			</q-item>
-		</div>
+		</q-scroll-area>
 		<div v-else>
 			<q-item v-close-popup>
 				<q-item-section>
