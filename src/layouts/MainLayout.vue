@@ -7,10 +7,16 @@
 				</q-toolbar-title>
 
 				<div v-if="userStore.loggedInUser">
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('notificatons') : ''" :icon="mdiBell">
+					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('title.notificatons') : ''" :icon="mdiBell">
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? $t('message') : ''" :to="{ name: 'message' }" :icon="mdiMessage">
+					<q-btn
+						flat
+						rounded
+						:label="quasar.screen.gt.sm ? $t('title.message') : ''"
+						:to="{ name: 'message' }"
+						:icon="mdiMessage"
+					>
 						<!-- <q-badge color="red" label="2" class="absolute-top-left" style="border-radius: 10px" /> -->
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
@@ -25,7 +31,7 @@
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
-									<q-item-label>{{ $t("adminPage") }}</q-item-label>
+									<q-item-label>{{ $t("title.adminPage") }}</q-item-label>
 								</q-item-section>
 							</q-item>
 							<template v-for="button in buttons" :key="button.name">
@@ -38,7 +44,7 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat :label="$t('login')" :to="{ name: 'auth' }" />
+					<q-btn flat :label="$t('auth.login')" :to="{ name: 'auth' }" />
 					<q-btn
 						flat
 						:icon="buttons[1].icon"
@@ -66,36 +72,38 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ComputedRef, ref } from "vue";
 	import { useQuasar } from "quasar";
+	import { useI18n } from "vue-i18n";
+	import { useRouter } from "vue-router";
 	import { userAuthStore } from "@stores/auth";
 	import { useUserStore } from "@stores/user";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import { useRouter } from "vue-router";
 	import { locales, setLocale } from "../modules/i18n";
-	import { computed, ComputedRef, ref } from "vue";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
-	import { useI18n } from "vue-i18n";
 
 	const router = useRouter();
 	const quasar = useQuasar();
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
 	const { t } = useI18n({ useScope: "global" });
-	//TODO: mód váltót befejezni
+
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: t("myProfile"),
+			name: t("title.myProfile"),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
 		{
-			name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
+			name: computed(() =>
+				t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.darkMode") : t("title.lightMode") }),
+			),
 			action: quasar.dark.toggle,
 			icon: mdiThemeLightDark,
 		},
 		{
-			name: t("logout"),
+			name: t("title.logout"),
 			action: authStore.logOut,
 			icon: matLogout,
 		},

@@ -1,22 +1,22 @@
 <template>
 	<q-card style="width: 500px" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'">
-		<p class="text-h4">{{ $t("login") }}</p>
+		<p class="text-h4">{{ $t("auth.login") }}</p>
 		<q-separator />
 		<q-form @submit.prevent="emits('login', userCred)">
-			<q-input v-model="userCred.emailOrUsername" type="text" :label="$t('emailoruser')" autocomplete="on" />
-			<q-input v-model="userCred.password" type="password" :label="$t('password')" autocomplete="on" />
+			<q-input v-model="userCred.emailOrUsername" type="text" :label="$t('auth.emailOrUsername')" autocomplete="on" />
+			<q-input v-model="userCred.password" type="password" :label="$t('auth.password')" autocomplete="on" />
 			<div class="q-py-sm flex justify-evenly">
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 					:disabled="isDisabled"
 					type="submit"
-					:label="$t('login')"
+					:label="$t('auth.login')"
 				/>
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-					:label="$q.screen.gt.xs ? $t('register') : 'Register'"
+					:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
 					@click="emits('to-register')"
 				/>
 				<GoogleLogin :callback="googleCallback" popup-type="TOKEN" auto-login>
@@ -24,7 +24,7 @@
 						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						:icon="fabGoogle"
-						:label="$q.screen.gt.xs ? $t('googleLogin') : ''"
+						:label="$q.screen.gt.xs ? $t('auth.googleLogin') : ''"
 					/>
 				</GoogleLogin>
 			</div>

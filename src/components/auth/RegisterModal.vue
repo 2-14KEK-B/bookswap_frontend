@@ -1,22 +1,22 @@
 <template>
 	<q-card style="width: 500px" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'">
-		<p class="text-h4">{{ $t("register") }}</p>
+		<p class="text-h4">{{ $t("auth.register") }}</p>
 		<q-form @submit.prevent="emits('register', userCred)">
-			<q-input v-model="userCred.username" type="text" :label="$t('username')" />
+			<q-input v-model="userCred.username" type="text" :label="$t('auth.username') + ':'" />
 			<q-input v-model="userCred.email" type="text" label="E-mail:" />
-			<q-input v-model="userCred.password" type="password" :label="$t('password')" autocomplete="on" />
+			<q-input v-model="userCred.password" type="password" :label="$t('auth.password') + ':'" autocomplete="on" />
 			<div class="q-py-sm flex justify-evenly">
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 					:disabled="isDisabled"
 					type="submit"
-					:label="$t('register')"
+					:label="$t('auth.register')"
 				/>
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-					:label="$t('goToLogin')"
+					:label="$t('auth.goToLogin')"
 					@click="emits('to-login')"
 				/>
 			</div>
