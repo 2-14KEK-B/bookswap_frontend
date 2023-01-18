@@ -1,22 +1,36 @@
 <template>
-	<q-card style="width: 500px" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'">
+	<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px; width: calc(100vw - 10%)">
 		<p class="text-h4">Login</p>
 		<q-separator />
-		<q-form @submit.prevent="emits('login', userCred)">
-			<q-input v-model="userCred.emailOrUsername" type="text" label="Email or username:" autocomplete="on" />
-			<q-input v-model="userCred.password" type="password" label="Password:" autocomplete="on" />
-			<div class="q-py-sm flex justify-evenly">
+		<q-form style="min-width: 300px" @submit.prevent="emits('login', userCred)">
+			<q-input
+				v-model="userCred.emailOrUsername"
+				type="text"
+				label="Email or username:"
+				autocomplete="on"
+				:rules="[(val) => !!val || 'Field is required']"
+			/>
+			<q-input
+				v-model="userCred.password"
+				type="password"
+				label="Password:"
+				autocomplete="on"
+				:rules="[(val) => !!val || 'Field is required']"
+			/>
+			<div class="q-gutter-md q-py-sm flex justify-evenly">
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 					:disabled="isDisabled"
 					type="submit"
+					no-caps
 					label="Login"
 				/>
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-					:label="$q.screen.gt.xs ? 'Go to Register' : 'Register'"
+					label="Go to Register"
+					no-caps
 					@click="emits('to-register')"
 				/>
 				<GoogleLogin :callback="googleCallback" popup-type="TOKEN" auto-login>
@@ -24,6 +38,7 @@
 						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						:icon="fabGoogle"
+						no-caps
 						:label="$q.screen.gt.xs ? 'Login with Google' : ''"
 					/>
 				</GoogleLogin>

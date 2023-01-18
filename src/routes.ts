@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "editProfile",
 				name: "editProfile",
-				component: () => import("@views/loggedIn/EditProfile.vue"),
+				component: () => import("@views/loggedIn/EditProfileView.vue"),
 			},
 			{
 				path: "auth",
@@ -32,12 +32,12 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "newBook",
 				name: "newBook",
-				component: () => import("@views/NewBook.vue"),
+				component: () => import("@views/NewBookView.vue"),
 			},
 			{
 				path: "me",
 				name: "myProfile",
-				component: () => import("@views/loggedIn/MyProfileView.vue"),
+				component: () => import("@views/loggedIn/ProfileView.vue"),
 				beforeEnter: async () => {
 					const userStore = useUserStore();
 					await userStore.getLoggedIn();
@@ -46,7 +46,7 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "books",
 				name: "myBooks",
-				component: () => import("@views/loggedIn/LoggedInBooks.vue"),
+				component: () => import("@views/loggedIn/BooksView.vue"),
 			},
 			{
 				path: "user/:id",
@@ -80,7 +80,7 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "borrow/:id",
 				name: "borrowBook",
-				component: () => import("@views/BorrowBook.vue"),
+				component: () => import("@views/BorrowBookView.vue"),
 				beforeEnter: async (to) => {
 					const bookStore = useBookStore();
 					const book = await bookStore.getBookById(to.params.id as string);

@@ -1,9 +1,11 @@
 <template>
 	<q-avatar
 		v-if="src"
-		size="lg"
-		style="margin: 1px"
-		:style="{ border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey' }"
+		:size="size"
+		:style="{
+			border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey',
+			margin: title ? '' : '1px',
+		}"
 	>
 		<q-img
 			:src="src"
@@ -19,9 +21,11 @@
 		v-else
 		:color="$q.dark.isActive ? 'cyan-10' : 'cyan'"
 		text-color="white"
-		size="35px"
-		style="margin: 1px"
-		:style="{ border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey' }"
+		:size="size"
+		:style="{
+			border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey',
+			margin: title ? '' : '1px',
+		}"
 	>
 		{{ alt?.charAt(0).toUpperCase() }}
 	</q-avatar>
@@ -29,11 +33,13 @@
 
 <script setup lang="ts">
 	interface Props {
+		size?: string;
 		title?: boolean;
 		src?: string;
 		alt?: string;
 	}
 	withDefaults(defineProps<Props>(), {
+		size: "30px",
 		title: false,
 		src: "",
 		alt: "",

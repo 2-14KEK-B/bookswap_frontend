@@ -3,7 +3,8 @@
 		<q-img
 			:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 			:src="bookStore.openedBook?.picture"
-			style="max-widht: 100%; max-height: 300px"
+			style="max-widht: 100%; max-height: 400px"
+			fit="contain"
 		/>
 		<q-card-section :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<div class="text-h5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">

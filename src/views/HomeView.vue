@@ -6,7 +6,7 @@
 				outlined
 				dense
 				style="max-width: 100%"
-				placeholder="Search by title or author"
+				placeholder="Search by title, author or ISBN number"
 				:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-3'"
 				@keydown.enter.prevent="searchByKeyword"
 			>
@@ -25,9 +25,15 @@
 			<div class="row">
 				<div class="col">
 					<div class="row q-col-gutter-md">
-						<div v-for="book in books" :key="book._id" class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div
+							v-for="book in books"
+							:key="book._id"
+							class="col-xs-6 col-sm-4 col-md-3 col-lg-2"
+							:class="$q.platform.is.mobile ? 'col-xs-12' : ''"
+							style="max-width: 100vw"
+						>
 							<q-card :class="$q.dark.isActive ? 'no-shadow' : ''" :bordered="$q.dark.isActive" :square="$q.dark.isActive">
-								<q-img :src="book.picture" fit="cover" height="250px" />
+								<q-img :src="book.picture" fit="contain" height="300px" />
 								<q-card-section class="q-px-none" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 									<div class="row items-center no-wrap">
 										<div class="col">

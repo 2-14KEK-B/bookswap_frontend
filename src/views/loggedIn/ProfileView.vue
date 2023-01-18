@@ -10,18 +10,10 @@
 			<q-card-section
 				class="text-center q-pt-sm"
 				:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
-				style="height: 250px"
+				style="height: 180px"
 			>
 				<p class="text-h4">My account</p>
-				<q-img
-					class="q-pa-lg"
-					:src="
-						userStore.loggedInUser?.picture
-							? userStore.loggedInUser.picture
-							: 'https://pic.onlinewebfonts.com/svg/img_329115.png'
-					"
-					style="height: 150px; max-width: 150px"
-				/>
+				<ProfileAvatar size="100px" :src="userStore.loggedInUser?.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 			</q-card-section>
 			<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 				<q-tab name="info" label="My information" />
@@ -34,10 +26,10 @@
 			</q-tabs>
 			<q-tab-panels
 				v-model="userTab"
-				style="height: calc(100vh - 350px)"
+				style="height: calc(100vh - 278px)"
 				:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
 			>
-				<q-tab-panel name="info" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+				<q-tab-panel class="no-padding" name="info" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-card flat class="full-height q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 						<p class="text-h5">
 							Full Name:
@@ -97,21 +89,12 @@
 						</q-tab-panel>
 					</q-tab-panels>
 				</q-tab-panel>
-				<q-tab-panel class="no-padding" name="borrow" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-					<q-card
-						v-for="borrow in (borrowStore.loggedInBorrows as Borrow[])"
-						:key="borrow._id"
-						flat
-						bordered
-						class="q-ma-sm"
-					>
+				<q-tab-panel class="q-pa-sm" name="borrow" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+					<q-card v-for="borrow in (borrowStore.loggedInBorrows as Borrow[])" :key="borrow._id" flat class="q-ma-sm">
 						<q-card-section>
 							<div class="text-h6">
 								From: {{ getDisplayName(borrow.from as User) }}
 								<ProfileAvatar :src="(borrow.from as User).picture" :alt="getDisplayName(borrow.from as User)" />
-								<!-- <q-avatar v-if="(borrow.from as User).picture">
-									<q-img :src="(borrow.from as User).picture" />
-								</q-avatar> -->
 								<span v-if="!borrow.verified" class="absolute-top-right">
 									<q-icon
 										v-if="canLoggedInVerifyBorrow(borrow)"
@@ -145,7 +128,7 @@
 												<div>Title: {{ book.title }}</div>
 												<div>Author: {{ book.author }}</div>
 											</q-card-section>
-											<q-img v-if="book.picture" :src="book.picture" style="max-height: 100px" />
+											<q-img v-if="book.picture" :src="book.picture" style="max-height: 400px" fit="scale-down" />
 											<q-skeleton v-else height="100px" />
 										</q-card>
 									</div>

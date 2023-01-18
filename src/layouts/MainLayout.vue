@@ -64,12 +64,7 @@
 				</div>
 				<div v-else>
 					<q-btn flat label="Login" :to="{ name: 'auth' }" />
-					<q-btn
-						flat
-						:icon="darkModeButton.icon"
-						:label="quasar.screen.gt.sm ? darkModeButton.name as string : ''"
-						@click="darkModeButton.action"
-					/>
+					<q-btn flat :icon="darkModeButton.icon" @click="darkModeButton.action" />
 				</div>
 			</q-toolbar>
 		</q-header>
