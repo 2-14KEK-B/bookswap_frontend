@@ -66,9 +66,9 @@
 					<q-btn flat label="Login" :to="{ name: 'auth' }" />
 					<q-btn
 						flat
-						:icon="buttons[1].icon"
-						:label="quasar.screen.gt.sm ? buttons[1].name : ''"
-						@click="buttons[1].action"
+						:icon="darkModeButton.icon"
+						:label="quasar.screen.gt.sm ? darkModeButton.name as string : ''"
+						@click="darkModeButton.action"
 					/>
 				</div>
 			</q-toolbar>
@@ -99,7 +99,19 @@
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
 
-	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
+	interface Button {
+		name: string | ComputedRef<string>;
+		action: () => void;
+		icon?: string;
+	}
+
+	const darkModeButton: Button = {
+		name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
+		action: quasar.dark.toggle,
+		icon: mdiThemeLightDark,
+	};
+
+	const buttons = ref<Button[]>([
 		{
 			name: "My profile",
 			action: () => router.push({ name: "myProfile" }),
@@ -110,11 +122,7 @@
 			action: () => router.push({ name: "myBooks" }),
 			icon: matBook,
 		},
-		{
-			name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
-			action: quasar.dark.toggle,
-			icon: mdiThemeLightDark,
-		},
+		darkModeButton,
 		{
 			name: "Logout",
 			action: authStore.logOut,
