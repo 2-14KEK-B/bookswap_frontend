@@ -1,6 +1,14 @@
 import axios from "axios";
 import { Loading, Notify } from "quasar";
 import API_URL from "../config/api_url";
+import { matClose } from "@quasar/extras/material-icons";
+
+Notify.setDefaults({
+	progress: true,
+	position: "bottom-right",
+	timeout: 2000,
+	actions: [{ icon: matClose, color: "white" }],
+});
 
 const $axios = axios.create({
 	baseURL: API_URL,

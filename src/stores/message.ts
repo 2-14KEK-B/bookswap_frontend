@@ -1,20 +1,22 @@
 import { defineStore } from "pinia";
 import $axios from "@api/axios";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import socket from "@api/socket";
 import { Loading } from "quasar";
 import { useUserStore } from "@stores/user";
-import { setInfoFromOtherUser } from "@utils/message";
+import { setInitialMessageInfo, countNotSeenMessages, sortMessagesByContentUpdatedAt } from "@utils/messageHelper";
 import type { Message, MessageContent } from "@interfaces/message";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 
 export const useMessageStore = defineStore("message", () => {
-	const selectedMessageIndex = ref<number | null>(null);
+	const selectedMessage = ref<{ _id: string; index: number } | null>(null);
 	const loggedInMessages = ref<Message[]>([]);
+	const notSeenMessages = computed(() => countNotSeenMessages(loggedInMessages.value));
+	const loggedInMessagesSorted = computed(() => sortMessagesByContentUpdatedAt(loggedInMessages.value));
 
 	async function loadMessage(index: number): Promise<boolean | void> {
-		if (selectedMessageIndex.value == null) return;
-		const m = loggedInMessages.value[selectedMessageIndex.value];
+		if (selectedMessage.value == null) return;
+		const m = loggedInMessages.value[selectedMessage.value.index];
 		const total = m.totalCount as number;
 
 		if (total < 25) return;
@@ -37,30 +39,24 @@ export const useMessageStore = defineStore("message", () => {
 	async function getLoggedInUserMessages() {
 		try {
 			Loading.show();
-			const userStore = useUserStore();
 			const { data } = await $axios.get("/user/me/message");
-			loggedInMessages.value = (data as Message[])?.map((message) =>
-				setInfoFromOtherUser(message, userStore.loggedInUser?._id as string),
-			);
+			loggedInMessages.value = (data as Message[])?.map((message) => setInitialMessageInfo(message));
 		} catch (error) {
 			return;
 		}
 	}
 
-	async function sendMessageToSelectedMessage(message: string) {
-		if (selectedMessageIndex.value != null) {
+	async function sendMessageToSelectedMessage(content: string) {
+		if (selectedMessage.value != null) {
 			try {
-				const selectedMessage = loggedInMessages.value[selectedMessageIndex.value];
-				const userId = selectedMessage.otherUser?._id as string;
+				const message = loggedInMessages.value[selectedMessage.value.index];
+				const userId = message.otherUser?._id as string;
 				const { data } = await $axios.post<{ message: MessageContent }>(`/user/${userId}/message`, {
-					content: message,
+					content: content,
 				});
-				(selectedMessage.totalCount as number)++;
-				selectedMessage.message_contents.push(data.message);
-				socket.emit("send-msg-cnt", {
-					to: userId as string,
-					message: data.message as MessageContent,
-				});
+				(message.totalCount as number)++;
+				message.message_contents.push(data.message);
+				socket.emit("send-msg-cnt", userId, data.message);
 			} catch (error) {
 				return;
 			}
@@ -73,54 +69,44 @@ export const useMessageStore = defineStore("message", () => {
 				content: message,
 			});
 			if (data.isNew) {
-				loggedInMessages.value.push(data.message as Message);
-				socket.emit("send-new-msg", {
-					to: to_id,
-					message: data.message as Message,
-				});
+				loggedInMessages.value.push({ ...(data.message as Message), seenByLoggedInUser: true });
+				socket.emit("send-new-msg", to_id, data.message as Message);
 			} else {
 				const messageWithOtherUser = loggedInMessages.value.find((m) => {
 					return m.otherUser?._id == to_id;
 				});
 				messageWithOtherUser?.message_contents.push(data.message as MessageContent);
-				socket.emit("send-msg-cnt", {
-					to: to_id,
-					message: data.message as MessageContent,
-				});
+				socket.emit("send-msg-cnt", to_id, data.message as MessageContent);
 			}
+		} catch (error) {
+			return;
+		}
+	}
 
-			// if (to_id) {
-			// 	const message = messages.value.find((m) =>
-			// 		m.users.some((u) => {
-			// 			if (typeof u == "string") {
-			// 				return u == to_id;
-			// 			} else {
-			// 				return u._id == to_id;
-			// 			}
-			// 		}),
-			// 	);
-			// 	if (message) {
-
-			// 	}
-			// 	socket.emit(
-			// 		"send-msg",
-			// 		{
-			// 			...messageContent,
-			// 		},
-			// 		{
-			// 			_id: loggedInUser?._id,
-			// 			displayName: loggedInUser?.fullname || loggedInUser?.username || loggedInUser?.email,
-			// 			picture: loggedInUser?.picture,
-			// 		},
-			// 	);
-			// 	messages.value.push(data);
-			// } else {
-			// 	socket.emit("send-msg", {
-			// 		...messageContent,
-			// 	});
-			// 	(messages.value[selectedMessageIndex.value as number].totalCount as number)++;
-			// 	messages.value[selectedMessageIndex.value as number].message_contents.push(data);
-			// }
+	async function setMessageToSeen(messageId?: string) {
+		if (!messageId) return;
+		try {
+			const { status } = await $axios.patch(`/message/${messageId}/seen`);
+			if (status == 204) {
+				const message = loggedInMessages.value.find((message) => message._id == messageId);
+				if (message) {
+					const userStore = useUserStore();
+					socket.emit(
+						"msg-seen",
+						userStore.loggedInUser?._id as string,
+						message.otherUser?._id as string,
+						message._id as string,
+					);
+					message.seenByLoggedInUser = true;
+					message.message_contents.some((content) => {
+						if (content.sender_id != userStore.loggedInUser?._id) {
+							content.seen = true;
+							return true;
+						}
+						return false;
+					});
+				}
+			}
 		} catch (error) {
 			return;
 		}
@@ -172,14 +158,17 @@ export const useMessageStore = defineStore("message", () => {
 	}
 
 	return {
-		selectedMessageIndex,
+		selectedMessage,
 		loggedInMessages,
+		notSeenMessages,
+		loggedInMessagesSorted,
 		getLoggedInUserMessages,
 		// getDisplayName,
 		sendMessageToSelectedMessage,
 		sendMessageToUserId,
 		// convertToChat,
 		loadMessage,
+		setMessageToSeen,
 		deleteMessage,
 		adminGetMessages,
 		adminDeleteMessage,

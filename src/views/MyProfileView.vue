@@ -111,7 +111,7 @@
 								</q-avatar>
 								<span v-if="!borrow.verified" class="absolute-top-right">
 									<q-icon
-										v-if="(borrow.from as User)._id == userStore.loggedInUser._id"
+										v-if="(borrow.from as User)._id == userStore.loggedInUser._id && !borrow?.verified"
 										:name="matEdit"
 										class="q-pr-md"
 										@click.prevent="editBorrow(borrow)"

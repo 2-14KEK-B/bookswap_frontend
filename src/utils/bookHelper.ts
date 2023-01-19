@@ -1,13 +1,15 @@
 import { useUserStore } from "@stores/user";
 import type { BookRate } from "@interfaces/bookRate";
 import type { User } from "@interfaces/user";
+import type { Borrow } from "@interfaces/borrow";
+import type { Book } from "@interfaces/book";
 
 function getOverallRate(rates?: (string | BookRate)[]) {
 	if (rates && rates.length > 0) {
 		if (isImplementsBookRate(rates)) {
 			let all = 0;
 			let count = 0;
-			rates.forEach((rate) => {
+			rates.every((rate) => {
 				all += rate.rate;
 				count++;
 			});
@@ -42,6 +44,26 @@ function isRateFromLoggedIn(rate?: BookRate) {
 	return false;
 }
 
+function isBookAlreadyInLoggedInBorrows(bookId?: string, borrows?: Borrow[]) {
+	let isInLoggedInBorrows = false;
+	if (bookId && borrows) {
+		borrows.some((borrow) => {
+			if (
+				(borrow.books as Book[]).some((book) => {
+					if (book._id == bookId) {
+						isInLoggedInBorrows = true;
+						return true;
+					}
+				})
+			) {
+				return true;
+			}
+			return false;
+		});
+	}
+	return isInLoggedInBorrows;
+}
+
 function isImplementsBookRate(rates?: any[]): rates is BookRate[] {
 	if (rates && rates.length > 0) {
 		return "from" in rates[0];
@@ -49,4 +71,4 @@ function isImplementsBookRate(rates?: any[]): rates is BookRate[] {
 	return false;
 }
 
-export { getOverallRate, isLoggedInUserAlreadyRated, isRateFromLoggedIn };
+export { getOverallRate, isLoggedInUserAlreadyRated, isRateFromLoggedIn, isBookAlreadyInLoggedInBorrows };

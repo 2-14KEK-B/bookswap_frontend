@@ -12,6 +12,7 @@ interface MessageContent {
 	sender_id: string;
 	createdAt?: string;
 	content: string;
+	seen: boolean;
 }
 
 interface Message {
@@ -22,6 +23,7 @@ interface Message {
 	otherUser?: User;
 	message_contents: MessageContent[];
 	totalCount?: number;
+	seenByLoggedInUser?: boolean;
 }
 
 interface CreateMessage {

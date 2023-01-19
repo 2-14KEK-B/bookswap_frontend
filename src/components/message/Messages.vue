@@ -1,5 +1,5 @@
 <template>
-	<div style="padding-top: 50px">
+	<div v-if="appStore.isMessageOpened" style="padding-top: 50px">
 		<q-scroll-area
 			ref="chatRef"
 			style="height: calc(100vh - 150px)"
@@ -8,21 +8,36 @@
 			<q-infinite-scroll reverse class="q-pa-md" @load="load">
 				<template #loading>
 					<div
-						v-if="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.message_contents.length % 25 == 0"
+						v-if="messageStore.loggedInMessages[messageStore.selectedMessage?.index as number]?.message_contents.length % 25 == 0"
 						class="row justify-center q-my-md"
 					>
 						<q-spinner color="primary" name="dots" size="40px" />
 					</div>
 				</template>
 				<q-chat-message
-					v-for="(content, index) in messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.message_contents"
+					v-for="(content, index) in messageStore.loggedInMessages[messageStore.selectedMessage?.index as number]?.message_contents"
 					:key="index"
 					class="q-py-sm"
 					:sent="content.sender_id == userStore.loggedInUser?._id"
 					:text="[content.content]"
 					:name="content.sender_id == userStore.loggedInUser?._id ? $t('me') : otherUser?.displayName"
 					:stamp="dayjs().to(content.createdAt)"
-				/>
+				>
+					<template #avatar>
+						<q-avatar
+							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
+							color="primary"
+							text-color="white"
+							class="q-message-avatar q-message-avatar--received"
+						>
+							<q-img
+								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+							/>
+							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
+						</q-avatar>
+					</template>
+				</q-chat-message>
 			</q-infinite-scroll>
 		</q-scroll-area>
 		<q-page-sticky expand position="top">
@@ -31,10 +46,10 @@
 				<q-space />
 				<q-btn flat no-caps align="center">
 					<q-toolbar-title>
-						<q-avatar color="primary" text-color="white">
+						<q-avatar v-if="messageStore.selectedMessage" color="primary" text-color="white">
 							<q-img
-								v-if="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
-								:src="messageStore.loggedInMessages[messageStore.selectedMessageIndex as number]?.otherUser?.picture"
+								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
 							/>
 							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
 						</q-avatar>
@@ -64,19 +79,21 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, onUnmounted } from "vue";
 	import socket from "@api/socket";
 	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
-	import { useMessageStore } from "@stores/message";
+	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
+	import { useMessageStore } from "@stores/message";
 	import { QInput, QScrollArea } from "quasar";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
 
 	extend(relativeTime);
+	const appStore = useAppStore();
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
-	const otherUser = messageStore.loggedInMessages[messageStore.selectedMessageIndex as number].otherUser;
+	const otherUser = messageStore.loggedInMessages[messageStore.selectedMessage?.index as number].otherUser;
 
 	const input = ref("");
 	const inputRef = ref<QInput>();
@@ -95,17 +112,28 @@
 	}
 
 	async function send() {
+		if (input.value.length == 0) {
+			inputRef.value?.focus();
+			return;
+		}
 		await messageStore.sendMessageToSelectedMessage(input.value);
 		moveToBottom();
 		input.value = "";
 		inputRef.value?.focus();
 	}
 
-	socket.on("msg-sent", () => {
-		moveToBottom();
+	socket.on("msg-sent", async () => {
+		if (appStore.isMessageOpened) {
+			await messageStore.setMessageToSeen(messageStore.selectedMessage?._id);
+			moveToBottom();
+		}
 	});
 
 	const emits = defineEmits<{ (e: "openContacts"): void }>();
+
+	onUnmounted(() => {
+		appStore.isMessageOpened = false;
+	});
 </script>
 
 <style scoped></style>

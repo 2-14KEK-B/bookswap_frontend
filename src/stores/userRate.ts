@@ -45,10 +45,12 @@ export const useUserRateStore = defineStore("userRate", () => {
 			const { data } = await $axios.post<UserRate>(`/user/${userId}/rate`, { ...userRateData, borrow: borrowId });
 			const borrowStore = useBorrowStore();
 			loggedInRates.value.from.push(data);
-			borrowStore.loggedInBorrows.forEach((b) => {
+			borrowStore.loggedInBorrows.some((b) => {
 				if (b._id == borrowId) {
 					b.user_rates?.push(data);
+					return true;
 				}
+				return false;
 			});
 		} catch (error) {
 			return;
@@ -59,22 +61,26 @@ export const useUserRateStore = defineStore("userRate", () => {
 		try {
 			Loading.show();
 			const { data } = await $axios.patch<UserRate>(`/user/${userId}/rate/${rateId}`, userRateData);
-			loggedInRates.value.from.forEach((rate) => {
+			loggedInRates.value.from.some((rate) => {
 				if (rate._id == rateId) {
 					Object.assign(rate, data);
-					return;
+					return true;
 				}
+				return false;
 			});
 			const borrowStore = useBorrowStore();
-			borrowStore.loggedInBorrows.forEach((b) => {
+			borrowStore.loggedInBorrows.some((b) => {
 				if (b._id == borrowId) {
-					b.user_rates?.forEach((rate) => {
+					b.user_rates?.some((rate) => {
 						if (data._id == rateId) {
 							Object.assign(rate, data);
-							return;
+							return true;
 						}
+						return false;
 					});
+					return true;
 				}
+				return false;
 			});
 		} catch (error) {
 			return;
@@ -85,12 +91,14 @@ export const useUserRateStore = defineStore("userRate", () => {
 			Loading.show();
 			const { status } = await $axios.delete(`/user/${userId}/rate/${rateId}`);
 			if (status == 204) {
-				loggedInRates.value.from = loggedInRates.value.from.filter((rate) => rate._id == rateId);
+				loggedInRates.value.from = loggedInRates.value.from.filter((rate) => rate._id != rateId);
 				const borrowStore = useBorrowStore();
-				borrowStore.loggedInBorrows.forEach((b) => {
+				borrowStore.loggedInBorrows.some((b) => {
 					if (b._id == borrowId) {
-						b.user_rates = (b.user_rates as UserRate[])?.filter((rate) => rate._id == rateId);
+						b.user_rates = (b.user_rates as UserRate[])?.filter((rate) => rate._id != rateId);
+						return true;
 					}
+					return false;
 				});
 			}
 		} catch (error) {

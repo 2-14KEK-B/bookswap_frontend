@@ -37,17 +37,33 @@ export const useBorrowStore = defineStore("borrow", () => {
 		}
 	}
 
-	async function editBorrow(borrowData: ModifyBorrow, id?: string) {
+	async function editBorrow(borrowData: ModifyBorrow, id: string) {
 		try {
 			Loading.show();
 			const { data } = await $axios.patch<Borrow>(`/borrow/${id}`, borrowData);
-			loggedInBorrows.value.forEach((borrow) => {
+			loggedInBorrows.value.some((borrow) => {
 				if (borrow._id == data._id) {
 					Object.assign(borrow, data);
-					return;
+					return true;
 				}
+				return false;
 			});
-			console.log(data);
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function verifyBorrow(borrowId: string) {
+		try {
+			Loading.show();
+			await $axios.patch(`/borrow/${borrowId}/verify`);
+			loggedInBorrows.value.some((borrow) => {
+				if (borrow._id == borrowId) {
+					borrow.verified = true;
+					return true;
+				}
+				return false;
+			});
 		} catch (error) {
 			return;
 		}
@@ -113,6 +129,7 @@ export const useBorrowStore = defineStore("borrow", () => {
 		getById: getBorrowById,
 		createBorrow,
 		editBorrow,
+		verifyBorrow,
 		deleteBorrow,
 		adminGetBorrows,
 		adminGetBorrowById,

@@ -7,7 +7,7 @@ import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
-import { setInfoFromOtherUser } from "@utils/message";
+import { setInitialMessageInfo } from "@utils/messageHelper";
 import type { LoginCred, RegisterCred } from "@interfaces/auth";
 import type { Message } from "@interfaces/message";
 import type { User } from "@interfaces/user";
@@ -39,9 +39,7 @@ export const userAuthStore = defineStore("auth", () => {
 
 		userStore.loggedInUser = user;
 		bookStore.loggedInBooks = user.books as Book[];
-		messageStore.loggedInMessages = (user.messages as Message[])?.map((message) =>
-			setInfoFromOtherUser(message, user._id as string),
-		);
+		messageStore.loggedInMessages = (user.messages as Message[])?.map((message) => setInitialMessageInfo(message));
 		borrowStore.loggedInBorrows = user.borrows as Borrow[];
 		userRateStore.loggedInRates = user.user_rates as { from: UserRate[]; to: UserRate[] };
 		socket.connect();

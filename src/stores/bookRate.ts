@@ -35,7 +35,7 @@ export const useBookRateStore = defineStore("bookRate", () => {
 			Loading.show();
 			const bookStore = useBookStore();
 			const { data } = await $axios.patch<Book>(`/book/${bookId}/rate/${rateId}`, bookRateData);
-			bookStore.openedBook = data;
+			bookStore.openedBook = { ...data, loggedInAlreadyRated: true };
 			bookStore.openedBook.overallRate = getOverallRate(bookStore.openedBook.rates);
 		} catch (error) {
 			return;
