@@ -12,9 +12,10 @@
 	"license": "MIT",
 	"dependencies": {
 		"@intlify/unplugin-vue-i18n": "^0.8.1",
-		"@quasar/extras": "^1.15.9",
+		"@quasar/extras": "^1.15.10",
 		"axios": "^1.2.3",
 		"dayjs": "^1.11.7",
+		"moment": "^2.29.4",
 		"pinia": "^2.0.29",
 		"quasar": "^2.11.5",
 		"socket.io-client": "^4.5.4",
@@ -38,7 +39,7 @@
 		"sass": "~1.32.12",
 		"typescript": "^4.9.4",
 		"vite": "^4.0.4",
-		"vite-plugin-checker": "^0.5.3",
+		"vite-plugin-checker": "^0.5.4",
 		"vite-plugin-eslint": "^1.8.1",
 		"vue-tsc": "^1.0.24"
 	}

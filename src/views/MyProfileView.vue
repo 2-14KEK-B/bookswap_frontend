@@ -48,8 +48,8 @@
 							{{ userStore.loggedInUser?.username ? userStore.loggedInUser?.username : "-" }}
 						</div>
 						<div class="text-h5">{{ $t("user.email") }}: {{ userStore.loggedInUser?.email }}</div>
-						<div class="text-h5">{{ $t("user.registered") }}: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
-						<div class="text-h5">{{ $t("user.overallRate") }}: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
+						<div class="text-h5">{{ $t("user.registeredAt") }}: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
+						<div class="text-h5">{{ $t("rate.overallRate") }}: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
 						<q-btn color="secondary" class="q-my-lg" :label="$t('me.edit')" :to="{ name: 'editProfile' }" />
 					</q-card>
 				</q-tab-panel>

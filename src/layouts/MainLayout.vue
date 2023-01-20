@@ -82,7 +82,7 @@
 				</div>
 				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 					<template #label>
-						<q-icon :name="$i18n.locale == 'en' ? 'img:public/en.svg' : 'img:public/hu.svg'" />
+						<q-icon :name="$i18n.locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
 					</template>
 					<q-list>
 						<q-item
@@ -93,7 +93,7 @@
 							@click.once="onSetLocale(locale)"
 						>
 							<q-item-section>
-								<q-icon :name="locale == 'en' ? 'img:public/en.svg' : 'img:public/hu.svg'" />
+								<q-icon :name="locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
 							</q-item-section>
 							<q-item-section>{{ locale }}</q-item-section>
 						</q-item>
@@ -131,7 +131,7 @@
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: t("title.myProfile"),
+			name: computed(() => t("title.myProfile")),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
@@ -143,7 +143,7 @@
 			icon: mdiThemeLightDark,
 		},
 		{
-			name: t("auth.logout"),
+			name: computed(() => t("auth.logout")),
 			action: authStore.logOut,
 			icon: matLogout,
 		},

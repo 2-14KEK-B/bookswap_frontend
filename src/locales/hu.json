@@ -112,5 +112,7 @@
                 "404": "Oldal nem található",
                 "or": "vagy",
                 "404message": "A keresett oldal létezik vagy egyéb hiba történt."
-        }
+        },
+        "yes": "Igen",
+        "no": "Nem"
 }

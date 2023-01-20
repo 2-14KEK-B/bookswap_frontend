@@ -43,7 +43,7 @@
 				</q-tab-panel>
 			</q-tab-panels>
 			<q-input v-model="input.price" :label="$t('book.price')" type="number" suffix="Ft" />
-			<q-toggle v-model="input.for_borrow" color="green" :label="$t('forBorrow')" />
+			<q-toggle v-model="input.for_borrow" color="green" :label="$t('book.forBorrow')" />
 			<q-card-actions>
 				<q-btn :label="$t('button.submit')" type="submit" color="primary" />
 				<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />

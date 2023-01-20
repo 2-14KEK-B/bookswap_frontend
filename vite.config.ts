@@ -25,8 +25,8 @@ export default defineConfig({
 			apply: "build",
 		},
 		// checker({
-		// 	typescript: true,
-		// 	vueTsc: true,
+		// 	// typescript: true,
+		// 	// vueTsc: true,
 		// 	eslint: {
 		// 		lintCommand: 'eslint "./src/**/*.{ts,vue}"',
 		// 	},

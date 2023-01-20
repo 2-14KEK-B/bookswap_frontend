@@ -14,6 +14,8 @@ const i18n = createI18n({
 	messages: messages,
 });
 
+await setDayJS("hu");
+
 // Set new locale.
 export async function setLocale(locale: availableLocales) {
 	// Load locale if not available yet.
@@ -32,17 +34,16 @@ export async function setLocale(locale: availableLocales) {
 
 	// Set locale.
 	i18n.global.locale.value = locale;
-	setDayJS();
+	await setDayJS(locale);
 }
 
-async function setDayJS(locale = i18n.global.locale.value) {
-	if (locale == "hu") {
-		const dayjsLo = await import("dayjs/locale/hu");
-		dayjs.locale(dayjsLo);
-	} else {
-		const dayjsLo = await import("dayjs/locale/en");
-		dayjs.locale(dayjsLo);
-	}
+async function setDayJS(locale: availableLocales) {
+	const locales = {
+		hu: () => import("dayjs/locale/hu"),
+		en: () => import("dayjs/locale/en"),
+	};
+	await locales[locale]();
+	dayjs.locale(locale);
 }
 
 // Fetch locale.
@@ -60,5 +61,4 @@ async function loadLocale(locale: availableLocales) {
 
 export const install = (app: App) => {
 	app.use(i18n);
-	setDayJS();
 };

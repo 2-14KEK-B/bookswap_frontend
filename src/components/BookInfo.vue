@@ -33,15 +33,17 @@
 				<q-tab-panel name="info">
 					<div class="text-h6">
 						{{ $t("book.available") }}:
-						<span>{{ bookStore.openedBook?.available }}</span>
+						<span>{{ bookStore.openedBook?.available ? $t("yes") : $t("no") }}</span>
 					</div>
 					<div class="text-h6">
 						{{ $t("book.createdAt") }}:
-						<span>{{ new Date(bookStore.openedBook?.createdAt as string).toLocaleString() }}</span>
+						<span>
+							{{ dayjs(bookStore.openedBook?.createdAt).locale($i18n.locale).format("LLLL") }}
+						</span>
 					</div>
 					<div class="text-h6">
 						{{ $t("book.forBorrow") }}:
-						<span>{{ bookStore.openedBook?.for_borrow }}</span>
+						<span>{{ bookStore.openedBook?.for_borrow ? $t("yes") : $t("no") }}</span>
 					</div>
 					<div class="text-h6">
 						{{ $t("book.price") }}:
@@ -90,6 +92,8 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import dayjs, { extend } from "dayjs";
+	import localizedFormat from "dayjs/plugin/localizedFormat";
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useBookStore } from "@stores/book";
@@ -101,6 +105,8 @@
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
 	import type { BookRate } from "@interfaces/bookRate";
+
+	extend(localizedFormat);
 
 	const appStore = useAppStore();
 	const userStore = useUserStore();

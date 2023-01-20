@@ -112,5 +112,7 @@
                 "404": "Page not found",
                 "or": "or",
                 "404message": "The Page you are looking for doesn't exist or an other error occurred."
-        }
+        },
+        "yes": "Yes",
+        "no": "No"
 }
