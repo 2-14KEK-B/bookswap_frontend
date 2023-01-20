@@ -20,7 +20,7 @@
 					class="q-py-sm"
 					:sent="content.sender_id == userStore.loggedInUser?._id"
 					:text="[content.content]"
-					:name="content.sender_id == userStore.loggedInUser?._id ? $t('me') : otherUser?.displayName"
+					:name="content.sender_id == userStore.loggedInUser?._id ? $t('message.me') : otherUser?.displayName"
 					:stamp="dayjs().to(content.createdAt)"
 				>
 					<template #avatar>
@@ -42,7 +42,7 @@
 		</q-scroll-area>
 		<q-page-sticky expand position="top">
 			<q-toolbar class="bg-secondary">
-				<q-btn flat dense :icon="mdiArrowLeft" :label="$t('back')" @click="emits('openContacts')" />
+				<q-btn flat dense :icon="mdiArrowLeft" :label="$t('message.back')" @click="emits('openContacts')" />
 				<q-space />
 				<q-btn flat no-caps align="center">
 					<q-toolbar-title>
@@ -70,7 +70,7 @@
 					:bg-color="$q.dark.isActive ? 'grey-9' : 'grey-1'"
 					outlined
 					autofocus
-					:placeholder="$t('Type your message..')"
+					:placeholder="$t('message.placeholder')"
 				/>
 				<q-btn class="col-auto" flat color="white" rounded :icon="mdiSend" type="submit" />
 			</q-form>

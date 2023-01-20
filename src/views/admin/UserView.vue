@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				:title="$t('user')"
+				:title="t('users')"
 				:columns="columns"
 				:rows="data?.docs"
 				:loading="loading"
@@ -16,29 +16,68 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		:title="$t('user')"
+		:title="t('user')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-input v-model="editedData.username" :label="$t('username')" />
-		<q-input v-model="editedData.fullname" :label="$t('fullname')" />
-		<q-input v-model="editedData.picture" :label="$t('picture')" />
-		<q-input v-model="editedData.email" :label="$t('email')" />
+		<q-input v-model="editedData.username" :label="t('username')" />
+		<q-input v-model="editedData.fullname" :label="t('fullname')" />
+		<q-input v-model="editedData.picture" :label="t('picture')" />
+		<q-input v-model="editedData.email" :label="t('email')" />
 		<div class="flex"></div>
 	</EditTableData>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import { useI18n } from "vue-i18n";
 	import { useUserStore } from "@stores/user";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
 	import type { User } from "@interfaces/user";
 	import type { QTableColumn } from "quasar";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
-	import { useI18n } from "vue-i18n";
+
+	const { t } = useI18n({
+		messages: {
+			en: {
+				user: "User",
+				users: "Users",
+				username: "Username",
+				fullname: "Fullname",
+				picture: "Picture",
+				email: "Email",
+				emailVerified: "Email is verified",
+				locale: "Spoken language",
+				createdAt: "Date of creation",
+				updatedAt: "Date of last edition",
+				books: "Uploaded books",
+				borrows: "Borrows",
+				messages: "Messages",
+				raredBooks: "Rated books",
+				userRates: "User rates",
+			},
+			hu: {
+				user: "Felhasználó",
+				users: "Felhasználók",
+				username: "Felhasználó név",
+				fullname: "Teljes név",
+				picture: "Kép",
+				email: "Email",
+				emailVerified: "Az email visszaigazolva",
+				locale: "Beszélt nyelv",
+				createdAt: "Létrehozás dátuma",
+				updatedAt: "Legutóbbi szerkesztés időpontja",
+				books: "Feltöltött könyvek",
+				borrows: "Kölcsönzések",
+				messages: "Üzenetek",
+				raredBooks: "Értékelt könyvek",
+				userRates: "Felhasználói értékelések",
+			},
+		},
+	});
 
 	interface ModifiableData {
 		username?: string;
@@ -54,8 +93,8 @@
 	const editedData = ref<ModifiableData>(emptyData);
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number | undefined>();
-	const { t } = useI18n({ useScope: "global" });
+	const rowsNumber = ref<number>(0);
+	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const users = await userStore.adminGetUsers(query);

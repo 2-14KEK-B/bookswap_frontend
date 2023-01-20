@@ -22,14 +22,20 @@
 
 		<template #top-right>
 			<q-btn
-				v-if="selectedArray.length == 1 && title != 'Message'"
+				v-if="selectedArray.length == 1 && !isMessage"
 				class="q-mx-sm"
 				color="secondary"
-				:label="$t('modify')"
+				:label="t('button.edit')"
 				@click.prevent="onEdit"
 			/>
-			<q-btn v-if="selectedArray.length" class="q-mx-sm" color="red" :label="$t('delete')" @click.prevent="onDelete" />
-			<q-input v-model="filter" dense debounce="300" :placeholder="$t('search')" type="text" @keydown.enter="onRequest">
+			<q-btn
+				v-if="selectedArray.length"
+				class="q-mx-sm"
+				color="red"
+				:label="t('button.delete')"
+				@click.prevent="onDelete"
+			/>
+			<q-input v-model="filter" dense debounce="300" :placeholder="t('search')" type="text" @keydown.enter="onRequest">
 				<template #append>
 					<q-btn flat round :icon="matSearch" @click.prevent="onRequest" />
 				</template>
@@ -38,7 +44,7 @@
 				<q-menu auto-close :offset="[50, 10]">
 					<q-list>
 						<q-item clickable>
-							<q-item-section no-wrap @click="exportTable(columns, rows, title)">{{$t('exportCSV')}}</q-item-section>
+							<q-item-section no-wrap @click="exportTable(columns, rows, title)">{{ t("export") }}</q-item-section>
 						</q-item>
 					</q-list>
 				</q-menu>
@@ -75,17 +81,44 @@
 
 <script setup lang="ts">
 	import { onMounted, ref } from "vue";
+	import { useI18n } from "vue-i18n";
 	import { QTableProps, QTable } from "quasar";
 	import { matSearch, matMoreVert } from "@quasar/extras/material-icons";
 	import exportTable from "@utils/exportTable";
 	import type { PathQuery } from "@interfaces/paginate";
 
-	const componentProps = defineProps<{
+	const { t } = useI18n({
+		messages: {
+			en: {
+				button: {
+					delete: "Delete",
+					edit: "Modify",
+				},
+				editing: "Editing a {title}",
+				export: "Export table to CSV",
+				search: "Search",
+			},
+			hu: {
+				button: {
+					delete: "Törlés",
+					edit: "Módosítás",
+				},
+				editing: "Egy {title} módosítása",
+				export: "Tábla kiexportálása CSV-be",
+				search: "Keresés",
+			},
+		},
+	});
+
+	interface Table {
 		columns: QTableProps["columns"];
 		title: QTableProps["title"];
 		rows: QTableProps["rows"];
-		rowsNumber?: number;
-	}>();
+		rowsNumber: number;
+		isMessage?: boolean;
+	}
+
+	const componentProps = withDefaults(defineProps<Table>(), { isMessage: false });
 
 	const tableRef = ref();
 	const selectedArray = ref<{ _id: string }[]>([]);

@@ -4,19 +4,18 @@
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
-						Rate
-						<span class="text-italic">{{ getDisplayName(otherUser) }}</span>
+						<span class="text-italic">{{ $t("rate.title", { title: getDisplayName(otherUser) }) }}</span>
 					</div>
 				</q-toolbar-title>
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-toolbar>
 			<q-card-section class="q-pt-none">
-				<q-toggle v-model="rate" label="Rate" />
-				<q-input v-model="comment" label="Comment" />
+				<q-toggle v-model="rate" :label="$t('rate.rate')" />
+				<q-input v-model="comment" :label="$t('rate.comment')" />
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn v-close-popup flat label="OK" @click="sendRate" />
+				<q-btn v-close-popup flat :label="$t('button.send')" @click="sendRate" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>

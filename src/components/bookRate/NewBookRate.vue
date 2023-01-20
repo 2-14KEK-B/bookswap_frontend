@@ -4,19 +4,18 @@
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
-						{{$t('rate')}}
-						<span class="text-italic">{{ book?.title }}</span>
+						<span class="text-italic">{{ $t("rate.title", { title: book?.title }) }}</span>
 					</div>
 				</q-toolbar-title>
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-toolbar>
 			<q-card-section class="q-pt-none">
-				<q-rating v-model="rate" :label="$t('rate')" />
-				<q-input v-model="comment" :label="$t('comment')" />
+				<q-rating v-model="rate" :label="$t('rate.rate')" />
+				<q-input v-model="comment" :label="$t('rate.comment')" />
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn v-close-popup flat label="OK" :disable="rate == 0" @click="sendRate" />
+				<q-btn v-close-popup flat :label="$t('button.send')" :disable="rate == 0" @click="sendRate" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>

@@ -3,8 +3,13 @@
 		<p class="text-h4">{{ $t("auth.login") }}</p>
 		<q-separator />
 		<q-form @submit.prevent="emits('login', userCred)">
-			<q-input v-model="userCred.emailOrUsername" type="text" :label="$t('auth.emailOrUsername')" autocomplete="on" />
-			<q-input v-model="userCred.password" type="password" :label="$t('auth.password')" autocomplete="on" />
+			<q-input
+				v-model="userCred.emailOrUsername"
+				type="text"
+				:label="$t('auth.emailOrUsername') + ':'"
+				autocomplete="on"
+			/>
+			<q-input v-model="userCred.password" type="password" :label="$t('auth.password') + ':'" autocomplete="on" />
 			<div class="q-py-sm flex justify-evenly">
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"

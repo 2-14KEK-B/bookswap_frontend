@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<q-card flat square>
 			<q-card-section class="text-center">
-				<div class="text-h3">{{ getDisplayName(userStore.openedUser) }} {{ $t("'s profile") }}</div>
+				<div class="text-h3">{{ $t("user.profile", { user: getDisplayName(userStore.openedUser) }) }}</div>
 				<q-img
 					class="q-pa-sm"
 					:src="
@@ -16,14 +16,9 @@
 				<q-splitter v-model="splitterWidth" unit="px" :limits="[150, 200]">
 					<template #before>
 						<q-tabs v-model="tabs" vertical align="left" class="full-width">
+							<q-tab :label="$t('user.info')" name="user_info" no-caps style="justify-content: initial; text-align: left" />
 							<q-tab
-								:label="$t('User information')"
-								name="user_info"
-								no-caps
-								style="justify-content: initial; text-align: left"
-							/>
-							<q-tab
-								:label="$t('Upload books')"
+								:label="$t('book.others')"
 								name="uploaded_books"
 								no-caps
 								style="justify-content: initial; text-align: left"
@@ -32,7 +27,7 @@
 							<q-tab :label="$t('Lended books')" name="lended_books" no-caps style="justify-content: initial; text-align: left" /> -->
 							<q-tab
 								v-if="userStore.loggedInUser"
-								:label="$t('Send a message')"
+								:label="$t('message.new', { user: getDisplayName(userStore.openedUser) })"
 								name="message"
 								no-caps
 								style="justify-content: initial; text-align: left"
@@ -42,15 +37,15 @@
 					<template #after>
 						<q-tab-panels v-model="tabs" animated swipeable>
 							<q-tab-panel v-if="userStore.openedUser" name="user_info">
-								<q-input v-model="userStore.openedUser.fullname" type="text" readonly :label="$t('fullname')" />
-								<q-input v-model="userStore.openedUser.username" type="text" readonly :label="$t('username')" />
-								<q-input v-model="userStore.openedUser.email" type="email" readonly :label="$t('email')" />
+								<q-input v-model="userStore.openedUser.fullname" type="text" readonly :label="$t('user.fullname')" />
+								<q-input v-model="userStore.openedUser.username" type="text" readonly :label="$t('user.username')" />
+								<q-input v-model="userStore.openedUser.email" type="email" readonly :label="$t('user.email')" />
 
 								<q-input
 									v-model="new Date(userStore.openedUser.createdAt as string).toString().split('GMT')[0]"
 									type="text"
 									readonly
-									:label="$t('Registered at')"
+									:label="$t('user.registeredAt')"
 								/>
 							</q-tab-panel>
 							<q-tab-panel name="uploaded_books" class="q-pa-md row items-start q-gutter-md">
@@ -83,11 +78,11 @@
 										v-model="messageInput"
 										type="textarea"
 										class="q-mb-lg"
-										:placeholder="$t('Type your message')"
+										:placeholder="$t('message.placeholder')"
 										autofocus
 										autogrow
 									/>
-									<q-btn type="submit" :label="$t('send')" />
+									<q-btn type="submit" :label="$t('button.send')" />
 								</q-form>
 							</q-tab-panel>
 						</q-tab-panels>

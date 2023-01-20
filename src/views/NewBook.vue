@@ -9,27 +9,23 @@
 		<q-form class="col-12" @submit.prevent="bookCreating" @reset="resetFields">
 			<q-input
 				v-model="input.author"
-				:label="$t('author')"
+				:label="$t('book.author')"
 				lazy-rules
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
 			<q-input
 				v-model="input.title"
-				:label="$t('title')"
+				:label="$t('book.title')"
 				lazy-rules
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
 			<q-tabs v-model="tab" align="justify" no-caps>
-				<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" label="Copy the link of the image" />
-				<q-tab
-					name="upload"
-					:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'"
-					label="Upload an image from your device"
-				/>
+				<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.link')" />
+				<q-tab name="upload" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.image')" />
 			</q-tabs>
 			<q-tab-panels v-model="tab" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 				<q-tab-panel name="link" class="no-padding">
-					<q-input v-model="input.picture" :label="$t('picture')" />
+					<q-input v-model="input.picture" :label="$t('book.picture')" />
 				</q-tab-panel>
 				<q-tab-panel name="upload" class="no-padding">
 					<q-uploader
@@ -37,7 +33,7 @@
 						square
 						hide-upload-btn
 						max-file-size="10485760"
-						label="Only image"
+						:label="$t('upload.onlyImg')"
 						class="full-width"
 						:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-5'"
 						accept="image/*"
@@ -46,11 +42,11 @@
 					/>
 				</q-tab-panel>
 			</q-tab-panels>
-			<q-input v-model="input.price" :label="$t('price')" type="number" />
-			<q-toggle v-model="input.for_borrow" color="green" :label="input.for_borrow ? $t('upForBorrow') : $t('upForLend')" />
+			<q-input v-model="input.price" :label="$t('book.price')" type="number" suffix="Ft" />
+			<q-toggle v-model="input.for_borrow" color="green" :label="$t('forBorrow')" />
 			<q-card-actions>
-				<q-btn :label="$t('submit')" type="submit" color="primary" />
-				<q-btn :label="$t('reset')" type="reset" color="primary" flat class="q-ml-sm" />
+				<q-btn :label="$t('button.submit')" type="submit" color="primary" />
+				<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />
 			</q-card-actions>
 		</q-form>
 	</q-card>

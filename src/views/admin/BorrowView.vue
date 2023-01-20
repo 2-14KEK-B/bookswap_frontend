@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				:title="$t('borrows')"
+				:title="t('borrows')"
 				:columns="columns"
 				:rows="data?.docs"
 				:loading="loading"
@@ -17,18 +17,19 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		:title="$t('borrows')"
+		:title="t('borrow')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-toggle v-model="editedData.verified" :label="$t('available')" />
+		<q-toggle v-model="editedData.verified" :label="t('verified')" />
 	</EditTableData>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import { useI18n } from "vue-i18n";
 	import { useBorrowStore } from "@stores/borrow";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
 	import EditTableData from "@components/admin/EditTableData.vue";
@@ -36,7 +37,31 @@
 	import type { Borrow } from "@interfaces/borrow";
 	import type { Book } from "@interfaces/book";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
-	import { useI18n } from "vue-i18n";
+
+	const { t } = useI18n({
+		messages: {
+			en: {
+				borrow: "Borrow",
+				borrows: "Borrows",
+				verified: "Verified",
+				createdAt: "Date of creation",
+				updatedAt: "Date of last edition",
+				from: "Borrow from",
+				to: "Lend to",
+				userRates: "User rates",
+			},
+			hu: {
+				borrow: "Kölcsönzés",
+				borrows: "kölcsönzések",
+				verified: "Visszaigazolt",
+				createdAt: "Létrehozás dátuma",
+				updatedAt: "Legutóbbi szerkesztés időpontja",
+				from: "Tőle kölcsönözve",
+				to: "Neki kölcsönadva",
+				userRates: "Felhasználói értékelések",
+			},
+		},
+	});
 
 	interface ModifiableData {
 		verified?: boolean;
@@ -49,8 +74,8 @@
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number | undefined>();
-	const { t } = useI18n({ useScope: "global" });
+	const rowsNumber = ref<number>(0);
+	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const borrows = await borrowStore.adminGetBorrows(query);
@@ -106,7 +131,6 @@
 			label: t("userRates"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
-		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>
 

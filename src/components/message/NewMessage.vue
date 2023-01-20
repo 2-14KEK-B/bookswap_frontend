@@ -4,18 +4,17 @@
 			<q-toolbar>
 				<q-toolbar-title>
 					<div class="text-h6">
-						{{$t('Send message to')}}
-						<span class="text-italic">{{ displayName }}</span>
+						<span class="text-italic">{{ $t("message.new", { user: displayName }) }}</span>
 					</div>
 				</q-toolbar-title>
 				<q-btn :icon="matClose" flat round dense @click="close" />
 			</q-toolbar>
 			<q-card-section class="q-pt-none">
-				<q-input v-model="input"></q-input>
+				<q-input v-model="input" />
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn flat label="OK" :disable="!inputValidate()" @click="sendMessage" />
+				<q-btn flat :label="$t('button.send')" :disable="!inputValidate()" @click="sendMessage" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>

@@ -35,7 +35,7 @@
 					<q-btn
 						flat
 						rounded
-						:label="quasar.screen.gt.sm ? $t('title.message') : ''"
+						:label="quasar.screen.gt.sm ? $t('title.messages') : ''"
 						:to="{ name: 'message' }"
 						:icon="mdiMessage"
 					>
@@ -80,16 +80,25 @@
 						@click="buttons[1].action"
 					/>
 				</div>
-				<q-select
-					v-model="$i18n.locale"
-					:options="locales"
-					dense
-					borderless
-					emit-value
-					map-options
-					options-dense
-					@update:model-value="(locale) => setLocale(locale)"
-				/>
+				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
+					<template #label>
+						<q-icon :name="$i18n.locale == 'en' ? 'img:public/en.svg' : 'img:public/hu.svg'" />
+					</template>
+					<q-list>
+						<q-item
+							v-for="(locale, i) in locales"
+							:key="i"
+							clickable
+							:disable="$i18n.locale == locale"
+							@click.once="onSetLocale(locale)"
+						>
+							<q-item-section>
+								<q-icon :name="locale == 'en' ? 'img:public/en.svg' : 'img:public/hu.svg'" />
+							</q-item-section>
+							<q-item-section>{{ locale }}</q-item-section>
+						</q-item>
+					</q-list>
+				</q-btn-dropdown>
 			</q-toolbar>
 		</q-header>
 
@@ -104,10 +113,11 @@
 	import { useQuasar } from "quasar";
 	import { useI18n } from "vue-i18n";
 	import { useRouter } from "vue-router";
-	import { userAuthStore } from "@stores/auth";
 	import { useUserStore } from "@stores/user";
+	import { userAuthStore } from "@stores/auth";
+	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import { locales, setLocale } from "../modules/i18n";
+	import { locales, setLocale, availableLocales } from "../modules/i18n";
 	import NotificationList from "@components/NotificationList.vue";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
 	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
@@ -116,6 +126,7 @@
 	const quasar = useQuasar();
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
+	const messageStore = useMessageStore();
 	const { t } = useI18n({ useScope: "global" });
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
@@ -132,15 +143,20 @@
 			icon: mdiThemeLightDark,
 		},
 		{
-			name: t("title.logout"),
+			name: t("auth.logout"),
 			action: authStore.logOut,
 			icon: matLogout,
 		},
 	]);
+
+	async function onSetLocale(locale: availableLocales) {
+		await setLocale(locale);
+	}
 </script>
 
 <style>
-	button.notification i {
+	button.notification i,
+	button.i18n i {
 		display: none;
 	}
 </style>

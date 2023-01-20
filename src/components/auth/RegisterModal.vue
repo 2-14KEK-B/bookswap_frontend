@@ -3,7 +3,7 @@
 		<p class="text-h4">{{ $t("auth.register") }}</p>
 		<q-form @submit.prevent="emits('register', userCred)">
 			<q-input v-model="userCred.username" type="text" :label="$t('auth.username') + ':'" />
-			<q-input v-model="userCred.email" type="text" label="E-mail:" />
+			<q-input v-model="userCred.email" type="text" :label="$t('auth.email') + ':'" />
 			<q-input v-model="userCred.password" type="password" :label="$t('auth.password') + ':'" autocomplete="on" />
 			<div class="q-py-sm flex justify-evenly">
 				<q-btn

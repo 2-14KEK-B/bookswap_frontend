@@ -41,9 +41,10 @@
 </template>
 
 <script setup lang="ts">
-	import { useUserStore } from "@stores/user";
+	import { useI18n } from "vue-i18n";
 	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
+	import { useUserStore } from "@stores/user";
 	import { getDisplayName } from "@utils/userHelper";
 	import { matDelete } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
@@ -51,9 +52,11 @@
 
 	extend(relativeTime);
 	const userStore = useUserStore();
+	const { t } = useI18n({ useScope: "global" });
 
 	function createReadableNotification(notification: Notification) {
 		let adj = "";
+		const type = notification.doc_type;
 		switch (notification.noti_type) {
 			case "create":
 				adj = "created";
@@ -68,9 +71,14 @@
 				adj = "verified";
 				break;
 		}
-		return `${getDisplayName(notification.from as Partial<User>)} ${adj} a ${
-			notification.doc_type == "user_rate" ? "user rate" : notification.doc_type
-		}`;
+		return t("notification.final", {
+			user: getDisplayName(notification.from as Partial<User>),
+			adj: t(`notification.${adj}`),
+			type: t(`notification.${type}`),
+		});
+		// return `${getDisplayName(notification.from as Partial<User>)} ${adj} a ${
+		// 	notification.doc_type == "user_rate" ? "user rate" : notification.doc_type
+		// }`;
 	}
 </script>
 

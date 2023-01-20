@@ -1,38 +1,37 @@
 <template>
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<q-tabs v-model="tab" no-caps align="justify">
-			<q-tab name="uploader" :label="$t('uploader')" />
-			<q-tab name="book" :label="$t('book')" />
-			<q-tab name="other-books" :label="$q.screen.lt.sm ? $t('otherBooks') : $t('otherBooksFromTheUploader')" />
+			<q-tab name="uploader" :label="$t('book.uploader')" />
+			<q-tab name="book" :label="$t('book.about')" />
+			<q-tab name="other-books" :label="$q.screen.lt.sm ? $t('book.others') : $t('book.othersFromUploader')" />
 		</q-tabs>
 		<q-tab-panels v-model="tab">
 			<q-tab-panel name="uploader" class="no-padding" style="height: calc(100vh - 100px)">
 				<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-					<q-tab name="info" :label="$t('userInformation')" />
-					<q-tab name="rate" :label="`${getDisplayName((bookStore.openedBook?.uploader as User))}'s rates`" />
+					<q-tab name="info" :label="$t('user.info')" />
+					<q-tab
+						name="rate"
+						:label="$t('user.usersRates', { user: getDisplayName((bookStore.openedBook?.uploader as User))})"
+					/>
 				</q-tabs>
 				<q-tab-panels v-model="userTab">
 					<q-tab-panel name="info" class="no-padding" style="height: calc(100vh - 150px)">
 						<q-card flat square class="full-height full-width q-pa-lg" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 							<p class="text-h4">
-								{{ $t("fullname") }}:
+								{{ $t("user.fullname") }}:
 								{{
-									(bookStore.openedBook?.uploader as User)?.fullname
-										? (bookStore.openedBook?.uploader as User)?.fullname
-										: $t("doesNotSetHisFullName")
+									(bookStore.openedBook?.uploader as User)?.fullname ? (bookStore.openedBook?.uploader as User)?.fullname : "-"
 								}}
 							</p>
 							<h5>
-								{{ $t("username") }}:
+								{{ $t("user.username") }}:
 								{{
-									(bookStore.openedBook?.uploader as User)?.username
-										? (bookStore.openedBook?.uploader as User)?.username
-										: $t("doesNotSetHisUsername")
+									(bookStore.openedBook?.uploader as User)?.username ? (bookStore.openedBook?.uploader as User)?.username : "-"
 								}}
 							</h5>
 							<h5>E-Mail: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
-							<h5>{{ $t("registered") }}: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
-							<h5>{{ $t("overallRate") }}: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
+							<h5>{{ $t("user.registeredAt") }}: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
+							<h5>{{ $t("rate.overallRate") }}: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
 					</q-tab-panel>
 					<q-tab-panel name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
@@ -46,13 +45,17 @@
 							>
 								<q-card-section>
 									<h6>
-										{{ $t("from") }}: {{ getDisplayName(rate.from as User) }}
+										{{ $t("rate.from") }}: {{ getDisplayName(rate.from as User) }}
 										<q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
 										</q-avatar>
 									</h6>
-									<p>Rate: {{ rate.rate ? "Upvoted" : "Downvoted" }}</p>
-									<p>Comment: {{ rate.comment }}</p>
+									<p>
+										{{ $t("rate.rate") }}:
+										<q-icon v-if="rate.rate" :name="matThumbUp" />
+										<q-icon v-else :name="matThumbDown" />
+									</p>
+									<p>{{ $t("rate.comment") }}: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
 						</q-scroll-area>
@@ -72,7 +75,7 @@
 							color="primary"
 							no-caps
 							padding="sm none"
-							:label="$q.screen.lt.sm ? $t('borrowIt') : $t('sendBorrowRequest')"
+							:label="$t('book.borrowIt')"
 							@click="sendBorrow"
 						/>
 						<q-btn
@@ -81,7 +84,7 @@
 							color="secondary"
 							no-caps
 							padding="sm none"
-							:label="$q.screen.lt.sm ? $t('sendMessage') : $t('sendMessageToTheUploader')"
+							:label="$t('message.new', { user: getDisplayName(bookStore.openedBook?.uploader as User) })"
 							@click="appStore.messageModal = true"
 						/>
 					</q-btn-group>
@@ -108,8 +111,8 @@
 												<div class="col">
 													<q-item>
 														<q-item-section>
-															<q-item-label lines="1">{{ otherBook?.title }}</q-item-label>
-															<q-item-label lines="1" caption>{{ otherBook?.author }}</q-item-label>
+															<q-item-label lines="1">{{ $t("book.title") }}: {{ otherBook?.title }}</q-item-label>
+															<q-item-label lines="1" caption>{{ $t("book.author") }}: {{ otherBook?.author }}</q-item-label>
 														</q-item-section>
 													</q-item>
 												</div>
@@ -120,7 +123,7 @@
 												flat
 												outline
 												no-caps
-												:label="$t('Open in new tab')"
+												:label="$t('button.openNewTab')"
 												@click.prevent="openBookInNewTab(otherBook?._id as string)"
 											/>
 										</q-btn-group>
@@ -149,6 +152,7 @@
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
 	import BookInfo from "@components/BookInfo.vue";
 	import NewMessage from "@components/message/NewMessage.vue";
+	import { matThumbDown, matThumbUp } from "@quasar/extras/material-icons";
 	import type { Book } from "@interfaces/book";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";

@@ -7,16 +7,16 @@
 		/>
 		<q-card-section :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<div class="text-h5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
-				{{ $t("title") }}:
+				{{ $t("book.title") }}:
 				{{ bookStore.openedBook?.title }}
 			</div>
 			<div class="text-h6" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
-				{{ $t("author") }}:
+				{{ $t("book.author") }}:
 				{{ bookStore.openedBook?.author }}
 			</div>
 		</q-card-section>
 		<q-card-section v-if="bookStore.openedBook?.category.length">
-			<span>{{ $t("category") }}:</span>
+			<span>{{ $t("book.category") }}:</span>
 			<q-badge
 				v-for="(category, index) in bookStore.openedBook?.category"
 				:key="index"
@@ -26,29 +26,29 @@
 		</q-card-section>
 		<q-card-section class="no-padding">
 			<q-tabs v-model="tab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-				<q-tab name="info">{{ $t("info") }}:</q-tab>
-				<q-tab name="rate">{{ $t("rate") }}:</q-tab>
+				<q-tab name="info">{{ $t("book.info") }}:</q-tab>
+				<q-tab name="rate">{{ $t("book.rates") }}:</q-tab>
 			</q-tabs>
 			<q-tab-panels v-model="tab" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 				<q-tab-panel name="info">
 					<div class="text-h6">
-						{{ $t("available") }}:
+						{{ $t("book.available") }}:
 						<span>{{ bookStore.openedBook?.available }}</span>
 					</div>
 					<div class="text-h6">
-						{{ $t("uploadedAt") }}:
+						{{ $t("book.createdAt") }}:
 						<span>{{ new Date(bookStore.openedBook?.createdAt as string).toLocaleString() }}</span>
 					</div>
 					<div class="text-h6">
-						{{$t('Uploaded for borrow:')}}
+						{{ $t("book.forBorrow") }}:
 						<span>{{ bookStore.openedBook?.for_borrow }}</span>
 					</div>
 					<div class="text-h6">
-						{{ $t("price") }}:
+						{{ $t("book.price") }}:
 						<span>{{ bookStore.openedBook?.price }}</span>
 					</div>
 					<div class="text-h6">
-						{{ $t("overallRate") }}:
+						{{ $t("rate.overallRate") }}:
 						<q-rating v-model="bookStore.openedBook.overallRate" readonly />
 					</div>
 				</q-tab-panel>
@@ -59,12 +59,12 @@
 						class="flex justify-center items-center q-py-lg"
 						:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 					>
-						<q-btn no-caps outline color="secondary" :label="$t('Create a new rate')" @click="appStore.createBookRate = true" />
+						<q-btn no-caps outline color="secondary" :label="$t('rate.create')" @click="appStore.createBookRate = true" />
 					</q-card>
 					<q-card v-for="rate in (bookStore.openedBook?.rates as BookRate[])" :key="rate._id" flat bordered class="q-mb-sm">
 						<q-card-section>
 							<div class="text-h6">
-								{{$t('from')}}: {{ getDisplayName(rate.from as User) }}
+								{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
 								<q-avatar v-if="(rate.from as User).picture">
 									<q-img :src="(rate.from as User).picture" />
 								</q-avatar>
@@ -74,10 +74,10 @@
 								</span>
 							</div>
 							<p>
-								{{$t('rate')}}:
+								{{ $t("rate.rate") }}:
 								<q-rating v-model="rate.rate" readonly />
 							</p>
-							<p>{{$t('comment')}}: {{ rate.comment }}</p>
+							<p>{{ $t("rate.comment") }}: {{ rate.comment }}</p>
 						</q-card-section>
 					</q-card>
 				</q-tab-panel>
