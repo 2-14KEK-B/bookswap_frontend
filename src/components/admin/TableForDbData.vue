@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from "vue";
+	import { onMounted, ref, toRef } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { QTableProps, QTable } from "quasar";
 	import { matSearch, matMoreVert } from "@quasar/extras/material-icons";
@@ -114,11 +114,12 @@
 		columns: QTableProps["columns"];
 		title: QTableProps["title"];
 		rows: QTableProps["rows"];
-		rowsNumber: number;
+		rowsNumber?: number;
 		isMessage?: boolean;
 	}
 
-	const componentProps = withDefaults(defineProps<Table>(), { isMessage: false });
+	const componentProps = defineProps<Table>();
+	const rowsNumber = toRef(componentProps, "rowsNumber");
 
 	const tableRef = ref();
 	const selectedArray = ref<{ _id: string }[]>([]);
@@ -128,7 +129,7 @@
 		descending: true,
 		page: 1,
 		rowsPerPage: 10,
-		rowsNumber: componentProps.rowsNumber,
+		rowsNumber: rowsNumber?.value,
 	});
 
 	const emits = defineEmits<{

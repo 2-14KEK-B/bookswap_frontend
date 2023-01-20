@@ -21,7 +21,6 @@ export async function setLocale(locale: availableLocales) {
 	// Load locale if not available yet.
 	if (!i18n.global.availableLocales.includes(locale)) {
 		const messages = await loadLocale(locale);
-		console.log("messages: ", messages);
 
 		// fetch() error occurred.
 		if (messages === undefined) {

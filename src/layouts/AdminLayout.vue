@@ -161,55 +161,51 @@
 	const quasar = useQuasar();
 	const leftDrawerOpen = ref(false);
 
-	const menuItems: {
-		icon: string;
-		text: string;
-		name: string;
-		routeName: string;
-		disabled: boolean;
-		separator: boolean;
-	}[] = [
+	const menuItems = ref<
+		{
+			icon: string;
+			text: string | ComputedRef<string>;
+			routeName: string;
+			disabled: boolean;
+			separator: boolean;
+		}[]
+	>([
 		{
 			icon: mdiHomeCircleOutline,
-			text: tLocale("homePage"),
-			name: "Home Page",
+			text: computed(() => tLocale("homePage")),
 			routeName: "home",
 			disabled: false,
 			separator: false,
 		},
 		{
 			icon: mdiAccountOutline,
-			text: tLocale("users"),
-			name: "User",
+			text: computed(() => tLocale("users")),
 			routeName: "admin_user",
 			disabled: false,
 			separator: false,
 		},
 		{
 			icon: mdiBookOpenPageVariantOutline,
-			text: tLocale("books"),
-			name: "Book",
+			text: computed(() => tLocale("books")),
 			routeName: "admin_book",
 			disabled: false,
 			separator: false,
 		},
 		{
 			icon: mdiShareAllOutline,
-			text: tLocale("borrows"),
-			name: "Borrow",
+			text: computed(() => tLocale("borrows")),
 			routeName: "admin_borrow",
 			disabled: false,
 			separator: false,
 		},
 		{
 			icon: mdiMessageOutline,
-			text: tLocale("message"),
-			name: "Message",
+			text: computed(() => tLocale("messages")),
 			routeName: "admin_message",
 			disabled: false,
 			separator: false,
 		},
-	];
+	]);
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{

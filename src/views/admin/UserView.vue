@@ -56,7 +56,7 @@
 				books: "Uploaded books",
 				borrows: "Borrows",
 				messages: "Messages",
-				raredBooks: "Rated books",
+				ratedBooks: "Rated books",
 				userRates: "User rates",
 			},
 			hu: {
@@ -73,7 +73,7 @@
 				books: "Feltöltött könyvek",
 				borrows: "Kölcsönzések",
 				messages: "Üzenetek",
-				raredBooks: "Értékelt könyvek",
+				ratedBooks: "Értékelt könyvek",
 				userRates: "Felhasználói értékelések",
 			},
 		},
@@ -93,7 +93,7 @@
 	const editedData = ref<ModifiableData>(emptyData);
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number>(0);
+	const rowsNumber = ref<number>();
 	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {

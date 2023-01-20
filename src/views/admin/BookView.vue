@@ -91,7 +91,7 @@
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number>(0);
+	const rowsNumber = ref<number>();
 	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {

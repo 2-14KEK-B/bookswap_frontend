@@ -48,7 +48,10 @@
 							{{ userStore.loggedInUser?.username ? userStore.loggedInUser?.username : "-" }}
 						</div>
 						<div class="text-h5">{{ $t("user.email") }}: {{ userStore.loggedInUser?.email }}</div>
-						<div class="text-h5">{{ $t("user.registeredAt") }}: {{ getLocalDate(userStore.loggedInUser?.createdAt) }}</div>
+						<div class="text-h5">
+							{{ $t("user.registeredAt") }}:
+							{{ dayjs(userStore.loggedInUser?.createdAt).locale($i18n.locale).format("LLLL") }}
+						</div>
 						<div class="text-h5">{{ $t("rate.overallRate") }}: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
 						<q-btn color="secondary" class="q-my-lg" :label="$t('me.edit')" :to="{ name: 'editProfile' }" />
 					</q-card>
@@ -63,7 +66,7 @@
 							<q-card v-for="rate in userRateStore.loggedInRates.from" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
 									<div class="text-h6">
-										{{ $t("rate.user.to") }}: {{ getDisplayName(rate.to as User) }}
+										{{ $t("rate.user.to", { user: getDisplayName(rate.to as User) }) }}
 										<q-avatar v-if="(rate.to as User).picture">
 											<q-img :src="(rate.to as User).picture" />
 										</q-avatar>
@@ -73,7 +76,11 @@
 										</span>
 									</div>
 									<q-separator />
-									<p>{{ $t("rate.rate") }}: {{ rate.rate ? $t("upVoted") : $t("downVoted") }}</p>
+									<p>
+										{{ $t("rate.rate") }}:
+										<q-icon v-if="rate.rate" :name="matThumbUp" />
+										<q-icon v-else :name="matThumbDown" />
+									</p>
 									<p>{{ $t("rate.comment") }}: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
@@ -82,13 +89,17 @@
 							<q-card v-for="rate in userRateStore.loggedInRates.to" :key="rate._id" flat bordered class="q-ma-sm">
 								<q-card-section>
 									<div class="text-h6">
-										{{ $t("rate.from") }}: {{ getDisplayName(rate.from as User) }}
+										{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
 										<q-avatar v-if="(rate.from as User).picture">
 											<q-img :src="(rate.from as User).picture" />
 										</q-avatar>
 									</div>
 									<q-separator />
-									<p>{{ $t("rate.rate") }} {{ rate.rate ? $t("upVoted") : $t("downVoted") }}</p>
+									<p>
+										{{ $t("rate.rate") }}:
+										<q-icon v-if="rate.rate" :name="matThumbUp" />
+										<q-icon v-else :name="matThumbDown" />
+									</p>
 									<p>{{ $t("rate.comment") }}: {{ rate.comment }}</p>
 								</q-card-section>
 							</q-card>
@@ -127,7 +138,7 @@
 							</div>
 							<div class="text-h6">
 								{{ $t("borrow.verified") }}:
-								<span class="text-italic">{{ borrow.verified }}</span>
+								<span class="text-italic">{{ borrow.verified ? $t("yes") : $t("no") }}</span>
 							</div>
 							<q-list>
 								<q-expansion-item :label="$t('borrow.books')">
@@ -155,18 +166,22 @@
 											<q-card-section>
 												<q-list>
 													<div>
-														{{ $t("rate.from") }}: {{ getDisplayName(rate.from as User) }}
+														{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
 														<q-avatar v-if="(rate.from as User).picture">
 															<q-img :src="(rate.from as User).picture" />
 														</q-avatar>
 													</div>
 													<div>
-														{{ $t("rate.user.to") }}: {{ getDisplayName(rate.to as User) }}
+														{{ $t("rate.user.to", { user: getDisplayName(rate.to as User) }) }}
 														<q-avatar v-if="(rate.to as User).picture">
 															<q-img :src="(rate.to as User).picture" />
 														</q-avatar>
 													</div>
-													<div>{{ $t("rate.rate") }}: {{ rate.rate ? $t("upVoted") : $t("downVoted") }}</div>
+													<div>
+														{{ $t("rate.rate") }}:
+														<q-icon v-if="rate.rate" :name="matThumbUp" />
+														<q-icon v-else :name="matThumbDown" />
+													</div>
 													<div>
 														{{ $t("rate.comment") }}:
 														<span class="text-italic">{{ rate.comment }}</span>
@@ -194,12 +209,15 @@
 <script setup lang="ts">
 	//TODO: saját borrow szerkesztése
 	import { ref } from "vue";
+	import dayjs, { extend } from "dayjs";
+	import localizedFormat from "dayjs/plugin/localizedFormat";
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useBorrowStore } from "@stores/borrow";
 	import { useUserRateStore } from "@stores/userRate";
-	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
+	import { getDisplayName, getRateSum } from "@utils/userHelper";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
+	import { matThumbDown, matThumbUp } from "@quasar/extras/material-icons";
 	import NewUserRate from "@components/userRate/NewUserRate.vue";
 	import EditUserRate from "@components/userRate/EditUserRate.vue";
 	import EditBorrow from "@components/borrow/EditBorrow.vue";
@@ -207,6 +225,8 @@
 	import type { Borrow } from "@interfaces/borrow";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";
+
+	extend(localizedFormat);
 
 	const appStore = useAppStore();
 	const userStore = useUserStore();

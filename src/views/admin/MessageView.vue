@@ -46,7 +46,7 @@
 	const messageStore = useMessageStore();
 	const data = ref<PaginateResult<Message>>();
 	const loading = ref(true);
-	const rowsNumber = ref<number>(0);
+	const rowsNumber = ref<number>();
 	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {

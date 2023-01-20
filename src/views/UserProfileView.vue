@@ -40,13 +40,7 @@
 								<q-input v-model="userStore.openedUser.fullname" type="text" readonly :label="$t('user.fullname')" />
 								<q-input v-model="userStore.openedUser.username" type="text" readonly :label="$t('user.username')" />
 								<q-input v-model="userStore.openedUser.email" type="email" readonly :label="$t('user.email')" />
-
-								<q-input
-									v-model="new Date(userStore.openedUser.createdAt as string).toString().split('GMT')[0]"
-									type="text"
-									readonly
-									:label="$t('user.registeredAt')"
-								/>
+								<q-input v-model="registeredAt" type="text" readonly :label="$t('user.registeredAt')" />
 							</q-tab-panel>
 							<q-tab-panel name="uploaded_books" class="q-pa-md row items-start q-gutter-md">
 								<q-card v-for="book in uploadedBooks" :key="book._id">
@@ -94,26 +88,37 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from "vue";
+	import { onMounted, ref, computed } from "vue";
+	import dayjs, { extend } from "dayjs";
+	import localizedFormat from "dayjs/plugin/localizedFormat";
+	import { useI18n } from "vue-i18n";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
 	import { getDisplayName } from "@utils/userHelper";
 	import type { Book } from "@interfaces/book";
 	// import type { Borrow } from "@interfaces/borrow";
 
+	extend(localizedFormat);
+
 	const messageStore = useMessageStore();
 	const userStore = useUserStore();
+	const { locale } = useI18n({ useScope: "global" });
 
 	// const user = ref<User>();
 
 	type TabNames = "user_info" | "uploaded_books" | "borrowed_books" | "lended_books" | "message";
 	const tabs = ref<TabNames>("user_info");
+	const registeredAt = computed(() =>
+		dayjs(userStore.openedUser?.createdAt)
+			.locale(locale.value as string)
+			.format("LLLL"),
+	);
 
 	const uploadedBooks = ref<Book[]>([]);
 	// const borrowedBooks = ref<Book[]>([]);
 	// const lendedBooks = ref<Book[]>([]);
 	const messageInput = ref("");
-	const splitterWidth = ref(150);
+	const splitterWidth = ref(200);
 
 	async function sendMessage() {
 		if (messageInput.value.length == 0) {

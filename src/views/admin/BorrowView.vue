@@ -46,16 +46,18 @@
 				verified: "Verified",
 				createdAt: "Date of creation",
 				updatedAt: "Date of last edition",
+				books: "Books",
 				from: "Borrow from",
 				to: "Lend to",
 				userRates: "User rates",
 			},
 			hu: {
 				borrow: "Kölcsönzés",
-				borrows: "kölcsönzések",
+				borrows: "Kölcsönzések",
 				verified: "Visszaigazolt",
 				createdAt: "Létrehozás dátuma",
 				updatedAt: "Legutóbbi szerkesztés időpontja",
+				books: "Könyvek",
 				from: "Tőle kölcsönözve",
 				to: "Neki kölcsönadva",
 				userRates: "Felhasználói értékelések",
@@ -74,7 +76,7 @@
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number>(0);
+	const rowsNumber = ref<number>();
 	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
