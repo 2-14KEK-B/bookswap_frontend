@@ -14,8 +14,6 @@ const i18n = createI18n({
 	messages: messages,
 });
 
-await setDayJS("hu");
-
 // Set new locale.
 export async function setLocale(locale: availableLocales) {
 	// Load locale if not available yet.
@@ -58,6 +56,7 @@ async function loadLocale(locale: availableLocales) {
 	}
 }
 
-export const install = (app: App) => {
+export const install = async (app: App) => {
+	await setDayJS(i18n.global.locale.value as availableLocales);
 	app.use(i18n);
 };

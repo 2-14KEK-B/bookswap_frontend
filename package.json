@@ -15,7 +15,6 @@
 		"@quasar/extras": "^1.15.10",
 		"axios": "^1.2.3",
 		"dayjs": "^1.11.7",
-		"moment": "^2.29.4",
 		"pinia": "^2.0.29",
 		"quasar": "^2.11.5",
 		"socket.io-client": "^4.5.4",
