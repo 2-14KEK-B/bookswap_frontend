@@ -3,16 +3,16 @@
 		<q-card style="min-width: 300px">
 			<q-toolbar>
 				<q-toolbar-title>
-					<div class="text-h6">Update borrow</div>
+					<div class="text-h6">{{ $t("borrow.edit") }}</div>
 				</q-toolbar-title>
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-toolbar>
 			<q-card-section class="q-pt-none">
-				<q-toggle v-model="verified" label="Verify" />
+				<q-toggle v-model="verified" :label="$t('borrow.verified')" />
 			</q-card-section>
 
 			<q-card-actions align="right">
-				<q-btn v-if="verified" v-close-popup flat label="OK" @click="sendUpdate" />
+				<q-btn v-if="verified" v-close-popup flat :label="$t('button.send')" @click="sendUpdate" />
 			</q-card-actions>
 		</q-card>
 	</q-dialog>

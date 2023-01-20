@@ -1,25 +1,25 @@
 <template>
 	<div class="q-mx-lg">
-		<h4>Edit profil</h4>
+		<h4>{{ $t("me.edit") }}</h4>
 	</div>
 	<div class="q-pa-lg">
 		<q-form @submit.prevent="editUser" @reset="reset">
-			<q-input v-model="userData.username" label="Username" />
-			<q-input v-model="userData.fullname" label="Fullname" />
-			<q-input v-model="userData.picture" label="Picture" />
+			<q-input v-model="userData.username" :label="$t('user.username')" />
+			<q-input v-model="userData.fullname" :label="$t('user.fullname')" />
+			<q-input v-model="userData.picture" :label="$t('user.picture')" />
 			<div class="q-my-lg">
-				<q-btn label="Submit" type="submit" color="primary" />
-				<q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+				<q-btn :label="$t('button.send')" type="submit" color="primary" />
+				<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />
 			</div>
 		</q-form>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { EditUser } from "@interfaces/user";
 	import { useUserStore } from "@stores/user";
 	import { ref, readonly } from "vue";
 	import { useRouter } from "vue-router";
+	import type { EditUser } from "@interfaces/user";
 
 	const userStore = useUserStore();
 	const router = useRouter();

@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<q-card flat square>
 			<q-card-section class="text-center">
-				<div class="text-h3">{{ getDisplayName(userStore.openedUser) }}'s profile</div>
+				<div class="text-h3">{{ $t("user.profile", { user: getDisplayName(userStore.openedUser) }) }}</div>
 				<q-img
 					class="q-pa-sm"
 					:src="
@@ -16,13 +16,18 @@
 				<q-splitter v-model="splitterWidth" unit="px" :limits="[150, 200]">
 					<template #before>
 						<q-tabs v-model="tabs" vertical align="left" class="full-width">
-							<q-tab label="User information" name="user_info" no-caps style="justify-content: initial; text-align: left" />
-							<q-tab label="Upload books" name="uploaded_books" no-caps style="justify-content: initial; text-align: left" />
-							<!-- <q-tab label="Borrowed books" name="borrowed_books" no-caps style="justify-content: initial; text-align: left" />
-							<q-tab label="Lended books" name="lended_books" no-caps style="justify-content: initial; text-align: left" /> -->
+							<q-tab :label="$t('user.info')" name="user_info" no-caps style="justify-content: initial; text-align: left" />
+							<q-tab
+								:label="$t('book.others')"
+								name="uploaded_books"
+								no-caps
+								style="justify-content: initial; text-align: left"
+							/>
+							<!-- <q-tab :label="$t('Borrowed books')" name="borrowed_books" no-caps style="justify-content: initial; text-align: left" />
+							<q-tab :label="$t('Lended books')" name="lended_books" no-caps style="justify-content: initial; text-align: left" /> -->
 							<q-tab
 								v-if="userStore.loggedInUser"
-								label="Send a message"
+								:label="$t('message.new', { user: getDisplayName(userStore.openedUser) })"
 								name="message"
 								no-caps
 								style="justify-content: initial; text-align: left"
@@ -32,16 +37,10 @@
 					<template #after>
 						<q-tab-panels v-model="tabs" animated swipeable>
 							<q-tab-panel v-if="userStore.openedUser" name="user_info">
-								<q-input v-model="userStore.openedUser.fullname" type="text" readonly label="Full name" />
-								<q-input v-model="userStore.openedUser.username" type="text" readonly label="Username" />
-								<q-input v-model="userStore.openedUser.email" type="email" readonly label="Username" />
-
-								<q-input
-									v-model="new Date(userStore.openedUser.createdAt as string).toString().split('GMT')[0]"
-									type="text"
-									readonly
-									label="Registered at"
-								/>
+								<q-input v-model="userStore.openedUser.fullname" type="text" readonly :label="$t('user.fullname')" />
+								<q-input v-model="userStore.openedUser.username" type="text" readonly :label="$t('user.username')" />
+								<q-input v-model="userStore.openedUser.email" type="email" readonly :label="$t('user.email')" />
+								<q-input v-model="registeredAt" type="text" readonly :label="$t('user.registeredAt')" />
 							</q-tab-panel>
 							<q-tab-panel name="uploaded_books" class="q-pa-md row items-start q-gutter-md">
 								<q-card v-for="book in uploadedBooks" :key="book._id">
@@ -73,11 +72,11 @@
 										v-model="messageInput"
 										type="textarea"
 										class="q-mb-lg"
-										placeholder="Type your message"
+										:placeholder="$t('message.placeholder')"
 										autofocus
 										autogrow
 									/>
-									<q-btn type="submit" label="Send" />
+									<q-btn type="submit" :label="$t('button.send')" />
 								</q-form>
 							</q-tab-panel>
 						</q-tab-panels>
@@ -89,26 +88,37 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from "vue";
+	import { onMounted, ref, computed } from "vue";
+	import dayjs, { extend } from "dayjs";
+	import localizedFormat from "dayjs/plugin/localizedFormat";
+	import { useI18n } from "vue-i18n";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
 	import { getDisplayName } from "@utils/userHelper";
 	import type { Book } from "@interfaces/book";
 	// import type { Borrow } from "@interfaces/borrow";
 
+	extend(localizedFormat);
+
 	const messageStore = useMessageStore();
 	const userStore = useUserStore();
+	const { locale } = useI18n({ useScope: "global" });
 
 	// const user = ref<User>();
 
 	type TabNames = "user_info" | "uploaded_books" | "borrowed_books" | "lended_books" | "message";
 	const tabs = ref<TabNames>("user_info");
+	const registeredAt = computed(() =>
+		dayjs(userStore.openedUser?.createdAt)
+			.locale(locale.value as string)
+			.format("LLLL"),
+	);
 
 	const uploadedBooks = ref<Book[]>([]);
 	// const borrowedBooks = ref<Book[]>([]);
 	// const lendedBooks = ref<Book[]>([]);
 	const messageInput = ref("");
-	const splitterWidth = ref(150);
+	const splitterWidth = ref(200);
 
 	async function sendMessage() {
 		if (messageInput.value.length == 0) {

@@ -1,0 +1,118 @@
+{
+        "title": {
+                "notificatons": "Értesítések",
+                "messages": "Üzenetek",
+                "adminPage": "Admin oldal",
+                "myProfile": "Profilom",
+                "lightMode": "Világos mód",
+                "darkMode": "Sötét mód",
+                "darkModeButton": "Átváltás {mode}ra"
+        },
+        "auth": {
+                "login": "Bejelentkezés",
+                "register": "Regisztráció",
+                "logout": "Kijelentkezés",
+                "googleLogin": "Bejelentkezés Google fiókkal",
+                "emailOrUsername": "E-mail cím vagy felhasználónév",
+                "password": "Jelszó",
+                "goToLogin": "Bejelentkezéshez",
+                "goToRegister": "Regisztrációhoz"
+        },
+        "user": {
+                "profile": "{user} profilja",
+                "usersRates": "{user} értékelései",
+                "info": "Tudnivalók a felhasználóról",
+                "fullname": "Teljes név",
+                "email": "E-mail",
+                "username": "Felhasználónév",
+                "picture": "Kép",
+                "registeredAt": "Regisztrálás időpontja"
+        },
+        "me": {
+                "profile": "Profilom",
+                "info": "Tudnivalók rólam",
+                "edit": "Saját adataim módosítása",
+                "rates": "Értékeléseim",
+                "ratesFrom": "Értékelések tőlem",
+                "ratesAbout": "Értékelések rólam",
+                "borrows": "Kölcsönzéseim"
+        },
+        "book": {
+                "title": "Cím",
+                "author": "Szerző",
+                "picture": "Kép",
+                "uploader": "Feltöltő",
+                "price": "Ár",
+                "available": "Elérhető",
+                "category": "Műfaj",
+                "forBorrow": "Kölcsönadásra feltöltve",
+                "createdAt": "Feltöltés dátuma",
+                "info": "Tudnivalók a könyvről",
+                "rates": "Értékelések",
+                "about": "A könyvről",
+                "others": "Feltöltő könyvei",
+                "othersFromUploader": "További könyvek a feltöltőtől",
+                "borrowIt": "A könyv kölcsönzése",
+                "lendIt": "A könyv kölcsönadása",
+                "searchBy": "Keresés cím vagy író alapján",
+                "offers": "Kölcsönzés",
+                "uploadNew": "Könyv feltöltés",
+                "wishes": "Kérések"
+        },
+        "borrow": {
+                "from": "{user}-től kölcsönözve",
+                "to": "{user} részére kölcsönadva",
+                "editBorrow": "Kölcsönzés módosítása",
+                "verified": "Visszaigazolva",
+                "books": "Kölcsönzött könyvek"
+        },
+        "message": {
+                "users": "Felhasználók",
+                "search": "Keresés felhasználó alapján",
+                "me": "én",
+                "back": "Vissza",
+                "placeholder": "Kezdd el gépelni..",
+                "new": "Üzenet küldése {user} számára"
+        },
+        "button": {
+                "send": "Elküld",
+                "edit": "Módosít",
+                "reset": "Visszaállít",
+                "open": "Megnyitás",
+                "openNewTab": "Megnyitás új lapon"
+        },
+        "rate": {
+                "user": {
+                        "to": "Értékelte {user}-t",
+                        "create": "A másik felhasználó értékelése"
+                },
+                "create": "Új értékelés létrehozása",
+                "title": "{title} értékelése",
+                "rate": "Értékelés",
+                "userRates": "felhasználói értékelések",
+                "from": "{user} által",
+                "overallRate": "Összesített értékelés",
+                "comment": "Megjegyzés"
+        },
+        "notification": {
+                "created": "létrehozott",
+                "deleted": "törölt",
+                "updated": "módosított",
+                "verified": "ellenőrzött",
+                "user_rate": "felhasználói értékelést",
+                "borrow": "kölcsönzést",
+                "final": "{user} {adj} egy {type}"
+        },
+        "upload": {
+                "onlyImg": "Csak kép engedélyezett",
+                "link": "Kép linkjének másolása",
+                "image": "Kép feltöltése"
+        },
+        "404": {
+                "404": "Oldal nem található",
+                "or": "vagy",
+                "404message": "A keresett oldal létezik vagy egyéb hiba történt."
+        },
+        "yes": "Igen",
+        "no": "Nem"
+}
