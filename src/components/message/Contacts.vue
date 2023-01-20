@@ -12,7 +12,7 @@
 		</q-pull-to-refresh>
 		<q-page-sticky expand position="top">
 			<q-toolbar class="bg-secondary">
-				<q-toolbar-title>Users</q-toolbar-title>
+				<q-toolbar-title>{{ $t("message.users") }}</q-toolbar-title>
 				<q-btn v-if="messageStore.selectedMessage != null" flat dense :icon="mdiClose" @click="emits('closeContacts')" />
 			</q-toolbar>
 			<q-toolbar class="bg-secondary">
@@ -23,7 +23,7 @@
 					outlined
 					dense
 					class="full-width"
-					placeholder="Search or start a new conversation"
+					:placeholder="$t('message.search')"
 				>
 					<template #prepend>
 						<q-icon :name="matSearch" />

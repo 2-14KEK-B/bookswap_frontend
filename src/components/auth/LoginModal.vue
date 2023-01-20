@@ -1,19 +1,19 @@
 <template>
 	<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px; width: calc(100vw - 10%)">
-		<p class="text-h4">Login</p>
+		<p class="text-h4">{{ $t("auth.login") }}</p>
 		<q-separator />
 		<q-form style="min-width: 300px" @submit.prevent="emits('login', userCred)">
 			<q-input
 				v-model="userCred.emailOrUsername"
 				type="text"
-				label="Email or username:"
+				:label="$t('auth.emailOrUsername') + ':'"
 				autocomplete="on"
 				:rules="[(val) => !!val || 'Field is required']"
 			/>
 			<q-input
 				v-model="userCred.password"
 				type="password"
-				label="Password:"
+				:label="$t('auth.password') + ':'"
 				autocomplete="on"
 				:rules="[(val) => !!val || 'Field is required']"
 			/>
@@ -24,12 +24,12 @@
 					:disabled="isDisabled"
 					type="submit"
 					no-caps
-					label="Login"
+					:label="$t('auth.login')"
 				/>
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-					label="Go to Register"
+					:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
 					no-caps
 					@click="emits('to-register')"
 				/>
@@ -39,7 +39,7 @@
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						:icon="fabGoogle"
 						no-caps
-						:label="$q.screen.gt.xs ? 'Login with Google' : ''"
+						:label="$q.screen.gt.xs ? $t('auth.googleLogin') : ''"
 					/>
 				</GoogleLogin>
 			</div>

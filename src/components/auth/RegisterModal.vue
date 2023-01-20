@@ -1,18 +1,23 @@
 <template>
 	<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px; width: calc(100vw - 10%)">
-		<p class="text-h4">Register</p>
+		<p class="text-h4">{{ $t("auth.register") }}</p>
 		<q-form style="min-width: 300px" @submit.prevent="emits('register', userCred)">
 			<q-input
 				v-model="userCred.username"
 				type="text"
-				label="Username:"
+				:label="$t('auth.username') + ':'"
 				:rules="[(val) => !!val || 'Field is required']"
 			/>
-			<q-input v-model="userCred.email" type="text" label="Email:" :rules="[(val) => !!val || 'Field is required']" />
+			<q-input
+				v-model="userCred.email"
+				type="text"
+				:label="$t('auth.email') + ':'"
+				:rules="[(val) => !!val || 'Field is required']"
+			/>
 			<q-input
 				v-model="userCred.password"
 				type="password"
-				label="Password:"
+				:label="$t('auth.password') + ':'"
 				autocomplete="on"
 				:rules="[(val) => !!val || 'Field is required']"
 			/>
@@ -53,13 +58,13 @@
 					:disabled="isDisabled"
 					no-caps
 					type="submit"
-					label="Register"
+					:label="$t('auth.register')"
 				/>
 				<q-btn
 					:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 					:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 					no-caps
-					label="Go to Login"
+					:label="$t('auth.goToLogin')"
 					@click="emits('to-login')"
 				/>
 			</div>

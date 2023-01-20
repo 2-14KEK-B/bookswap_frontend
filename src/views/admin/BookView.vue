@@ -2,7 +2,7 @@
 	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<div :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<TableForDbData
-				:title="'Book'"
+				:title="tLocale('books')"
 				:columns="columns"
 				:rows="data?.docs"
 				:request="getData"
@@ -18,24 +18,25 @@
 	</q-page>
 	<EditTableData
 		v-if="editing"
-		title="Borrow"
+		:title="tLocale('book')"
 		:edit="editing"
 		@close="closeEditModal"
 		@edit="sendEdit"
 		@reset="resetDataToDefault"
 	>
-		<q-input v-model="editedData.title" label="Title" />
-		<q-input v-model="editedData.author" type="text" label="Author" />
-		<q-input v-model="editedData.picture" type="url" label="Picture" />
-		<q-input v-model="editedData.price" type="number" label="Price" suffix="Ft" step="100" min="0" />
-		<q-toggle v-model="editedData.available" label="Available" />
-		<q-select v-model="editedData.category" multiple label="Category" disable />
-		<q-toggle v-model="editedData.for_borrow" label="For Borrow" />
+		<q-input v-model="editedData.title" :label="t('book.title')" />
+		<q-input v-model="editedData.author" type="text" :label="t('book.author')" />
+		<q-input v-model="editedData.picture" type="url" :label="t('book.picture')" />
+		<q-input v-model="editedData.price" type="number" :label="t('book.price')" suffix="Ft" step="100" min="0" />
+		<q-toggle v-model="editedData.available" :label="t('book.available')" />
+		<q-select v-model="editedData.category" multiple :label="t('book.category')" disable />
+		<q-toggle v-model="editedData.for_borrow" :label="t('book.forBorrow')" />
 	</EditTableData>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import { useI18n } from "vue-i18n";
 	import { useBookStore } from "@stores/book";
 	import EditTableData from "@components/admin/EditTableData.vue";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
@@ -43,6 +44,26 @@
 	import type { BookRate } from "@interfaces/bookRate";
 	import type { QTableColumn } from "quasar";
 	import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+
+	const { t } = useI18n({ useScope: "global" });
+	const { t: tLocale } = useI18n({
+		messages: {
+			en: {
+				book: "Book",
+				books: "Books",
+				createdAt: "Date of creation",
+				updatedAt: "Date of last edition",
+				rates: "Rates",
+			},
+			hu: {
+				book: "Könyv",
+				books: "Könyvek",
+				createdAt: "Létrehozás dátuma",
+				updatedAt: "Legutóbbi szerkesztés időpontja",
+				rates: "Értékelések",
+			},
+		},
+	});
 
 	interface ModifiableData {
 		author?: string;
@@ -70,7 +91,8 @@
 	const error = ref("");
 	const editing = ref(false);
 	const loading = ref(true);
-	const rowsNumber = ref<number | undefined>();
+	const rowsNumber = ref<number>();
+	// const { t } = useI18n({ useScope: "global" });
 
 	async function getData(query?: PathQuery) {
 		const books = await bookStore.adminGetBooks(query);
@@ -94,7 +116,7 @@
 	}
 
 	async function sendEdit() {
-		await bookStore.adminEditBookById(editedData.value, editDefaultData.value?._id as string);
+		await bookStore.adminEditBookById(editedData.value, editDefaultData.value?._id);
 		closeEditModal();
 		await getData();
 	}
@@ -123,27 +145,26 @@
 
 	const columns: QTableColumn<Book>[] = [
 		{ field: "_id", name: "_id", label: "_id" },
-		{ field: "createdAt", name: "createdAt", label: "createdAt", sortable: true },
-		{ field: "updatedAt", name: "updatedAt", label: "updatedAt", sortable: true },
-		{ field: "author", name: "author", label: "author", sortable: true },
-		{ field: "title", name: "title", label: "title", sortable: true },
-		{ field: "picture", name: "picture", label: "picture" },
+		{ field: "createdAt", name: "createdAt", label: tLocale("createdAt"), sortable: true },
+		{ field: "updatedAt", name: "updatedAt", label: tLocale("updatedAt"), sortable: true },
+		{ field: "author", name: "author", label: t("book.author"), sortable: true },
+		{ field: "title", name: "title", label: t("book.title"), sortable: true },
+		{ field: "picture", name: "picture", label: t("book.picture") },
 		{
 			field: "category",
 			name: "category",
-			label: "category",
+			label: t("book.category"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
-		{ field: "price", name: "price", label: "price", sortable: true },
-		{ field: "available", name: "available", label: "available", sortable: true },
-		{ field: "for_borrow", name: "for_borrow", label: "for_borrow", sortable: true },
+		{ field: "price", name: "price", label: t("book.price"), sortable: true },
+		{ field: "available", name: "available", label: t("book.available"), sortable: true },
+		{ field: "for_borrow", name: "for_borrow", label: t("book.forBorrow"), sortable: true },
 		{
 			field: "rates",
 			name: "rates",
-			label: "rates",
+			label: tLocale("rates"),
 			format: (val: BookRate[]) => `[${val.map((r) => r._id).join(", ")}]`,
 		},
-		{ field: "__v", name: "__v", label: "__v" },
 	];
 </script>
 

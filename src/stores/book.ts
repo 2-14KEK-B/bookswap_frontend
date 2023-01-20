@@ -95,8 +95,9 @@ export const useBookStore = defineStore("book", () => {
 		}
 	}
 
-	async function adminEditBookById(book: ModifyBook, id: string) {
+	async function adminEditBookById(book: ModifyBook, id?: string) {
 		try {
+			if (!id) return;
 			Loading.show();
 			await $axios.patch(`/admin/book/${id}`, book);
 		} catch (error) {

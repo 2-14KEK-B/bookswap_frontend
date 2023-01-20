@@ -20,7 +20,7 @@
 						content-style="width: 400px"
 					>
 						<template #label>
-							{{ quasar.screen.gt.sm ? "Notifications" : "" }}
+							{{ quasar.screen.gt.sm ? $t("title.notificatons") : "" }}
 							<q-badge
 								v-if="userStore.notificationSum > 0"
 								color="red"
@@ -32,7 +32,13 @@
 
 						<NotificationList />
 					</q-btn-dropdown>
-					<q-btn flat rounded :label="quasar.screen.gt.sm ? 'Messages' : ''" :to="{ name: 'message' }" :icon="mdiMessage">
+					<q-btn
+						flat
+						rounded
+						:label="quasar.screen.gt.sm ? $t('title.messages') : ''"
+						:to="{ name: 'message' }"
+						:icon="mdiMessage"
+					>
 						<q-badge
 							v-if="messageStore.notSeenMessages > 0"
 							color="red"
@@ -50,7 +56,7 @@
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
-									<q-item-label>Go to admin page</q-item-label>
+									<q-item-label>{{ $t("title.adminPage") }}</q-item-label>
 								</q-item-section>
 							</q-item>
 							<template v-for="button in buttons" :key="button.name">
@@ -63,9 +69,28 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat label="Login" :to="{ name: 'auth' }" />
+					<q-btn flat :label="$t('auth.login')" :to="{ name: 'auth' }" />
 					<q-btn flat :icon="darkModeButton.icon" @click="darkModeButton.action" />
 				</div>
+				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
+					<template #label>
+						<q-icon :name="$i18n.locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+					</template>
+					<q-list>
+						<q-item
+							v-for="(locale, i) in locales"
+							:key="i"
+							clickable
+							:disable="$i18n.locale == locale"
+							@click.once="onSetLocale(locale)"
+						>
+							<q-item-section>
+								<q-icon :name="locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+							</q-item-section>
+							<q-item-section>{{ locale }}</q-item-section>
+						</q-item>
+					</q-list>
+				</q-btn-dropdown>
 			</q-toolbar>
 		</q-header>
 
@@ -79,10 +104,12 @@
 	import { computed, ComputedRef, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
-	import { userAuthStore } from "@stores/auth";
+	import { useI18n } from "vue-i18n";
 	import { useUserStore } from "@stores/user";
+	import { userAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
+	import { locales, setLocale, availableLocales } from "../modules/i18n";
 	import NotificationList from "@components/NotificationList.vue";
 	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
@@ -93,6 +120,7 @@
 	const authStore = userAuthStore();
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
+	const { t } = useI18n({ useScope: "global" });
 
 	interface Button {
 		name: string | ComputedRef<string>;
@@ -108,7 +136,7 @@
 
 	const buttons = ref<Button[]>([
 		{
-			name: "My profile",
+			name: computed(() => t("title.myProfile")),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
@@ -119,15 +147,20 @@
 		},
 		darkModeButton,
 		{
-			name: "Logout",
+			name: computed(() => t("auth.logout")),
 			action: authStore.logOut,
 			icon: matLogout,
 		},
 	]);
+
+	async function onSetLocale(locale: availableLocales) {
+		await setLocale(locale);
+	}
 </script>
 
 <style>
-	button.notification i {
+	button.notification i,
+	button.i18n i {
 		display: none;
 	}
 </style>

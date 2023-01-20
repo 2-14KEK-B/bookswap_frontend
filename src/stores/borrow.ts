@@ -44,8 +44,9 @@ export const useBorrowStore = defineStore("borrow", () => {
 		}
 	}
 
-	async function editBorrow(borrowData: ModifyBorrow, id: string) {
+	async function editBorrow(borrowData: ModifyBorrow, id?: string) {
 		try {
+			if (!id) return;
 			Loading.show();
 			const { data } = await $axios.patch<Borrow>(`/borrow/${id}`, borrowData);
 			const { type } = data;

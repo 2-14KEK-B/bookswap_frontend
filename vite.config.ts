@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
-import path from "path";
+import path, { dirname, resolve } from "path";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import vue from "@vitejs/plugin-vue";
 import eslint from "vite-plugin-eslint";
+import { fileURLToPath } from "url";
 // import { checker } from "vite-plugin-checker";
 
 export default defineConfig({
@@ -14,13 +16,17 @@ export default defineConfig({
 			autoImportComponentCase: "combined",
 			sassVariables: "src/styles/quasar-variables.scss",
 		}),
+		VueI18nPlugin({
+			include: resolve(dirname(fileURLToPath(import.meta.url)), "./src/locales/**"),
+			runtimeOnly: false,
+		}),
 		{
 			...eslint({ failOnError: true, failOnWarning: true }),
 			apply: "build",
 		},
 		// checker({
-		// 	typescript: true,
-		// 	vueTsc: true,
+		// 	// typescript: true,
+		// 	// vueTsc: true,
 		// 	eslint: {
 		// 		lintCommand: 'eslint "./src/**/*.{ts,vue}"',
 		// 	},
@@ -47,7 +53,7 @@ export default defineConfig({
 			output: {
 				manualChunks(id) {
 					if (id.includes("/node_modules/")) {
-						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia", "socket.io"];
+						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia", "socket.io", "dayjs", "@intlify"];
 						const chunk = modules.find((module) => id.includes(`/node_modules/${module}`));
 						return chunk ? `vendor-${chunk}` : "vendor";
 					}
