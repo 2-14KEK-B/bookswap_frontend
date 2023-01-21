@@ -29,7 +29,7 @@
 									(bookStore.openedBook?.uploader as User)?.username ? (bookStore.openedBook?.uploader as User)?.username : "-"
 								}}
 							</h5>
-							<h5>E-Mail: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
+							<h5>{{ $t("user.email") }}: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
 							<h5>{{ $t("user.registeredAt") }}: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
 							<h5>{{ $t("rate.overallRate") }}: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
@@ -47,9 +47,6 @@
 									<h6>
 										{{ $t("rate.from") }}: {{ getDisplayName(rate.from as User) }}
 										<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
-										<!-- <q-avatar v-if="(rate.from as User).picture">
-											<q-img :src="(rate.from as User).picture" />
-										</q-avatar> -->
 									</h6>
 									<p>
 										{{ $t("rate.rate") }}:
@@ -66,7 +63,7 @@
 			<q-tab-panel
 				name="book"
 				class="no-padding row items-stretch bg-grey-9"
-				style="min-height: calc(100vh - 140px); margin-bottom: 40px"
+				style="min-height: calc(100vh - 138px); margin-bottom: 40px"
 			>
 				<div class="row items-stretch full-width">
 					<BookInfo v-if="bookStore.openedBook" />

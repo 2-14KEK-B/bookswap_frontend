@@ -13,7 +13,7 @@
 				style="height: 180px"
 			>
 				<p class="text-h4">{{ $t("me.profile") }}</p>
-				<ProfileAvatar size="100px" :src="userStore.loggedInUser?.picture" :alt="getDisplayName(userStore.loggedInUser)" />
+				<ProfileAvatar :size="100" :src="userStore.loggedInUser?.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 			</q-card-section>
 			<q-tabs v-model="userTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 				<q-tab name="info" :label="$t('me.info')" />
@@ -60,9 +60,6 @@
 									<div class="text-h6">
 										{{ $t("rate.user.to", { user: getDisplayName(rate.to as User) }) }}
 										<ProfileAvatar :src="(rate.to as User).picture" :alt="getDisplayName(rate.to as User)" />
-										<!-- <q-avatar v-if="(rate.to as User).picture">
-											<q-img :src="(rate.to as User).picture" />
-										</q-avatar> -->
 										<span class="absolute-top-right">
 											<q-icon :name="matEdit" class="q-pr-md" @click.prevent="editUserRate(rate)" />
 											<q-icon :name="matDelete" class="q-pr-md" @click.prevent="deleteUserRate(rate)" />
@@ -84,9 +81,6 @@
 									<div class="text-h6">
 										{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
 										<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
-										<!-- <q-avatar v-if="(rate.from as User).picture">
-											<q-img :src="(rate.from as User).picture" />
-										</q-avatar> -->
 									</div>
 									<q-separator />
 									<p>
@@ -123,9 +117,6 @@
 							<div class="text-h6">
 								{{ $t("borrow.to", { user: getDisplayName(borrow.to as User) }) }}
 								<ProfileAvatar :src="(borrow.to as User).picture" :alt="getDisplayName(borrow.to as User)" />
-								<!-- <q-avatar v-if="(borrow.to as User).picture">
-									<q-img :src="(borrow.to as User).picture" />
-								</q-avatar> -->
 							</div>
 							<div class="text-h6">
 								{{ $t("borrow.verified") }}:
@@ -159,16 +150,10 @@
 													<div>
 														{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
 														<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
-														<!-- <q-avatar v-if="(rate.from as User).picture">
-															<q-img :src="(rate.from as User).picture" />
-														</q-avatar> -->
 													</div>
 													<div>
 														{{ $t("rate.user.to", { user: getDisplayName(rate.to as User) }) }}
 														<ProfileAvatar :src="(rate.to as User).picture" :alt="getDisplayName(rate.to as User)" />
-														<!-- <q-avatar v-if="(rate.to as User).picture">
-															<q-img :src="(rate.to as User).picture" />
-														</q-avatar> -->
 													</div>
 													<div>
 														{{ $t("rate.rate") }}:
@@ -216,6 +201,7 @@
 	import NewUserRate from "@components/userRate/NewUserRate.vue";
 	import EditUserRate from "@components/userRate/EditUserRate.vue";
 	import EditBorrow from "@components/borrow/EditBorrow.vue";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import type { Book } from "@interfaces/book";
 	import type { Borrow } from "@interfaces/borrow";
 	import type { User } from "@interfaces/user";

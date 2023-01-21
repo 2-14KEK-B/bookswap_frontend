@@ -9,7 +9,7 @@
 		<div v-if="userStore.loggedInUser.notifications.length == 0">
 			<q-item v-close-popup>
 				<q-item-section>
-					<q-item-label>You do not have any notification.</q-item-label>
+					<q-item-label>{{ $t("notification.none") }}</q-item-label>
 				</q-item-section>
 			</q-item>
 		</div>

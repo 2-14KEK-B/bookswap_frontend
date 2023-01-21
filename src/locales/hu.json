@@ -14,7 +14,6 @@
                 "logout": "Kijelentkezés",
                 "googleLogin": "Bejelentkezés Google fiókkal",
                 "emailOrUsername": "E-mail cím vagy felhasználónév",
-                "password": "Jelszó",
                 "goToLogin": "Bejelentkezéshez",
                 "goToRegister": "Regisztrációhoz"
         },
@@ -24,6 +23,7 @@
                 "info": "Tudnivalók a felhasználóról",
                 "fullname": "Teljes név",
                 "email": "E-mail",
+                "password": "Jelszó",
                 "username": "Felhasználónév",
                 "picture": "Kép",
                 "registeredAt": "Regisztrálás időpontja"
@@ -45,16 +45,19 @@
                 "price": "Ár",
                 "available": "Elérhető",
                 "category": "Műfaj",
+                "isbn": "ISBN",
                 "forBorrow": "Kölcsönadásra feltöltve",
+                "forLend": "Kölcsönvétel miatt feltöltve ",
+                "notAvailable": "Nem elérhető",
                 "createdAt": "Feltöltés dátuma",
                 "info": "Tudnivalók a könyvről",
                 "rates": "Értékelések",
                 "about": "A könyvről",
                 "others": "Feltöltő könyvei",
                 "othersFromUploader": "További könyvek a feltöltőtől",
-                "borrowIt": "A könyv kölcsönzése",
-                "lendIt": "A könyv kölcsönadása",
-                "searchBy": "Keresés cím vagy író alapján",
+                "borrowIt": "Kikölcsönzés",
+                "lendIt": "Kölcsönadás",
+                "searchBy": "Keresés cím, szerző vagy ISBN alapján",
                 "offers": "Kölcsönzés",
                 "uploadNew": "Könyv feltöltés",
                 "wishes": "Kérések"
@@ -96,12 +99,16 @@
         },
         "notification": {
                 "created": "létrehozott",
+                "borrowRequest": "{type} egy kölcsönzési kérelmet",
+                "lendRequest": "{type} egy kölcsönadási kérelmet",
+                "userRate": "{type} egy felhasználói értékelést rólad",
                 "deleted": "törölt",
                 "updated": "módosított",
-                "verified": "ellenőrzött",
+                "verified": "visszaigazolt",
                 "user_rate": "felhasználói értékelést",
                 "borrow": "kölcsönzést",
-                "final": "{user} {adj} egy {type}"
+                "final": "{user} {adj} egy {type}",
+                "none": "Egy értesítésed sincs."
         },
         "upload": {
                 "onlyImg": "Csak kép engedélyezett",
@@ -112,6 +119,9 @@
                 "404": "Oldal nem található",
                 "or": "vagy",
                 "404message": "A keresett oldal létezik vagy egyéb hiba történt."
+        },
+        "formValidation": {
+                "required": "A mező kitöltése kötelező"
         },
         "yes": "Igen",
         "no": "Nem"

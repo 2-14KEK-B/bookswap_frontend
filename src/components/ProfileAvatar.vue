@@ -1,7 +1,7 @@
 <template>
 	<q-avatar
 		v-if="src"
-		:size="size"
+		:size="size + 'px'"
 		:style="{
 			border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey',
 			margin: title ? '' : '1px',
@@ -21,7 +21,8 @@
 		v-else
 		:color="$q.dark.isActive ? 'cyan-10' : 'cyan'"
 		text-color="white"
-		:size="size"
+		:size="size + 'px'"
+		:font-size="size * 0.7 + 'px'"
 		:style="{
 			border: title ? '2px solid white' : $q.dark.isActive ? '2px solid white' : '2px solid DarkSlateGrey',
 			margin: title ? '' : '1px',
@@ -33,13 +34,13 @@
 
 <script setup lang="ts">
 	interface Props {
-		size?: string;
+		size?: number;
 		title?: boolean;
 		src?: string;
 		alt?: string;
 	}
 	withDefaults(defineProps<Props>(), {
-		size: "30px",
+		size: 30,
 		title: false,
 		src: "",
 		alt: "",
@@ -49,5 +50,8 @@
 <style scoped>
 	.q-avatar {
 		box-sizing: content-box;
+	}
+	.q-avatar__content {
+		line-height: 0;
 	}
 </style>

@@ -32,9 +32,10 @@
 </template>
 
 <script setup lang="ts">
+	import { useI18n } from "vue-i18n";
+	import dayjs, { extend } from "dayjs";
 	import { useUserStore } from "@stores/user";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import dayjs, { extend } from "dayjs";
 	import relativeTime from "dayjs/plugin/relativeTime";
 	import { getDisplayName } from "@utils/userHelper";
 	import { matDelete } from "@quasar/extras/material-icons";
@@ -43,6 +44,7 @@
 
 	extend(relativeTime);
 	const userStore = useUserStore();
+	const { t } = useI18n({ useScope: "global" });
 
 	function createReadableNotification(notification: Notification) {
 		let finalString = `${getDisplayName(notification.from as Partial<User>)}`;
@@ -50,45 +52,45 @@
 			case "borrow":
 				switch (notification.noti_type) {
 					case "create":
-						finalString += " created a borrow request";
+						finalString += ` ${t("notification.borrowRequest", { type: t("notification.created") })}`;
 						break;
 					case "delete":
-						finalString += " deleted a borrow";
+						finalString += ` ${t("notification.borrowRequest", { type: t("notification.deleted") })}`;
 						break;
 					case "update":
-						finalString += " updated a borrow";
+						finalString += ` ${t("notification.borrowRequest", { type: t("notification.updated") })}`;
 						break;
 					case "verify":
-						finalString += " verified a borrow request";
+						finalString += ` ${t("notification.borrowRequest", { type: t("notification.verified") })}`;
 						break;
 				}
 				break;
 			case "lend":
 				switch (notification.noti_type) {
 					case "create":
-						finalString += " send a lend request";
+						finalString += ` ${t("notification.lendRequest", { type: t("notification.created") })}`;
 						break;
 					case "delete":
-						finalString += " deleted a lend";
+						finalString += ` ${t("notification.lendRequest", { type: t("notification.deleted") })}`;
 						break;
 					case "update":
-						finalString += " updated a lend";
+						finalString += ` ${t("notification.lendRequest", { type: t("notification.updated") })}`;
 						break;
 					case "verify":
-						finalString += " verified a lend request";
+						finalString += ` ${t("notification.lendRequest", { type: t("notification.verified") })}`;
 						break;
 				}
 				break;
 			case "user_rate":
 				switch (notification.noti_type) {
 					case "create":
-						finalString += " created a user rate about you";
+						finalString += ` ${t("notification.userRate", { type: t("notification.created") })}`;
 						break;
 					case "delete":
-						finalString += " deleted a user rate about you";
+						finalString += ` ${t("notification.userRate", { type: t("notification.deleted") })}`;
 						break;
 					case "update":
-						finalString += " updated a user rate about you";
+						finalString += ` ${t("notification.userRate", { type: t("notification.updated") })}`;
 						break;
 				}
 				break;

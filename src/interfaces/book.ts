@@ -8,6 +8,7 @@ interface Book {
 	updatedAt?: string;
 	author: string;
 	title: string;
+	isbn?: string;
 	picture: string;
 	category: string[];
 	price?: number;
@@ -22,6 +23,7 @@ interface Book {
 interface CreateBook {
 	author: string;
 	title: string;
+	isbn?: string;
 	picture?: string;
 	category?: string[];
 	price?: number | string;
@@ -31,6 +33,7 @@ interface CreateBook {
 interface ModifyBook {
 	author?: string;
 	title?: string;
+	isbn?: string;
 	picture?: string;
 	category?: string[];
 	price?: number;

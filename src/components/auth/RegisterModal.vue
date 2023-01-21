@@ -5,21 +5,27 @@
 			<q-input
 				v-model="userCred.username"
 				type="text"
-				:label="$t('auth.username') + ':'"
-				:rules="[(val) => !!val || 'Field is required']"
+				:label="$t('user.username') + ':'"
+				lazy-rules
+				reactive-rules
+				:rules="[(val) => !!val || $t('formValidation.required')]"
 			/>
 			<q-input
 				v-model="userCred.email"
 				type="text"
-				:label="$t('auth.email') + ':'"
-				:rules="[(val) => !!val || 'Field is required']"
+				:label="$t('user.email') + ':'"
+				lazy-rules
+				reactive-rules
+				:rules="[(val) => !!val || $t('formValidation.required')]"
 			/>
 			<q-input
 				v-model="userCred.password"
 				type="password"
-				:label="$t('auth.password') + ':'"
+				:label="$t('user.password') + ':'"
 				autocomplete="on"
-				:rules="[(val) => !!val || 'Field is required']"
+				lazy-rules
+				reactive-rules
+				:rules="[(val) => !!val || $t('formValidation.required')]"
 			/>
 			<!-- <div>
 				<span class="text-subtitle1">Picture:</span>

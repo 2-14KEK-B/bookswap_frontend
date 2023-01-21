@@ -24,24 +24,12 @@
 					:stamp="dayjs().to(content.createdAt)"
 				>
 					<template #avatar>
-						<span v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id">
+						<span v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id" class="q-pr-sm">
 							<ProfileAvatar
 								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
 								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
 							/>
 						</span>
-						<!-- <q-avatar
-							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
-							color="primary"
-							text-color="white"
-							class="q-message-avatar q-message-avatar--received"
-						>
-							<q-img
-								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
-								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
-							/>
-							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar> -->
 					</template>
 				</q-chat-message>
 			</q-infinite-scroll>
@@ -58,13 +46,6 @@
 								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
 							/>
 						</span>
-						<!-- <q-avatar v-if="messageStore.selectedMessage" color="primary" text-color="white">
-							<q-img
-								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
-								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
-							/>
-							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar> -->
 						{{ otherUser?.displayName }}
 					</q-toolbar-title>
 				</q-btn>
@@ -114,8 +95,14 @@
 	const chatRef = ref<QScrollArea>();
 
 	async function load(index: number, done: (stop?: boolean) => void) {
-		const stop = await messageStore.loadMessage(index);
-		done(!!stop);
+		if (messageStore.loggedInMessages && messageStore.selectedMessage) {
+			const m = messageStore.loggedInMessages[messageStore.selectedMessage.index];
+			if (m.totalCount && m.totalCount < 25) {
+				return done(true);
+			}
+			const stop = await messageStore.loadMessage(index);
+			done(!!stop);
+		}
 	}
 
 	function moveToBottom() {

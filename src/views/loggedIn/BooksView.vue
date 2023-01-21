@@ -1,9 +1,9 @@
 <template>
 	<q-page>
 		<q-tabs v-model="tab" no-caps>
-			<q-tab name="borrow" label="For Borrow" />
-			<q-tab name="lend" label="For Lend" />
-			<q-tab name="not_available" label="Not available" />
+			<q-tab name="borrow" :label="$t('book.forBorrow')" />
+			<q-tab name="lend" :label="$t('book.forLend')" />
+			<q-tab name="not_available" :label="$t('book.notAvailable')" />
 		</q-tabs>
 		<q-scroll-area style="height: calc(100vh - 98px)">
 			<div class="row q-pa-sm">
@@ -17,8 +17,8 @@
 										<div class="col">
 											<q-item>
 												<q-item-section>
-													<q-item-label lines="1">Title: {{ book.title }}</q-item-label>
-													<q-item-label lines="1" caption>Author: {{ book.author }}</q-item-label>
+													<q-item-label lines="1">{{ $t("book.title") }}: {{ book.title }}</q-item-label>
+													<q-item-label lines="1" caption>{{ $t("book.author") }}: {{ book.author }}</q-item-label>
 												</q-item-section>
 											</q-item>
 										</div>
@@ -29,7 +29,7 @@
 									<q-btn
 										flat
 										no-caps
-										label="Open"
+										:label="$t('button.open')"
 										padding="sm none"
 										@click.prevent="router.push({ name: 'book', params: { id: book._id } })"
 									/>

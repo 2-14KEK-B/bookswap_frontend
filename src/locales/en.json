@@ -14,7 +14,6 @@
                 "logout": "Logout",
                 "googleLogin": "Login with Google",
                 "emailOrUsername": "Email or username",
-                "password": "Password",
                 "goToLogin": "Go to login",
                 "goToRegister": "Go to register"
         },
@@ -24,6 +23,7 @@
                 "info": "Information about the user",
                 "fullname": "Fullname",
                 "email": "E-mail",
+                "password": "Password",
                 "username": "Username",
                 "picture": "Picture",
                 "registeredAt": "Registered at"
@@ -45,16 +45,19 @@
                 "price": "Price",
                 "available": "Available",
                 "category": "Genre",
+                "isbn": "ISBN",
                 "forBorrow": "Uploaded for borrow",
+                "forLend": "Uploaded for lend",
+                "notAvailable": "Not available",
                 "createdAt": "Date of upload",
                 "info": "Information about the book",
                 "rates": "Rates",
                 "about": "About the book",
                 "others": "Uploader's books",
                 "othersFromUploader": "Other books from from the uploader",
-                "borrowIt": "Borrow the book",
-                "lendIt": "Lend the book",
-                "searchBy": "Search by title or author",
+                "borrowIt": "Borrow",
+                "lendIt": "Lend",
+                "searchBy": "Search by title, author or ISBN",
                 "offers": "Offers",
                 "uploadNew": "Upload new",
                 "wishes": "Wishes"
@@ -96,12 +99,16 @@
         },
         "notification": {
                 "created": "created",
+                "borrowRequest": "{type} a borrow request",
+                "lendRequest": "{type} a lend request",
+                "userRate": "{type} a user rate about you",
                 "deleted": "deleted",
                 "updated": "updated",
                 "verified": "verified",
                 "user_rate": "user rate",
                 "borrow": "borrow",
-                "final": "{user} {adj} a {type}"
+                "final": "{user} {adj} a {type}",
+                "none": "You do not have any notification."
         },
         "upload": {
                 "onlyImg": "Only image allowed",
@@ -112,6 +119,9 @@
                 "404": "Page not found",
                 "or": "or",
                 "404message": "The Page you are looking for doesn't exist or an other error occurred."
+        },
+        "formValidation": {
+                "required": "Field is required"
         },
         "yes": "Yes",
         "no": "No"

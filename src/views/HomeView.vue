@@ -112,7 +112,7 @@
 	const selected = ref<"borrow" | "lend">("borrow");
 
 	async function searchByKeyword() {
-		const data = await bookStore.getBooks(`${selected.value}?keyword=${keyWord.value}`);
+		const data = await bookStore.getBooks(`${selected.value}?keyword=${keyWord.value.toString()}`);
 		books.value = data?.docs;
 	}
 
