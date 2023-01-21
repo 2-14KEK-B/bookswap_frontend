@@ -129,19 +129,21 @@
 	}
 
 	const darkModeButton: Button = {
-		name: computed(() => `Change to ${quasar.dark.isActive ? "light" : "dark"} mode`),
+		name: computed(() =>
+			t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.lightMode") : t("title.darkMode") }),
+		),
 		action: quasar.dark.toggle,
 		icon: mdiThemeLightDark,
 	};
 
 	const buttons = ref<Button[]>([
 		{
-			name: computed(() => t("title.myProfile")),
+			name: computed(() => t("me.profile")),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
 		{
-			name: "My books",
+			name: computed(() => t("me.books")),
 			action: () => router.push({ name: "myBooks" }),
 			icon: matBook,
 		},

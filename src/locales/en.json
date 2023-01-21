@@ -3,7 +3,6 @@
                 "notificatons": "Notificatons",
                 "messages": "Messages",
                 "adminPage": "Admin page",
-                "myProfile": "My profile",
                 "lightMode": "Light mode",
                 "darkMode": "Dark mode",
                 "darkModeButton": "Change to {mode}"
@@ -30,6 +29,7 @@
         },
         "me": {
                 "profile": "My profile",
+                "books": "My book",
                 "info": "Information about me",
                 "edit": "Edit my information",
                 "rates": "My rates",
