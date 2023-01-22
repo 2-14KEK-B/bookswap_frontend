@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { useBorrowStore } from "@stores/borrow";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
@@ -119,7 +119,7 @@
 		});
 	}
 
-	const columns: QTableColumn<Borrow>[] = [
+	const columns = computed<QTableColumn<Borrow>[]>(() => [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: t("createdAt"), sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt"), sortable: true },
@@ -134,7 +134,7 @@
 			label: t("userRates"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
-	];
+	]);
 </script>
 
 <style scoped lang="scss"></style>

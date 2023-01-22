@@ -45,7 +45,7 @@
 							{{ dayjs(userStore.loggedInUser?.createdAt).locale($i18n.locale).format("LLLL") }}
 						</div>
 						<div class="text-h5">{{ $t("rate.overallRate") }}: {{ getRateSum(userStore.loggedInUser?.user_rates) }}</div>
-						<q-btn color="secondary" class="q-my-lg" :label="$t('me.edit')" :to="{ name: 'editProfile' }" />
+						<q-btn color="secondary" class="q-my-lg" :label="$t('me.edit')" @click="appStore.editProfile = true" />
 					</q-card>
 				</q-tab-panel>
 				<q-tab-panel class="no-padding" name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
@@ -179,6 +179,7 @@
 			</q-tab-panels>
 		</q-card>
 	</q-page>
+	<EditProfile v-if="appStore.editProfile" />
 	<EditUserRate v-if="appStore.editUserRate" :user-rate="userRateToEdit" />
 	<EditBorrow v-if="appStore.editBorrow" :borrow="borrowToEdit" />
 	<NewUserRate v-if="borrowFrorUserRateCreating && appStore.createUserRate" :borrow="borrowFrorUserRateCreating" />
@@ -198,6 +199,7 @@
 	import { getDisplayName, getRateSum } from "@utils/userHelper";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
 	import { matThumbDown, matThumbUp } from "@quasar/extras/material-icons";
+	import EditProfile from "@components/loggedIn/EditProfile.vue";
 	import NewUserRate from "@components/userRate/NewUserRate.vue";
 	import EditUserRate from "@components/userRate/EditUserRate.vue";
 	import EditBorrow from "@components/borrow/EditBorrow.vue";

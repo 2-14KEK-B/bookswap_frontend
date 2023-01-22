@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { useBookStore } from "@stores/book";
 	import EditTableData from "@components/admin/EditTableData.vue";
@@ -143,7 +143,7 @@
 		});
 	}
 
-	const columns: QTableColumn<Book>[] = [
+	const columns = computed<QTableColumn<Book>[]>(() => [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: tLocale("createdAt"), sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: tLocale("updatedAt"), sortable: true },
@@ -165,7 +165,7 @@
 			label: tLocale("rates"),
 			format: (val: BookRate[]) => `[${val.map((r) => r._id).join(", ")}]`,
 		},
-	];
+	]);
 </script>
 
 <style scoped lang="scss"></style>

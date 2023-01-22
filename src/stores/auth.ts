@@ -8,7 +8,7 @@ import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
 import { setInitialMessageInfo } from "@utils/messageHelper";
-import type { LoginCred, RegisterCred } from "@interfaces/auth";
+import type { LoginCred } from "@interfaces/auth";
 import type { Message } from "@interfaces/message";
 import type { User } from "@interfaces/user";
 import type { Borrow } from "@interfaces/borrow";
@@ -77,7 +77,7 @@ export const userAuthStore = defineStore("auth", () => {
 		}
 	}
 
-	async function register(userData: RegisterCred) {
+	async function register(userData: Partial<User>) {
 		try {
 			Loading.show();
 			await $axios.post("/auth/register", userData);

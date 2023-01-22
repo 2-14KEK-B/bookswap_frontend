@@ -69,7 +69,7 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat :label="$t('auth.login')" :to="{ name: 'auth' }" />
+					<q-btn flat :label="$t('auth.login')" @click="appStore.login = true" />
 					<q-btn flat :icon="darkModeButton.icon" @click="darkModeButton.action" />
 				</div>
 				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
@@ -97,6 +97,9 @@
 		<q-page-container>
 			<router-view />
 		</q-page-container>
+
+		<LoginModal v-if="appStore.login" />
+		<RegisterModal v-if="appStore.register" />
 	</q-layout>
 </template>
 
@@ -105,11 +108,14 @@
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useI18n } from "vue-i18n";
+	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { userAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
-	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { locales, setLocale, availableLocales } from "../modules/i18n";
+	import LoginModal from "@components/auth/LoginModal.vue";
+	import RegisterModal from "@components/auth/RegisterModal.vue";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NotificationList from "@components/NotificationList.vue";
 	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
@@ -117,8 +123,9 @@
 
 	const router = useRouter();
 	const quasar = useQuasar();
-	const authStore = userAuthStore();
+	const appStore = useAppStore();
 	const userStore = useUserStore();
+	const authStore = userAuthStore();
 	const messageStore = useMessageStore();
 	const { t } = useI18n({ useScope: "global" });
 

@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useAppStore = defineStore("app", () => {
+	const login = ref(false);
+	const register = ref(false);
+	const editProfile = ref(false);
 	const adminEdit = ref(false);
 	const editBorrow = ref(false);
 	const createBookRate = ref(false);
@@ -13,6 +16,9 @@ export const useAppStore = defineStore("app", () => {
 	const isMessageOpened = ref(false);
 
 	return {
+		login,
+		register,
+		editProfile,
 		adminEdit,
 		editBorrow,
 		createBookRate,

@@ -20,16 +20,6 @@ export const routes: RouteRecordRaw[] = [
 				component: () => import("@views/MessageView.vue"),
 			},
 			{
-				path: "editProfile",
-				name: "editProfile",
-				component: () => import("@views/loggedIn/EditProfileView.vue"),
-			},
-			{
-				path: "auth",
-				name: "auth",
-				component: () => import("@views/AuthView.vue"),
-			},
-			{
 				path: "newBook",
 				name: "newBook",
 				component: () => import("@views/NewBookView.vue"),

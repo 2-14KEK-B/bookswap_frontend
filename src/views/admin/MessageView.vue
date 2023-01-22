@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { useMessageStore } from "@stores/message";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
@@ -64,7 +64,7 @@
 		});
 	}
 
-	const columns: QTableColumn<Message>[] = [
+	const columns = computed<QTableColumn<Message>[]>(() => [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: t("createdAt"), sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt"), sortable: true },
@@ -80,7 +80,7 @@
 			label: t("messageContents"),
 			format: (val: MessageContent[]) => `[${val.map((c) => c._id).join(", ")}]`,
 		},
-	];
+	]);
 </script>
 
 <style scoped lang="scss"></style>
