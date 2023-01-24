@@ -27,8 +27,10 @@ interface User {
 
 interface EditUser {
 	username?: string;
+	email?: string;
 	fullname?: string;
 	picture?: string;
+	password?: string;
 }
 
 export { User, EditUser };

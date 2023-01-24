@@ -1,5 +1,6 @@
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
+import { userAuthStore } from "@stores/auth";
 import { getOverallRate, isLoggedInUserAlreadyRated } from "@utils/bookHelper";
 import type { User } from "@interfaces/user";
 import type { RouteRecordRaw } from "vue-router";
@@ -37,6 +38,11 @@ export const routes: RouteRecordRaw[] = [
 				path: "books",
 				name: "myBooks",
 				component: () => import("@views/loggedIn/BooksView.vue"),
+			},
+			{
+				path: "borrows",
+				name: "myBorrows",
+				component: () => import("@views/loggedIn/BorrowsView.vue"),
 			},
 			{
 				path: "user/:id",
@@ -118,5 +124,19 @@ export const routes: RouteRecordRaw[] = [
 		path: "/:pathMatch(.*)*",
 		name: "notfound",
 		component: () => import("@views/404View.vue"),
+	},
+	{
+		path: "/validate/:token",
+		beforeEnter: async (to) => {
+			await userAuthStore().validateEmail(to.params.token as string);
+		},
+		redirect: () => {
+			return "/";
+		},
+	},
+	{
+		path: "/reset-password",
+		name: "PasswordReset",
+		component: () => import("@views/PasswordReset.vue"),
 	},
 ];

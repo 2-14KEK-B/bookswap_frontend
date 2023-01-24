@@ -30,12 +30,14 @@
         "me": {
                 "profile": "Profilom",
                 "books": "Könyveim",
+                "uploadedBooks": "Feltöltött könyveim",
                 "info": "Tudnivalók rólam",
                 "edit": "Saját adataim módosítása",
                 "rates": "Értékeléseim",
                 "ratesFrom": "Értékelések tőlem",
                 "ratesAbout": "Értékelések rólam",
-                "borrows": "Kölcsönzéseim"
+                "borrows": "Kölcsönzéseim",
+                "swaps": "Cseréim"
         },
         "book": {
                 "title": "Cím",
@@ -60,9 +62,11 @@
                 "searchBy": "Keresés cím, szerző vagy ISBN alapján",
                 "offers": "Kölcsönzés",
                 "uploadNew": "Könyv feltöltés",
+                "upload": "Feltöltés",
                 "wishes": "Kérések"
         },
         "borrow": {
+                "borrow": "kölcsönzés",
                 "from": "{user}-től kölcsönözve",
                 "to": "{user} részére kölcsönadva",
                 "editBorrow": "Kölcsönzés módosítása",
@@ -82,6 +86,7 @@
                 "edit": "Módosít",
                 "reset": "Visszaállít",
                 "open": "Megnyitás",
+                "passwordReset": "E-mail küldése a jelszó megváltoztatásához",
                 "openNewTab": "Megnyitás új lapon"
         },
         "rate": {
@@ -108,7 +113,8 @@
                 "user_rate": "felhasználói értékelést",
                 "borrow": "kölcsönzést",
                 "final": "{user} {adj} egy {type}",
-                "none": "Egy értesítésed sincs."
+                "none": "Egy értesítésed sincs.",
+                "notFoundOrDeleted": "A keresett {type} nem található vagy {user} már törölte."
         },
         "upload": {
                 "onlyImg": "Csak kép engedélyezett",

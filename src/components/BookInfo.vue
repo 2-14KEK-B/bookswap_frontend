@@ -76,7 +76,13 @@
 						class="flex justify-center items-center q-py-lg"
 						:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 					>
-						<q-btn no-caps outline color="secondary" :label="$t('rate.create')" @click="appStore.createBookRate = true" />
+						<q-btn
+							no-caps
+							outline
+							color="secondary"
+							:label="$t('rate.create')"
+							@click="appStore.editOrCreateBookRate = true"
+						/>
 					</q-card>
 					<q-card v-for="rate in (bookStore.openedBook?.rates as BookRate[])" :key="rate._id" flat bordered class="q-mb-sm">
 						<q-card-section>
@@ -104,8 +110,12 @@
 			</q-tab-panels>
 		</q-card-section>
 	</q-card>
-	<NewBookRate v-if="appStore.createBookRate" :book="bookStore.openedBook" />
-	<EditBookRate v-if="appStore.editBookRate" :book="bookStore.openedBook" :book-rate="bookRateForEdit" />
+	<BookRateModal
+		v-if="appStore.editOrCreateBookRate"
+		:book="bookStore.openedBook"
+		:book-rate="bookRateForEdit"
+		:edit="bookRateForEdit != undefined"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -119,8 +129,7 @@
 	import { isRateFromLoggedIn } from "@utils/bookHelper";
 	import { getDisplayName } from "@utils/userHelper";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import NewBookRate from "@components/bookRate/NewBookRate.vue";
-	import EditBookRate from "@components/bookRate/EditBookRate.vue";
+	import BookRateModal from "@components/bookRate/BookRateModal.vue";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
 	import type { BookRate } from "@interfaces/bookRate";
@@ -138,7 +147,7 @@
 	function openRateForEdit(rate: BookRate) {
 		if ((rate.from as User)._id == userStore.loggedInUser?._id) {
 			bookRateForEdit.value = rate;
-			appStore.editBookRate = true;
+			appStore.editOrCreateBookRate = true;
 		}
 	}
 

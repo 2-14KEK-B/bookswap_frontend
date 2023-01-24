@@ -74,7 +74,7 @@
 				</div>
 				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 					<template #label>
-						<q-icon :name="$i18n.locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+						<q-icon :name="$i18n.locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 					</template>
 					<q-list>
 						<q-item
@@ -85,7 +85,7 @@
 							@click.once="onSetLocale(locale)"
 						>
 							<q-item-section>
-								<q-icon :name="locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+								<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 							</q-item-section>
 							<q-item-section>{{ locale }}</q-item-section>
 						</q-item>
@@ -100,10 +100,15 @@
 
 		<LoginModal v-if="appStore.login" />
 		<RegisterModal v-if="appStore.register" />
+		<NotificationBorrowModal v-if="appStore.isOpenedBorrowNotification" />
+		<NotificationUserRateModal v-if="appStore.isOpenedUserRateNotification" />
 	</q-layout>
 </template>
 
 <script setup lang="ts">
+	//TODO: notificationnál egyből lekérni backendről( doc_id alapján ) és betenni a helyére a documentet
+	//TODO: és mikor megnyitásra kerül a notification, akkor már a reactive adat legyen ott
+
 	import { computed, ComputedRef, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
@@ -116,10 +121,15 @@
 	import LoginModal from "@components/auth/LoginModal.vue";
 	import RegisterModal from "@components/auth/RegisterModal.vue";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import NotificationList from "@components/NotificationList.vue";
+	import NotificationList from "@components/notification/NotificationList.vue";
+	import NotificationBorrowModal from "@components/notification/NotificationBorrowModal.vue";
+	import NotificationUserRateModal from "@components/notification/NotificationUserRateModal.vue";
 	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
-	import { matAdminPanelSettings, matPerson, matLogout, matBook } from "@quasar/extras/material-icons";
+	import { matAdminPanelSettings, matPerson, matLogout, matBook, matLibraryBooks } from "@quasar/extras/material-icons";
+
+	import EN from "/en.svg";
+	import HU from "/hu.svg";
 
 	const router = useRouter();
 	const quasar = useQuasar();
@@ -153,6 +163,11 @@
 			name: computed(() => t("me.books")),
 			action: () => router.push({ name: "myBooks" }),
 			icon: matBook,
+		},
+		{
+			name: computed(() => t("me.swaps")),
+			action: () => router.push({ name: "myBorrows" }),
+			icon: matLibraryBooks,
 		},
 		darkModeButton,
 		{

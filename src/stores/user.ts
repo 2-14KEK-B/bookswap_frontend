@@ -5,12 +5,14 @@ import { Loading } from "quasar";
 import { getNotSeenNotificationsCount, sortNotificationsByCreatedAt } from "@utils/userHelper";
 import type { User, EditUser } from "@interfaces/user";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { Notification } from "@interfaces/notification";
 
 export const useUserStore = defineStore("user", () => {
 	const loggedInUser = ref<User>();
 	const openedUser = ref<User>();
 	const notificationSum = computed(() => getNotSeenNotificationsCount(loggedInUser.value?.notifications));
 	const sortedNotifications = computed(() => sortNotificationsByCreatedAt(loggedInUser.value?.notifications));
+	const openedNotification = ref<Notification | null>(null);
 
 	async function getById(id: string) {
 		try {
@@ -124,6 +126,7 @@ export const useUserStore = defineStore("user", () => {
 		openedUser,
 		notificationSum,
 		sortedNotifications,
+		openedNotification,
 		getById,
 		setNotificationSeen,
 		deleteNotification,

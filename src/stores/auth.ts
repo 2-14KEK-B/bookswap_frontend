@@ -86,6 +86,14 @@ export const userAuthStore = defineStore("auth", () => {
 		}
 	}
 
+	async function validateEmail(token: string) {
+		try {
+			await $axios.post("/auth/validate", { token });
+		} catch (error) {
+			return;
+		}
+	}
+
 	async function logOut() {
 		try {
 			const userStore = useUserStore();
@@ -100,5 +108,5 @@ export const userAuthStore = defineStore("auth", () => {
 		}
 	}
 
-	return { login, loginWithGoogle, register, logOut, checkValidUser };
+	return { login, loginWithGoogle, register, validateEmail, logOut, checkValidUser };
 });

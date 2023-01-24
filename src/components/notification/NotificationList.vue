@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 	import { useUserStore } from "@stores/user";
-	import NotificationItems from "@components/NotificationItems.vue";
+	import NotificationItems from "@components/notification/NotificationItems.vue";
 
 	const userStore = useUserStore();
 </script>

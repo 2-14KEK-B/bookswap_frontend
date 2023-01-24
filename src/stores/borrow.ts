@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import $axios from "@api/axios";
 import { Loading, Notify } from "quasar";
+import { getSeparatedBorrows } from "@utils/borrowHelper";
 import { createNotification } from "@utils/notificationHelper";
 import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
@@ -9,6 +10,10 @@ import type { User } from "@interfaces/user";
 
 export const useBorrowStore = defineStore("borrow", () => {
 	const loggedInBorrows = ref<Borrow[]>([]);
+	const openedBorrow = ref<Borrow>();
+
+	const borrows = computed(() => getSeparatedBorrows(loggedInBorrows.value, "borrow"));
+	const lends = computed(() => getSeparatedBorrows(loggedInBorrows.value, "lend"));
 
 	async function getLoggedInBorrows() {
 		try {
@@ -22,7 +27,8 @@ export const useBorrowStore = defineStore("borrow", () => {
 	async function getBorrowById(id: string) {
 		try {
 			Loading.show();
-			await $axios.get(`/borrow/${id}`);
+			const { data } = await $axios.get(`/borrow/${id}`);
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -145,6 +151,9 @@ export const useBorrowStore = defineStore("borrow", () => {
 
 	return {
 		loggedInBorrows,
+		openedBorrow,
+		borrows,
+		lends,
 		getLoggedInBorrows,
 		getById: getBorrowById,
 		createBorrow,

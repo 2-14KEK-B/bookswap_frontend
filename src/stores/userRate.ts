@@ -9,12 +9,24 @@ import type { CreateUserRate, ModifyUserRate, UserRate } from "@interfaces/userR
 export const useUserRateStore = defineStore("userRate", () => {
 	//TODO: meg kell csinálni, hogy "loggedInRates" ne legyen, hanem csak a borrowból legyen kiszedve az összes userrate
 	const loggedInRates = ref<{ from: UserRate[]; to: UserRate[] }>({ from: [], to: [] });
+	const openedRate = ref<UserRate>();
+	const userRateToEdit = ref<UserRate>();
+
+	async function getByUserRateId(id: string) {
+		try {
+			Loading.show();
+			const { data } = await $axios.get(`/user/rate/${id}`);
+			return data;
+		} catch (error) {
+			return;
+		}
+	}
 
 	async function getLoggedInUserRates() {
 		try {
 			Loading.show();
-			const { data } = await $axios.get("/user/me/rate");
-			return data as UserRate[];
+			const { data } = await $axios.get<UserRate[]>("/user/me/rate");
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -23,8 +35,8 @@ export const useUserRateStore = defineStore("userRate", () => {
 	async function getUserRatesByUserId(id: string) {
 		try {
 			Loading.show();
-			const { data } = await $axios.get(`/user/${id}/rate`);
-			return data as UserRate[];
+			const { data } = await $axios.get<UserRate[]>(`/user/${id}/rate`);
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -33,8 +45,8 @@ export const useUserRateStore = defineStore("userRate", () => {
 	async function getUserRatesByBorrowId(id: string) {
 		try {
 			Loading.show();
-			const { data } = await $axios.get(`/borrow/${id}/rate`);
-			return data as UserRate[];
+			const { data } = await $axios.get<UserRate[]>(`/borrow/${id}/rate`);
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -110,8 +122,8 @@ export const useUserRateStore = defineStore("userRate", () => {
 
 	async function adminGetUserRates() {
 		try {
-			const { data } = await $axios.get("/admin/user/rate");
-			return data as UserRate[];
+			const { data } = await $axios.get<UserRate[]>("/admin/user/rate");
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -137,6 +149,9 @@ export const useUserRateStore = defineStore("userRate", () => {
 
 	return {
 		loggedInRates,
+		openedRate,
+		userRateToEdit,
+		getByUserRateId,
 		getLoggedInUserRates,
 		getUserRatesByUserId,
 		getUserRatesByBorrowId,

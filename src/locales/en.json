@@ -30,12 +30,14 @@
         "me": {
                 "profile": "My profile",
                 "books": "My book",
+                "uploadedBooks": "Uploaded books",
                 "info": "Information about me",
                 "edit": "Edit my information",
                 "rates": "My rates",
                 "ratesFrom": "Rates from me",
                 "ratesAbout": "Rates about me",
-                "borrows": "My borrows"
+                "borrows": "My borrows",
+                "swaps": "My swaps"
         },
         "book": {
                 "title": "Title",
@@ -60,9 +62,11 @@
                 "searchBy": "Search by title, author or ISBN",
                 "offers": "Offers",
                 "uploadNew": "Upload new",
+                "upload": "Upload",
                 "wishes": "Wishes"
         },
         "borrow": {
+                "borrow": "borrow",
                 "from": "Borrow from {user}",
                 "to": "Lend to {user}",
                 "edit": "Update borrow",
@@ -79,9 +83,10 @@
         },
         "button": {
                 "send": "Send",
-                "edit": "Edit",
+                "edit": "Modify",
                 "reset": "Reset",
                 "open": "Open",
+                "passwordReset": "Send E-mail to reset password",
                 "openNewTab": "Open in new tab"
         },
         "rate": {
@@ -108,7 +113,8 @@
                 "user_rate": "user rate",
                 "borrow": "borrow",
                 "final": "{user} {adj} a {type}",
-                "none": "You do not have any notification."
+                "none": "You do not have any notification.",
+                "notFoundOrDeleted": "The {type} you are looking for cannot be found or already deleted by {user}."
         },
         "upload": {
                 "onlyImg": "Only image allowed",
