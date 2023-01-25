@@ -10,6 +10,8 @@
         "auth": {
                 "login": "Bejelentkezés",
                 "register": "Regisztráció",
+                "forgottenPassword": "Elfelejtett jelszó",
+                "newPasswordRequest": "Új jelszó igénylése",
                 "logout": "Kijelentkezés",
                 "googleLogin": "Bejelentkezés Google fiókkal",
                 "emailOrUsername": "E-mail cím vagy felhasználónév",
@@ -25,7 +27,9 @@
                 "password": "Jelszó",
                 "username": "Felhasználónév",
                 "picture": "Kép",
-                "registeredAt": "Regisztrálás időpontja"
+                "registeredAt": "Regisztrálás időpontja",
+                "firstName": "Vezetéknév",
+                "secondName": "Keresztnév"
         },
         "me": {
                 "profile": "Profilom",
@@ -37,6 +41,7 @@
                 "ratesFrom": "Értékelések tőlem",
                 "ratesAbout": "Értékelések rólam",
                 "borrows": "Kölcsönzéseim",
+                "lends": "Kölcsönadásaim",
                 "swaps": "Cseréim"
         },
         "book": {
@@ -58,6 +63,8 @@
                 "others": "Feltöltő könyvei",
                 "othersFromUploader": "További könyvek a feltöltőtől",
                 "borrowIt": "Kikölcsönzés",
+                "sendBorrowRequest": "Kikölcsönzési kérelem küldése",
+                "sendLendRequest": "Kölcsönadási kérelem küldése",
                 "lendIt": "Kölcsönadás",
                 "searchBy": "Keresés cím, szerző vagy ISBN alapján",
                 "offers": "Kölcsönzés",

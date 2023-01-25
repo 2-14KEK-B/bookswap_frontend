@@ -1,4 +1,3 @@
-import { useAppStore } from "@stores/app";
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
 import { useAuthStore } from "@stores/auth";
@@ -15,10 +14,11 @@ export const routes: RouteRecordRaw[] = [
 				path: "",
 				name: "home",
 				component: () => import("@views/HomeView.vue"),
-				beforeEnter: (to, from) => {
-					if (from.name == "PasswordReset") {
-						const appStore = useAppStore();
-						appStore.login = true;
+				beforeEnter: async (to) => {
+					if (to.redirectedFrom?.name == "VerifyEmail") {
+						const token = to.redirectedFrom?.query.token as string;
+						const authStore = useAuthStore();
+						await authStore.validateEmail(token);
 					}
 				},
 			},
@@ -133,18 +133,14 @@ export const routes: RouteRecordRaw[] = [
 		component: () => import("@views/404View.vue"),
 	},
 	{
-		path: "/verify/:token",
+		path: "/verify",
 		name: "VerifyEmail",
-		beforeEnter: async (to) => {
-			const authStore = useAuthStore();
-			await authStore.validateEmail(to.params.token as string);
-		},
 		redirect: () => {
-			return "/";
+			return { name: "home", query: {} };
 		},
 	},
 	{
-		path: "/reset-password/:token",
+		path: "/reset-password",
 		name: "PasswordReset",
 		component: () => import("@views/PasswordReset.vue"),
 	},

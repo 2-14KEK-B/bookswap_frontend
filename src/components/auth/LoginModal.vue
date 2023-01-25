@@ -1,7 +1,11 @@
 <template>
 	<q-dialog v-model="appStore.login">
 		<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px" class="q-pa-md">
-			<p class="text-h4">{{ $t("auth.login") }}</p>
+			<q-card-section class="row q-pt-none q-px-none">
+				<div class="text-h4 q-pr-lg">{{ $t("auth.login") }}</div>
+				<q-space />
+				<q-btn v-close-popup :icon="matClose" flat round dense />
+			</q-card-section>
 			<q-separator />
 			<q-form style="min-width: 300px" @submit.prevent="login">
 				<q-input
@@ -22,6 +26,7 @@
 					reactive-rules
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
+				<q-btn dense no-caps @click="appStore.passwordReset = true">{{ $t("auth.forgottenPassword") }}</q-btn>
 				<div class="q-gutter-md q-py-sm flex justify-evenly">
 					<q-btn
 						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
@@ -52,6 +57,7 @@
 			</q-form>
 		</q-card>
 	</q-dialog>
+	<PasswordResetModal v-if="appStore.passwordReset" />
 </template>
 
 <script setup lang="ts">
@@ -59,7 +65,9 @@
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
+	import PasswordResetModal from "@components/auth/PasswordResetModal.vue";
 	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
+	import { matClose } from "@quasar/extras/material-icons";
 	import type { LoginCred } from "@interfaces/auth";
 
 	const appStore = useAppStore();

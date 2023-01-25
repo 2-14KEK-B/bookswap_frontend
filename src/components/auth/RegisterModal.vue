@@ -1,7 +1,12 @@
 <template>
 	<q-dialog v-model="appStore.register">
 		<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px" class="q-pa-md">
-			<p class="text-h4">{{ $t("auth.register") }}</p>
+			<q-card-section class="row q-pt-none q-px-none">
+				<div class="text-h4 q-pr-lg">{{ $t("auth.register") }}</div>
+				<q-space />
+				<q-btn v-close-popup :icon="matClose" flat round dense />
+			</q-card-section>
+			<q-separator />
 			<q-form style="min-width: 300px" @submit.prevent="register">
 				<q-input
 					v-model="userCred.email"
@@ -12,8 +17,8 @@
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
 				<div class="row justify-between">
-					<q-input v-model="name.firstName" label="First Name" style="max-width: 45%" />
-					<q-input v-model="name.secondName" label="Second Name" style="max-width: 45%" />
+					<q-input v-model="name.firstName" :label="$t('user.firstName')" style="max-width: 45%" />
+					<q-input v-model="name.secondName" :label="$t('user.secondName')" style="max-width: 45%" />
 				</div>
 				<q-input
 					v-model="userCred.username"
@@ -88,6 +93,7 @@
 	import { computed, reactive } from "vue";
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
+	import { matClose } from "@quasar/extras/material-icons";
 	import type { RegisterCred } from "@interfaces/auth";
 	import type { User } from "@interfaces/user";
 	// import axios, { AxiosProgressEvent } from "axios";

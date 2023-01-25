@@ -10,6 +10,8 @@
         "auth": {
                 "login": "Login",
                 "register": "Register",
+                "forgottenPassword": "Forgotten password",
+                "newPasswordRequest": "Request a new password",
                 "logout": "Logout",
                 "googleLogin": "Login with Google",
                 "emailOrUsername": "Email or username",
@@ -25,7 +27,9 @@
                 "password": "Password",
                 "username": "Username",
                 "picture": "Picture",
-                "registeredAt": "Registered at"
+                "registeredAt": "Registered at",
+                "firstName": "First Name",
+                "secondName": "Second Name"
         },
         "me": {
                 "profile": "My profile",
@@ -37,6 +41,7 @@
                 "ratesFrom": "Rates from me",
                 "ratesAbout": "Rates about me",
                 "borrows": "My borrows",
+                "lends": "My lends",
                 "swaps": "My swaps"
         },
         "book": {
@@ -59,6 +64,8 @@
                 "othersFromUploader": "Other books from from the uploader",
                 "borrowIt": "Borrow",
                 "lendIt": "Lend",
+                "sendBorrowRequest": "Send borrow request",
+                "sendLendRequest": "Send lend request",
                 "searchBy": "Search by title, author or ISBN",
                 "offers": "Offers",
                 "uploadNew": "Upload new",

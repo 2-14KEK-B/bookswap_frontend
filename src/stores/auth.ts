@@ -16,6 +16,10 @@ import type { Borrow } from "@interfaces/borrow";
 import type { UserRate } from "@interfaces/userRate";
 import type { Book } from "@interfaces/book";
 
+const isEmail = new RegExp(
+	/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
+);
+
 export const useAuthStore = defineStore("auth", () => {
 	async function checkValidUser() {
 		try {
@@ -47,9 +51,6 @@ export const useAuthStore = defineStore("auth", () => {
 	}
 
 	async function login(userData: LoginCred) {
-		const isEmail = new RegExp(
-			/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
-		);
 		const loginData: { email?: string; username?: string; password: string } = { password: userData.password };
 		if (isEmail.test(userData.emailOrUsername)) {
 			loginData.email = userData.emailOrUsername;
@@ -80,7 +81,10 @@ export const useAuthStore = defineStore("auth", () => {
 	async function register(userData: Partial<User>) {
 		try {
 			Loading.show();
-			await $axios.post("/auth/register", userData);
+			const { status } = await $axios.post("/auth/register", userData);
+			if (status < 400) {
+				Notify.create({ message: "E-mail has been sent. Check you incoming e-mails" });
+			}
 		} catch (error) {
 			return;
 		}
@@ -89,6 +93,20 @@ export const useAuthStore = defineStore("auth", () => {
 	async function validateEmail(token: string) {
 		try {
 			const { status, data } = await $axios.get(`/auth/verify-email?token=${token}`);
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function sendResetPasswordRequest(email: string) {
+		try {
+			if (!isEmail.test(email)) {
+				return;
+			}
+			const { status, data } = await $axios.post("/auth/forgot-password", { email });
 			if (status < 400) {
 				Notify.create({ message: data });
 			}
@@ -122,5 +140,14 @@ export const useAuthStore = defineStore("auth", () => {
 		}
 	}
 
-	return { login, loginWithGoogle, register, validateEmail, resetPassword, logOut, checkValidUser };
+	return {
+		login,
+		loginWithGoogle,
+		register,
+		validateEmail,
+		sendResetPasswordRequest,
+		resetPassword,
+		logOut,
+		checkValidUser,
+	};
 });

@@ -159,7 +159,6 @@
 				data.password = newData;
 				break;
 		}
-		console.log(newData, field);
 		await userStore.editLoggedIn(data);
 	}
 

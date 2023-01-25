@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const useAppStore = defineStore("app", () => {
 	const login = ref(false);
 	const register = ref(false);
+	const passwordReset = ref(false);
 	const adminEdit = ref(false);
 	const editBorrow = ref(false);
 	const editOrCreateBookRate = ref(false);
@@ -17,6 +18,7 @@ export const useAppStore = defineStore("app", () => {
 	return {
 		login,
 		register,
+		passwordReset,
 		adminEdit,
 		editBorrow,
 		editOrCreateBookRate,

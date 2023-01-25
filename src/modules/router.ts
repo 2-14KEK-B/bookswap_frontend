@@ -5,7 +5,7 @@ import $axios from "@api/axios";
 import { useAuthStore } from "@stores/auth";
 import type { App } from "vue";
 
-const publicPathNames = ["home", "auth", "userProfile", "book"];
+const publicPathNames = ["home", "auth", "userProfile", "book", "PasswordReset"];
 const adminPathsNames = ["admin_home", "admin_user", "admin_book", "admin_borrow", "admin_message"];
 
 const router = createRouter({

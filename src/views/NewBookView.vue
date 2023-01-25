@@ -96,7 +96,6 @@
 	});
 
 	async function bookCreating() {
-		console.log(input.value.category);
 		const newData: Partial<CreateBook> = {
 			author: input.value.author,
 			title: input.value.title,

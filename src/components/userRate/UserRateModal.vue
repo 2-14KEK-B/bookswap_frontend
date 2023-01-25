@@ -87,14 +87,12 @@
 	}
 
 	onMounted(() => {
-		console.log(props);
 		if (props.edit && props.userRate) {
 			if (props.userRate.comment) {
 				comment.value = props.userRate.comment;
 			}
 			rate.value = props.userRate.rate;
 		} else {
-			console.log(props.borrow);
 			otherUser.value = getOtherUser(props.borrow);
 		}
 	});
