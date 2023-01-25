@@ -1,20 +1,43 @@
 <template>
 	<q-page padding :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'" style="height: calc(100vh - 50px)">
-		<div>
+		<div class="row justify-around">
 			<q-input
 				v-model.trim="keyWord"
 				outlined
 				dense
-				style="max-width: 100%"
 				:placeholder="$t('book.searchBy')"
-				:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-3'"
-				@keydown.enter.prevent="searchByKeyword"
+				:class="[$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-3', $q.screen.gt.xs ? 'col-10' : 'col-8']"
+				@keydown.enter.prevent="getBooks"
 			>
 				<template #append>
 					<q-icon v-if="keyWord === ''" :name="matSearch" />
 					<q-icon v-else :name="matClear" class="cursor-pointer" @click="keyWord = ''" />
 				</template>
 			</q-input>
+			<q-btn-dropdown
+				:label="$q.screen.gt.sm ? 'filter' : ''"
+				class="filter col-auto"
+				content-class="q-pa-sm"
+				:icon="matFilter"
+				dropdown-icon="none"
+			>
+				<div class="q-my-sm">
+					<span>{{ $t("book.genres.selected") }}:</span>
+					<q-badge v-for="(category, i) in selectedGenres" :key="i" color="secondary" class="q-mx-sm" multi-line>
+						{{ $t(`book.genres.${category}`) }}
+					</q-badge>
+				</div>
+				<q-select
+					v-model="selectedGenres"
+					:label="$t('book.genres.genre')"
+					:options="genres()"
+					emit-value
+					map-options
+					multiple
+					clearable
+					@update:model-value="getBooks"
+				/>
+			</q-btn-dropdown>
 		</div>
 		<q-btn-group flat class="full-width flex justify-evenly q-my-md">
 			<q-btn no-caps :label="$t('book.offers')" color="secondary" @click.prevent="selectBooks('borrow')" />
@@ -39,14 +62,21 @@
 						>
 							<q-card :class="$q.dark.isActive ? 'no-shadow' : ''" :bordered="$q.dark.isActive" :square="$q.dark.isActive">
 								<q-img :src="book.picture" fit="contain" height="400px" />
-								<q-card-section class="q-px-none" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
+								<q-card-section class="q-px-none q-py-sm" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 									<div class="row items-center no-wrap">
 										<div class="col">
-											<q-item>
+											<q-item class="column q-pa-none q-mx-xs">
 												<q-item-section>
 													<q-item-label lines="1">{{ $t("book.title") }}: {{ book.title }}</q-item-label>
 													<q-item-label lines="1" caption>{{ $t("book.author") }}: {{ book.author }}</q-item-label>
 												</q-item-section>
+												<q-item-label>
+													{{ $t("book.genres.genre") }}:
+													<q-badge v-for="(category, i) in book.category" :key="i" class="q-mx-xs">
+														{{ $t(`book.genres.${category}`) }}
+													</q-badge>
+												</q-item-label>
+												<q-rating :model-value="getOverallRate(book.rates)" readonly />
 											</q-item>
 										</div>
 										<div v-if="book.uploader != userStore.loggedInUser?._id" class="col-auto">
@@ -103,31 +133,47 @@
 	import { useRouter } from "vue-router";
 	import { useUserStore } from "@stores/user";
 	import { useBookStore } from "@stores/book";
-	import { isBookAlreadyInLoggedInBorrows } from "@utils/bookHelper";
-	import { matMoreVert, matSearch, matClear } from "@quasar/extras/material-icons";
+	import { isBookAlreadyInLoggedInBorrows, getOverallRate, genres } from "@utils/bookHelper";
+	import { matMoreVert, matSearch, matClear, matFilter } from "@quasar/extras/material-icons";
 	import type { Book } from "@interfaces/book";
 	import type { Borrow } from "@interfaces/borrow";
+	import type { PaginateResult } from "@interfaces/paginate";
 
 	const router = useRouter();
 	const userStore = useUserStore();
 	const bookStore = useBookStore();
 
 	const books = ref<Book[]>();
-	const keyWord = ref("");
+	const keyWord = ref<string | null>(null);
+	const selectedGenres = ref<string[] | null>(null);
 	const selected = ref<"borrow" | "lend">("borrow");
 
-	async function searchByKeyword() {
-		const data = await bookStore.getBooks(`${selected.value}?keyword=${keyWord.value.toString()}`);
-		books.value = data?.docs;
-	}
-
 	async function getBooks() {
-		const data = await bookStore.getBooks(selected.value);
+		if (keyWord.value?.length == 0) keyWord.value = null;
+		if (selectedGenres.value?.length == 0) selectedGenres.value = null;
+		let data: PaginateResult<Book> | undefined = undefined;
+		const genresQuery = selectedGenres.value?.join(",");
+
+		if (keyWord.value != null) {
+			if (selectedGenres.value != null) {
+				data = await bookStore.getBooks(`${selected.value}?keyword=${keyWord.value.toString()}&genre=${genresQuery}`);
+			} else {
+				data = await bookStore.getBooks(`${selected.value}?keyword=${keyWord.value.toString()}`);
+			}
+		} else {
+			if (selectedGenres.value) {
+				data = await bookStore.getBooks(`${selected.value}?genre=${genresQuery}`);
+			} else {
+				data = await bookStore.getBooks(selected.value);
+			}
+		}
 		books.value = data?.docs;
 	}
 
 	async function selectBooks(type: "borrow" | "lend") {
 		selected.value = type;
+		selectedGenres.value = [];
+		keyWord.value = "";
 		await getBooks();
 	}
 
@@ -136,4 +182,8 @@
 	});
 </script>
 
-<style scoped></style>
+<style>
+	button.filter i {
+		display: none;
+	}
+</style>

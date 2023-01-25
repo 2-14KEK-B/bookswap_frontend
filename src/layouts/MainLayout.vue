@@ -106,9 +106,6 @@
 </template>
 
 <script setup lang="ts">
-	//TODO: notificationnál egyből lekérni backendről( doc_id alapján ) és betenni a helyére a documentet
-	//TODO: és mikor megnyitásra kerül a notification, akkor már a reactive adat legyen ott
-
 	import { computed, ComputedRef, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";

@@ -20,6 +20,23 @@
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
 			<q-input v-model="input.isbn" :label="$t('book.isbn')" />
+
+			<div class="q-my-sm">
+				<span>{{ $t("book.genres.selected") }}:</span>
+				<q-badge v-for="(category, i) in input.category" :key="i" color="secondary" class="q-mx-sm" multi-line>
+					{{ $t(`book.genres.${category}`) }}
+				</q-badge>
+			</div>
+			<q-select
+				v-model="input.category"
+				:label="$t('book.genres.genre')"
+				:options="genres()"
+				emit-value
+				map-options
+				multiple
+				clearable
+			/>
+
 			<q-tabs v-model="tab" align="justify" no-caps>
 				<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.link')" />
 				<q-tab name="upload" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.image')" />
@@ -46,7 +63,7 @@
 			<q-input v-model="input.price" :label="$t('book.price')" type="number" suffix="Ft" />
 			<q-toggle v-model="input.for_borrow" color="green" :label="$t('book.forBorrow')" />
 			<q-card-actions>
-				<q-btn :label="$t('button.submit')" type="submit" color="primary" />
+				<q-btn :label="$t('button.send')" type="submit" color="primary" />
 				<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />
 			</q-card-actions>
 		</q-form>
@@ -54,12 +71,13 @@
 </template>
 
 <script setup lang="ts">
-	import { QBtn, QForm, QInput, QUploader } from "quasar";
-	import { useBookStore } from "@stores/book";
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
 	import axios, { AxiosProgressEvent } from "axios";
+	import { genres } from "@utils/bookHelper";
+	import { useBookStore } from "@stores/book";
 	import type { CreateBook } from "@interfaces/book";
+	import { QUploader } from "quasar";
 
 	const bookStore = useBookStore();
 	const router = useRouter();
@@ -71,15 +89,19 @@
 		author: "",
 		title: "",
 		isbn: "",
+		category: [],
 		picture: "",
 		price: 0,
 		for_borrow: true,
 	});
 
 	async function bookCreating() {
+		console.log(input.value.category);
 		const newData: Partial<CreateBook> = {
 			author: input.value.author,
 			title: input.value.title,
+			isbn: input.value.isbn,
+			category: input.value.category,
 			price: input.value.price?.toString(),
 			for_borrow: input.value.for_borrow,
 		};
