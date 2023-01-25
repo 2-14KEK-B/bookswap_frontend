@@ -114,7 +114,7 @@
 	import { useI18n } from "vue-i18n";
 	import { useQuasar } from "quasar";
 	import { useUserStore } from "@stores/user";
-	import { userAuthStore } from "@stores/auth";
+	import { useAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
 	import { availableLocales, setLocale, locales } from "../modules/i18n";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
@@ -157,7 +157,7 @@
 	const { t } = useI18n({ useScope: "global" });
 	const router = useRouter();
 	const userStore = useUserStore();
-	const authStore = userAuthStore();
+	const authStore = useAuthStore();
 	const messageStore = useMessageStore();
 	const quasar = useQuasar();
 	const leftDrawerOpen = ref(false);

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "../routes";
 import { useUserStore } from "@stores/user";
 import $axios from "@api/axios";
-import { userAuthStore } from "@stores/auth";
+import { useAuthStore } from "@stores/auth";
 import type { App } from "vue";
 
 const publicPathNames = ["home", "auth", "userProfile", "book"];
@@ -15,7 +15,7 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
 	const userStore = useUserStore();
-	const authStore = userAuthStore();
+	const authStore = useAuthStore();
 	const user_id: string | null = localStorage.getItem("user_id");
 	if (!userStore.loggedInUser) {
 		if (user_id != null) {

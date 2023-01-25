@@ -1,8 +1,9 @@
 import $axios from "@api/axios";
 import socket from "@api/socket";
-import { Loading } from "quasar";
+import { Loading, Notify } from "quasar";
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
+import { useBookStore } from "./book";
 import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
@@ -13,10 +14,9 @@ import type { Message } from "@interfaces/message";
 import type { User } from "@interfaces/user";
 import type { Borrow } from "@interfaces/borrow";
 import type { UserRate } from "@interfaces/userRate";
-import { useBookStore } from "./book";
 import type { Book } from "@interfaces/book";
 
-export const userAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore("auth", () => {
 	async function checkValidUser() {
 		try {
 			Loading.show();
@@ -88,7 +88,21 @@ export const userAuthStore = defineStore("auth", () => {
 
 	async function validateEmail(token: string) {
 		try {
-			await $axios.post("/auth/validate", { token });
+			const { status, data } = await $axios.get(`/auth/verify-email?token=${token}`);
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function resetPassword(token: string, oldPassword: string, newPassword: string) {
+		try {
+			const { status, data } = await $axios.post("/auth/reset-password", { token, oldPassword, newPassword });
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
 		} catch (error) {
 			return;
 		}
@@ -108,5 +122,5 @@ export const userAuthStore = defineStore("auth", () => {
 		}
 	}
 
-	return { login, loginWithGoogle, register, validateEmail, logOut, checkValidUser };
+	return { login, loginWithGoogle, register, validateEmail, resetPassword, logOut, checkValidUser };
 });

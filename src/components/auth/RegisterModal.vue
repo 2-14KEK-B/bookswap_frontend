@@ -87,13 +87,13 @@
 <script setup lang="ts">
 	import { computed, reactive } from "vue";
 	import { useAppStore } from "@stores/app";
-	import { userAuthStore } from "@stores/auth";
+	import { useAuthStore } from "@stores/auth";
 	import type { RegisterCred } from "@interfaces/auth";
 	import type { User } from "@interfaces/user";
 	// import axios, { AxiosProgressEvent } from "axios";
 
 	const appStore = useAppStore();
-	const authStore = userAuthStore();
+	const authStore = useAuthStore();
 
 	const name = reactive({ firstName: "", secondName: "" });
 	const userCred = reactive<RegisterCred>({ email: "", username: "", password: "" });

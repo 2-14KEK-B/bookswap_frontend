@@ -57,13 +57,13 @@
 <script setup lang="ts">
 	import { ref, computed } from "vue";
 	import { useAppStore } from "@stores/app";
-	import { userAuthStore } from "@stores/auth";
+	import { useAuthStore } from "@stores/auth";
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
 	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
 	import type { LoginCred } from "@interfaces/auth";
 
 	const appStore = useAppStore();
-	const authStore = userAuthStore();
+	const authStore = useAuthStore();
 	const userCred = ref<LoginCred>({ emailOrUsername: "", password: "" });
 
 	async function login() {

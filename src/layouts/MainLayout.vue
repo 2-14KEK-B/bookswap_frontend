@@ -112,7 +112,7 @@
 	import { useI18n } from "vue-i18n";
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
-	import { userAuthStore } from "@stores/auth";
+	import { useAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
 	import { locales, setLocale, availableLocales } from "../modules/i18n";
 	import LoginModal from "@components/auth/LoginModal.vue";
@@ -132,7 +132,7 @@
 	const quasar = useQuasar();
 	const appStore = useAppStore();
 	const userStore = useUserStore();
-	const authStore = userAuthStore();
+	const authStore = useAuthStore();
 	const messageStore = useMessageStore();
 	const { t } = useI18n({ useScope: "global" });
 
