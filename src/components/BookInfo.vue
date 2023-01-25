@@ -15,13 +15,11 @@
 				{{ $t("book.author") }}:
 				{{ bookStore.openedBook?.author }}
 			</div>
-		</q-card-section>
-		<q-card-section v-if="bookStore.openedBook?.category.length">
-			<span>{{ $t("book.category") }}:</span>
+			<span>{{ $t("book.genres.genre") }}:</span>
 			<q-badge
 				v-for="(category, index) in bookStore.openedBook?.category"
 				:key="index"
-				:label="category"
+				:label="$t(`book.genres.${category}`)"
 				class="q-mx-sm"
 			/>
 		</q-card-section>
