@@ -24,6 +24,7 @@
 	import { useBorrowStore } from "@stores/borrow";
 	import { matClose } from "@quasar/extras/material-icons";
 	import type { Borrow } from "@interfaces/borrow";
+	import type { User } from "@interfaces/user";
 
 	const props = defineProps<{ borrow?: Borrow }>();
 
@@ -34,7 +35,7 @@
 
 	async function sendUpdate() {
 		if (props.borrow) {
-			await borrowStore.verifyBorrow(props.borrow?._id);
+			await borrowStore.verifyBorrow(props.borrow.type, (props.borrow.from as User)._id as string, props.borrow?._id);
 			close();
 		}
 	}

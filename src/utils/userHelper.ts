@@ -45,8 +45,23 @@ function getNotSeenNotificationsCount(notifications?: Notification[]) {
 	return notificationSum;
 }
 
+function sortNotificationsByCreatedAt(notifications?: Notification[]) {
+	return notifications?.sort((a, b) => {
+		const aDate = Date.parse(a.createdAt as string);
+		const bDate = Date.parse(b.createdAt as string);
+		return bDate - aDate;
+	});
+}
+
 function instanceOfRate(data: any): data is UserRate {
 	return "rate" in data;
 }
 
-export { getDisplayName, getAvatar, getLocalDate, getRateSum, getNotSeenNotificationsCount };
+export {
+	getDisplayName,
+	getAvatar,
+	getLocalDate,
+	getRateSum,
+	getNotSeenNotificationsCount,
+	sortNotificationsByCreatedAt,
+};

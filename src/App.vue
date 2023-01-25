@@ -7,6 +7,13 @@
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
 	import { setInitialMessageInfo } from "@utils/messageHelper";
+	import {
+		deleteFromBorrowAndUserRates,
+		addToBorrowAndUserRates,
+		updateInBorrowAndUserRates,
+	} from "@utils/userRateHelper";
+	import { useBorrowStore } from "@stores/borrow";
+	import { useUserRateStore } from "@stores/userRate";
 
 	const userStore = useUserStore();
 	const messageStore = useMessageStore();
@@ -28,7 +35,9 @@
 		messageStore.loggedInMessages.push(setInitialMessageInfo(sentMessage));
 	});
 
-	socket.on("recieve-notification", (doc_id, docType, notiType, from) => {
+	socket.on("recieve-notification", async (doc_id, docType, notiType, from) => {
+		const borrowStore = useBorrowStore();
+		const userRateStore = useUserRateStore();
 		userStore.loggedInUser?.notifications.push({
 			doc_id: doc_id,
 			doc_type: docType,
@@ -38,6 +47,43 @@
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 		});
+		if (notiType == "delete") {
+			if (docType == "user_rate") {
+				deleteFromBorrowAndUserRates(doc_id);
+			} else {
+				borrowStore.loggedInBorrows = borrowStore.loggedInBorrows.filter((b) => b._id != doc_id);
+			}
+		} else if (notiType == "create") {
+			if (docType == "user_rate") {
+				const userRate = await userRateStore.getByUserRateId(doc_id);
+				addToBorrowAndUserRates(userRate);
+			} else {
+				const borrow = await borrowStore.getById(doc_id);
+				borrowStore.loggedInBorrows.push(borrow);
+			}
+		} else if (notiType == "verify") {
+			borrowStore.loggedInBorrows.some((b) => {
+				if (b._id == doc_id) {
+					b.verified = true;
+					return true;
+				}
+				return false;
+			});
+		} else {
+			if (docType == "user_rate") {
+				const userRate = await userRateStore.getByUserRateId(doc_id);
+				updateInBorrowAndUserRates(userRate);
+			} else {
+				const borrow = await borrowStore.getById(doc_id);
+				borrowStore.loggedInBorrows.some((b) => {
+					if (b._id == doc_id) {
+						b = borrow;
+						return true;
+					}
+					return false;
+				});
+			}
+		}
 	});
 
 	socket.on("msg-seen", (userWhoSawId, messageId) => {

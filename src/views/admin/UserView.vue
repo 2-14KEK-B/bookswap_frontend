@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { useUserStore } from "@stores/user";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
@@ -139,7 +139,7 @@
 		});
 	}
 
-	const columns: QTableColumn<User>[] = [
+	const columns = computed<QTableColumn<User>[]>(() => [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: t("createdAt") },
 		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt") },
@@ -179,7 +179,7 @@
 			label: t("userRates"),
 			format: (val) => val,
 		},
-	];
+	]);
 </script>
 
 <style scoped lang="scss"></style>

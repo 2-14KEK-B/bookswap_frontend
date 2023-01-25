@@ -1,12 +1,19 @@
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 import $axios from "@api/axios";
 import { Loading, Notify } from "quasar";
-import { ref } from "vue";
+import { getSeparatedBorrows } from "@utils/borrowHelper";
+import { createNotification } from "@utils/notificationHelper";
 import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { User } from "@interfaces/user";
 
 export const useBorrowStore = defineStore("borrow", () => {
 	const loggedInBorrows = ref<Borrow[]>([]);
+	const openedBorrow = ref<Borrow>();
+
+	const borrows = computed(() => getSeparatedBorrows(loggedInBorrows.value, "borrow"));
+	const lends = computed(() => getSeparatedBorrows(loggedInBorrows.value, "lend"));
 
 	async function getLoggedInBorrows() {
 		try {
@@ -20,7 +27,8 @@ export const useBorrowStore = defineStore("borrow", () => {
 	async function getBorrowById(id: string) {
 		try {
 			Loading.show();
-			await $axios.get(`/borrow/${id}`);
+			const { data } = await $axios.get(`/borrow/${id}`);
+			return data;
 		} catch (error) {
 			return;
 		}
@@ -30,8 +38,13 @@ export const useBorrowStore = defineStore("borrow", () => {
 		try {
 			Loading.show();
 			const { data } = await $axios.post<Borrow>(`/borrow`, borrowData);
+			if (borrowData.from) {
+				createNotification(borrowData.from, data._id, "borrow", "create");
+			} else if (borrowData.to) {
+				createNotification(borrowData.to, data._id, "lend", "create");
+			}
 			loggedInBorrows.value.push(data);
-			Notify.create({ message: "Successfully created a borrow" });
+			Notify.create({ message: "Request sent to other user" });
 		} catch (error) {
 			return;
 		}
@@ -42,6 +55,12 @@ export const useBorrowStore = defineStore("borrow", () => {
 			if (!id) return;
 			Loading.show();
 			const { data } = await $axios.patch<Borrow>(`/borrow/${id}`, borrowData);
+			const { type } = data;
+			if (type == "borrow") {
+				createNotification((data.from as User)._id as string, id, "borrow", "update");
+			} else {
+				createNotification((data.from as User)._id as string, id, "lend", "update");
+			}
 			loggedInBorrows.value.some((borrow) => {
 				if (borrow._id == data._id) {
 					Object.assign(borrow, data);
@@ -54,10 +73,15 @@ export const useBorrowStore = defineStore("borrow", () => {
 		}
 	}
 
-	async function verifyBorrow(borrowId: string) {
+	async function verifyBorrow(type: "borrow" | "lend", userId: string, borrowId: string) {
 		try {
 			Loading.show();
 			await $axios.patch(`/borrow/${borrowId}/verify`);
+			if (type == "borrow") {
+				createNotification(userId, borrowId, "borrow", "verify");
+			} else {
+				createNotification(userId, borrowId, "lend", "verify");
+			}
 			loggedInBorrows.value.some((borrow) => {
 				if (borrow._id == borrowId) {
 					borrow.verified = true;
@@ -70,10 +94,11 @@ export const useBorrowStore = defineStore("borrow", () => {
 		}
 	}
 
-	async function deleteBorrow(id: string) {
+	async function deleteBorrow(type: "borrow" | "lend", userId: string, id: string) {
 		try {
 			Loading.show();
 			await $axios.delete(`/borrow/${id}`);
+			createNotification(userId, id, "borrow", "delete");
 			loggedInBorrows.value = loggedInBorrows.value.filter((borrow) => borrow._id != id);
 		} catch (error) {
 			return;
@@ -126,6 +151,9 @@ export const useBorrowStore = defineStore("borrow", () => {
 
 	return {
 		loggedInBorrows,
+		openedBorrow,
+		borrows,
+		lends,
 		getLoggedInBorrows,
 		getById: getBorrowById,
 		createBorrow,

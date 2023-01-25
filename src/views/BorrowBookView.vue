@@ -29,7 +29,7 @@
 									(bookStore.openedBook?.uploader as User)?.username ? (bookStore.openedBook?.uploader as User)?.username : "-"
 								}}
 							</h5>
-							<h5>E-Mail: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
+							<h5>{{ $t("user.email") }}: {{ (bookStore.openedBook?.uploader as User)?.email }}</h5>
 							<h5>{{ $t("user.registeredAt") }}: {{ getLocalDate((bookStore.openedBook?.uploader as User)?.createdAt) }}</h5>
 							<h5>{{ $t("rate.overallRate") }}: {{ getRateSum((bookStore.openedBook?.uploader as User)?.user_rates) }}</h5>
 						</q-card>
@@ -46,9 +46,7 @@
 								<q-card-section>
 									<h6>
 										{{ $t("rate.from") }}: {{ getDisplayName(rate.from as User) }}
-										<q-avatar v-if="(rate.from as User).picture">
-											<q-img :src="(rate.from as User).picture" />
-										</q-avatar>
+										<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
 									</h6>
 									<p>
 										{{ $t("rate.rate") }}:
@@ -65,7 +63,7 @@
 			<q-tab-panel
 				name="book"
 				class="no-padding row items-stretch bg-grey-9"
-				style="min-height: calc(100vh - 140px); margin-bottom: 40px"
+				style="min-height: calc(100vh - 138px); margin-bottom: 40px"
 			>
 				<div class="row items-stretch full-width">
 					<BookInfo v-if="bookStore.openedBook" />
@@ -75,7 +73,15 @@
 							color="primary"
 							no-caps
 							padding="sm none"
-							:label="$t('book.borrowIt')"
+							:label="
+								bookStore.openedBook?.for_borrow
+									? $q.screen.lt.sm
+										? $t('book.borrowIt')
+										: 'Send borrow request'
+									: $q.screen.lt.sm
+									? 'Lend it'
+									: 'Send lend request'
+							"
 							@click="sendBorrow"
 						/>
 						<q-btn
@@ -150,12 +156,14 @@
 	import { useBookStore } from "@stores/book";
 	import { useBorrowStore } from "@stores/borrow";
 	import { getDisplayName, getLocalDate, getRateSum } from "@utils/userHelper";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import BookInfo from "@components/BookInfo.vue";
 	import NewMessage from "@components/message/NewMessage.vue";
 	import { matThumbDown, matThumbUp } from "@quasar/extras/material-icons";
 	import type { Book } from "@interfaces/book";
 	import type { User } from "@interfaces/user";
 	import type { UserRate } from "@interfaces/userRate";
+	import type { CreateBorrow } from "@interfaces/borrow";
 
 	const appStore = useAppStore();
 	const bookStore = useBookStore();
@@ -166,11 +174,17 @@
 	const otherBooks = ref<Book[]>([]);
 
 	async function sendBorrow() {
-		if (bookStore.openedBook) {
-			const borrowData = {
-				from: (bookStore.openedBook.uploader as User)?._id as string,
-				books: [bookStore.openedBook?._id as string],
+		const book = bookStore.openedBook;
+		if (book) {
+			const borrowData: CreateBorrow = {
+				books: [book._id as string],
 			};
+			const uploader = (book.uploader as User)._id as string;
+			if (book.for_borrow) {
+				borrowData["from"] = uploader;
+			} else {
+				borrowData["to"] = uploader;
+			}
 			await borrowStore.createBorrow(borrowData);
 
 			router.push({ name: "home" });

@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { useI18n } from "vue-i18n";
 	import { useBorrowStore } from "@stores/borrow";
 	import TableForDbData from "@components/admin/TableForDbData.vue";
@@ -95,7 +95,7 @@
 	}
 
 	async function sendEdit() {
-		await borrowStore.editBorrow(editedData.value, editDefaultData.value?._id);
+		await borrowStore.editBorrow(editedData.value, editDefaultData.value?._id as string);
 		closeEditModal();
 		await getData();
 	}
@@ -119,12 +119,13 @@
 		});
 	}
 
-	const columns: QTableColumn<Borrow>[] = [
+	const columns = computed<QTableColumn<Borrow>[]>(() => [
 		{ field: "_id", name: "_id", label: "_id" },
 		{ field: "createdAt", name: "createdAt", label: t("createdAt"), sortable: true },
 		{ field: "updatedAt", name: "updatedAt", label: t("updatedAt"), sortable: true },
 		{ field: "from", name: "from", label: t("from") },
 		{ field: "to", name: "to", label: t("to") },
+		{ field: "type", name: "type", label: "type" },
 		{ field: "books", name: "books", label: t("books"), format: (book: Book[]) => book?.join(", ") },
 		{ field: "verified", name: "verified", label: t("verified") },
 		{
@@ -133,7 +134,7 @@
 			label: t("userRates"),
 			format: (val) => `[${val.join(", ")}]`,
 		},
-	];
+	]);
 </script>
 
 <style scoped lang="scss"></style>

@@ -3,7 +3,8 @@
 		<q-img
 			:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 			:src="bookStore.openedBook?.picture"
-			style="max-widht: 100%; max-height: 300px"
+			style="max-widht: 100%; max-height: 400px"
+			fit="contain"
 		/>
 		<q-card-section :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 			<div class="text-h5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
@@ -36,6 +37,14 @@
 						<span>{{ bookStore.openedBook?.available ? $t("yes") : $t("no") }}</span>
 					</div>
 					<div class="text-h6">
+						{{ $t("book.uploader") }}:
+						<span class="q-mr-sm">{{ getDisplayName(bookStore.openedBook.uploader as User) }}</span>
+						<ProfileAvatar
+							:src="(bookStore.openedBook.uploader as User).picture"
+							:alt="getDisplayName(bookStore.openedBook.uploader as User)"
+						/>
+					</div>
+					<div class="text-h6">
 						{{ $t("book.createdAt") }}:
 						<span>
 							{{ dayjs(bookStore.openedBook?.createdAt).locale($i18n.locale).format("LLLL") }}
@@ -50,8 +59,14 @@
 						<span>{{ bookStore.openedBook?.price }}</span>
 					</div>
 					<div class="text-h6">
+						<!-- :color="$q.dark.isActive ? 'yellow' : 'dark-yellow'" -->
 						{{ $t("rate.overallRate") }}:
-						<q-rating v-model="bookStore.openedBook.overallRate" readonly />
+						<q-rating
+							v-model="bookStore.openedBook.overallRate"
+							readonly
+							color="grey-10"
+							:color-selected="$q.dark.isActive ? 'yellow' : 'yellow-8'"
+						/>
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="rate">
@@ -61,15 +76,19 @@
 						class="flex justify-center items-center q-py-lg"
 						:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
 					>
-						<q-btn no-caps outline color="secondary" :label="$t('rate.create')" @click="appStore.createBookRate = true" />
+						<q-btn
+							no-caps
+							outline
+							color="secondary"
+							:label="$t('rate.create')"
+							@click="appStore.editOrCreateBookRate = true"
+						/>
 					</q-card>
 					<q-card v-for="rate in (bookStore.openedBook?.rates as BookRate[])" :key="rate._id" flat bordered class="q-mb-sm">
 						<q-card-section>
 							<div class="text-h6">
 								{{ $t("rate.from", { user: getDisplayName(rate.from as User) }) }}
-								<q-avatar v-if="(rate.from as User).picture">
-									<q-img :src="(rate.from as User).picture" />
-								</q-avatar>
+								<ProfileAvatar :src="(rate.from as User).picture" :alt="getDisplayName(rate.from as User)" />
 								<span v-if="isRateFromLoggedIn(rate)" class="absolute-top-right">
 									<q-icon dense :name="matEdit" class="q-pr-md" @click.prevent="openRateForEdit(rate)" />
 									<q-icon dense :name="matDelete" class="q-pr-md" @click.prevent="deleteRate(rate._id)" />
@@ -77,7 +96,12 @@
 							</div>
 							<p>
 								{{ $t("rate.rate") }}:
-								<q-rating v-model="rate.rate" readonly />
+								<q-rating
+									v-model="rate.rate"
+									readonly
+									:color="$q.dark.isActive ? 'grey-6' : 'grey-10'"
+									:color-selected="$q.dark.isActive ? 'yellow' : 'yellow-8'"
+								/>
 							</p>
 							<p>{{ $t("rate.comment") }}: {{ rate.comment }}</p>
 						</q-card-section>
@@ -86,8 +110,12 @@
 			</q-tab-panels>
 		</q-card-section>
 	</q-card>
-	<NewBookRate v-if="appStore.createBookRate" :book="bookStore.openedBook" />
-	<EditBookRate v-if="appStore.editBookRate" :book="bookStore.openedBook" :book-rate="bookRateForEdit" />
+	<BookRateModal
+		v-if="appStore.editOrCreateBookRate"
+		:book="bookStore.openedBook"
+		:book-rate="bookRateForEdit"
+		:edit="bookRateForEdit != undefined"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -100,8 +128,8 @@
 	import { useBookRateStore } from "@stores/bookRate";
 	import { isRateFromLoggedIn } from "@utils/bookHelper";
 	import { getDisplayName } from "@utils/userHelper";
-	import NewBookRate from "@components/bookRate/NewBookRate.vue";
-	import EditBookRate from "@components/bookRate/EditBookRate.vue";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
+	import BookRateModal from "@components/bookRate/BookRateModal.vue";
 	import { matEdit, matDelete } from "@quasar/extras/material-icons";
 	import type { User } from "@interfaces/user";
 	import type { BookRate } from "@interfaces/bookRate";
@@ -119,7 +147,7 @@
 	function openRateForEdit(rate: BookRate) {
 		if ((rate.from as User)._id == userStore.loggedInUser?._id) {
 			bookRateForEdit.value = rate;
-			appStore.editBookRate = true;
+			appStore.editOrCreateBookRate = true;
 		}
 	}
 

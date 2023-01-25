@@ -49,13 +49,10 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
-							<ProfileAvatar
-								:src="userStore.loggedInUser.picture"
-								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
-							/>
+							<ProfileAvatar title :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
-							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_home' }">
+							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_user' }">
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
 								<q-item-section>
@@ -72,17 +69,12 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat :label="$t('auth.login')" :to="{ name: 'auth' }" />
-					<q-btn
-						flat
-						:icon="buttons[1].icon"
-						:label="quasar.screen.gt.sm ? buttons[1].name : ''"
-						@click="buttons[1].action"
-					/>
+					<q-btn flat :label="$t('auth.login')" @click="appStore.login = true" />
+					<q-btn flat :icon="darkModeButton.icon" @click="darkModeButton.action" />
 				</div>
 				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 					<template #label>
-						<q-icon :name="$i18n.locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+						<q-icon :name="$i18n.locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 					</template>
 					<q-list>
 						<q-item
@@ -93,7 +85,7 @@
 							@click.once="onSetLocale(locale)"
 						>
 							<q-item-section>
-								<q-icon :name="locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+								<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 							</q-item-section>
 							<q-item-section>{{ locale }}</q-item-section>
 						</q-item>
@@ -105,43 +97,79 @@
 		<q-page-container>
 			<router-view />
 		</q-page-container>
+
+		<LoginModal v-if="appStore.login" />
+		<RegisterModal v-if="appStore.register" />
+		<NotificationBorrowModal v-if="appStore.isOpenedBorrowNotification" />
+		<NotificationUserRateModal v-if="appStore.isOpenedUserRateNotification" />
 	</q-layout>
 </template>
 
 <script setup lang="ts">
+	//TODO: notificationnál egyből lekérni backendről( doc_id alapján ) és betenni a helyére a documentet
+	//TODO: és mikor megnyitásra kerül a notification, akkor már a reactive adat legyen ott
+
 	import { computed, ComputedRef, ref } from "vue";
+	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useI18n } from "vue-i18n";
-	import { useRouter } from "vue-router";
+	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { userAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
-	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { locales, setLocale, availableLocales } from "../modules/i18n";
-	import NotificationList from "@components/NotificationList.vue";
+	import LoginModal from "@components/auth/LoginModal.vue";
+	import RegisterModal from "@components/auth/RegisterModal.vue";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
+	import NotificationList from "@components/notification/NotificationList.vue";
+	import NotificationBorrowModal from "@components/notification/NotificationBorrowModal.vue";
+	import NotificationUserRateModal from "@components/notification/NotificationUserRateModal.vue";
+	import { getDisplayName } from "@utils/userHelper";
 	import { mdiBell, mdiMessage, mdiThemeLightDark } from "@quasar/extras/mdi-v7";
-	import { matAdminPanelSettings, matPerson, matLogout } from "@quasar/extras/material-icons";
+	import { matAdminPanelSettings, matPerson, matLogout, matBook, matLibraryBooks } from "@quasar/extras/material-icons";
+
+	import EN from "/en.svg";
+	import HU from "/hu.svg";
 
 	const router = useRouter();
 	const quasar = useQuasar();
-	const authStore = userAuthStore();
+	const appStore = useAppStore();
 	const userStore = useUserStore();
+	const authStore = userAuthStore();
 	const messageStore = useMessageStore();
 	const { t } = useI18n({ useScope: "global" });
 
-	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
+	interface Button {
+		name: string | ComputedRef<string>;
+		action: () => void;
+		icon?: string;
+	}
+
+	const darkModeButton: Button = {
+		name: computed(() =>
+			t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.lightMode") : t("title.darkMode") }),
+		),
+		action: quasar.dark.toggle,
+		icon: mdiThemeLightDark,
+	};
+
+	const buttons = ref<Button[]>([
 		{
-			name: computed(() => t("title.myProfile")),
+			name: computed(() => t("me.profile")),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
 		{
-			name: computed(() =>
-				t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.darkMode") : t("title.lightMode") }),
-			),
-			action: quasar.dark.toggle,
-			icon: mdiThemeLightDark,
+			name: computed(() => t("me.books")),
+			action: () => router.push({ name: "myBooks" }),
+			icon: matBook,
 		},
+		{
+			name: computed(() => t("me.swaps")),
+			action: () => router.push({ name: "myBorrows" }),
+			icon: matLibraryBooks,
+		},
+		darkModeButton,
 		{
 			name: computed(() => t("auth.logout")),
 			action: authStore.logOut,

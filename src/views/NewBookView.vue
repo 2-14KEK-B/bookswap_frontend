@@ -19,6 +19,7 @@
 				lazy-rules
 				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 			/>
+			<q-input v-model="input.isbn" :label="$t('book.isbn')" />
 			<q-tabs v-model="tab" align="justify" no-caps>
 				<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.link')" />
 				<q-tab name="upload" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.image')" />
@@ -69,6 +70,7 @@
 	const input = ref<CreateBook>({
 		author: "",
 		title: "",
+		isbn: "",
 		picture: "",
 		price: 0,
 		for_borrow: true,
@@ -126,6 +128,7 @@
 		input.value = {
 			author: "",
 			title: "",
+			isbn: "",
 			picture: "",
 			price: 0,
 			for_borrow: true,

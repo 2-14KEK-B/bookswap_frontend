@@ -34,7 +34,7 @@ function isMessageSeen(message: Message) {
 	const loggedInUserId = userStore.loggedInUser?._id;
 	if (loggedInUserId) {
 		message.message_contents.some((content) => {
-			if (content.sender_id != loggedInUserId && content.seen == false) {
+			if (content.sender_id != loggedInUserId && content.seen != true) {
 				seen = false;
 				return true;
 			}

@@ -12,6 +12,8 @@ interface ServerToClientEvents {
 		notiType: notiType,
 		from: { _id: string; email: string; username?: string; fullname?: string; picture?: string },
 	) => void;
+	"borrow-updated": () => void;
+	"user-rate-updated": () => void;
 	"msg-sent": () => void;
 	"msg-seen": (userWhoSawId: string, messageId: string) => void;
 }

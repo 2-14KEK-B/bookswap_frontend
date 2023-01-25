@@ -24,18 +24,12 @@
 					:stamp="dayjs().to(content.createdAt)"
 				>
 					<template #avatar>
-						<q-avatar
-							v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id"
-							color="primary"
-							text-color="white"
-							class="q-message-avatar q-message-avatar--received"
-						>
-							<q-img
-								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+						<span v-if="messageStore.selectedMessage && content.sender_id != userStore.loggedInUser?._id" class="q-pr-sm">
+							<ProfileAvatar
 								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
 							/>
-							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar>
+						</span>
 					</template>
 				</q-chat-message>
 			</q-infinite-scroll>
@@ -46,13 +40,12 @@
 				<q-space />
 				<q-btn flat no-caps align="center">
 					<q-toolbar-title>
-						<q-avatar v-if="messageStore.selectedMessage" color="primary" text-color="white">
-							<q-img
-								v-if="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+						<span v-if="messageStore.selectedMessage">
+							<ProfileAvatar
 								:src="messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser?.picture"
+								:alt="getDisplayName(messageStore.loggedInMessages[messageStore.selectedMessage.index as number]?.otherUser)"
 							/>
-							{{ otherUser?.displayName?.charAt(0).toUpperCase() }}
-						</q-avatar>
+						</span>
 						{{ otherUser?.displayName }}
 					</q-toolbar-title>
 				</q-btn>
@@ -86,6 +79,8 @@
 	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useMessageStore } from "@stores/message";
+	import { getDisplayName } from "@utils/userHelper";
+	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import { QInput, QScrollArea } from "quasar";
 	import { mdiArrowLeft, mdiSend } from "@quasar/extras/mdi-v7";
 
@@ -100,8 +95,14 @@
 	const chatRef = ref<QScrollArea>();
 
 	async function load(index: number, done: (stop?: boolean) => void) {
-		const stop = await messageStore.loadMessage(index);
-		done(!!stop);
+		if (messageStore.loggedInMessages && messageStore.selectedMessage) {
+			const m = messageStore.loggedInMessages[messageStore.selectedMessage.index];
+			if (m.totalCount && m.totalCount < 25) {
+				return done(true);
+			}
+			const stop = await messageStore.loadMessage(index);
+			done(!!stop);
+		}
 	}
 
 	function moveToBottom() {

@@ -1,5 +1,6 @@
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
+import { userAuthStore } from "@stores/auth";
 import { getOverallRate, isLoggedInUserAlreadyRated } from "@utils/bookHelper";
 import type { User } from "@interfaces/user";
 import type { RouteRecordRaw } from "vue-router";
@@ -20,28 +21,28 @@ export const routes: RouteRecordRaw[] = [
 				component: () => import("@views/MessageView.vue"),
 			},
 			{
-				path: "editProfile",
-				name: "editProfile",
-				component: () => import("@views/EditProfile.vue"),
-			},
-			{
-				path: "auth",
-				name: "auth",
-				component: () => import("@views/AuthView.vue"),
-			},
-			{
 				path: "newBook",
 				name: "newBook",
-				component: () => import("@views/NewBook.vue"),
+				component: () => import("@views/NewBookView.vue"),
 			},
 			{
 				path: "me",
 				name: "myProfile",
-				component: () => import("@views/MyProfileView.vue"),
+				component: () => import("@views/loggedIn/ProfileView.vue"),
 				beforeEnter: async () => {
 					const userStore = useUserStore();
 					await userStore.getLoggedIn();
 				},
+			},
+			{
+				path: "books",
+				name: "myBooks",
+				component: () => import("@views/loggedIn/BooksView.vue"),
+			},
+			{
+				path: "borrows",
+				name: "myBorrows",
+				component: () => import("@views/loggedIn/BorrowsView.vue"),
 			},
 			{
 				path: "user/:id",
@@ -75,7 +76,7 @@ export const routes: RouteRecordRaw[] = [
 			{
 				path: "borrow/:id",
 				name: "borrowBook",
-				component: () => import("@views/BorrowBook.vue"),
+				component: () => import("@views/BorrowBookView.vue"),
 				beforeEnter: async (to) => {
 					const bookStore = useBookStore();
 					const book = await bookStore.getBookById(to.params.id as string);
@@ -99,11 +100,6 @@ export const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: "",
-				name: "admin_home",
-				component: () => import("@views/HomeView.vue"),
-			},
-			{
-				path: "user",
 				name: "admin_user",
 				component: () => import("@views/admin/UserView.vue"),
 			},
@@ -128,5 +124,19 @@ export const routes: RouteRecordRaw[] = [
 		path: "/:pathMatch(.*)*",
 		name: "notfound",
 		component: () => import("@views/404View.vue"),
+	},
+	{
+		path: "/validate/:token",
+		beforeEnter: async (to) => {
+			await userAuthStore().validateEmail(to.params.token as string);
+		},
+		redirect: () => {
+			return "/";
+		},
+	},
+	{
+		path: "/reset-password",
+		name: "PasswordReset",
+		component: () => import("@views/PasswordReset.vue"),
 	},
 ];

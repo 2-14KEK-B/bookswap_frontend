@@ -3,7 +3,6 @@
                 "notificatons": "Notificatons",
                 "messages": "Messages",
                 "adminPage": "Admin page",
-                "myProfile": "My profile",
                 "lightMode": "Light mode",
                 "darkMode": "Dark mode",
                 "darkModeButton": "Change to {mode}"
@@ -14,7 +13,6 @@
                 "logout": "Logout",
                 "googleLogin": "Login with Google",
                 "emailOrUsername": "Email or username",
-                "password": "Password",
                 "goToLogin": "Go to login",
                 "goToRegister": "Go to register"
         },
@@ -24,18 +22,22 @@
                 "info": "Information about the user",
                 "fullname": "Fullname",
                 "email": "E-mail",
+                "password": "Password",
                 "username": "Username",
                 "picture": "Picture",
                 "registeredAt": "Registered at"
         },
         "me": {
                 "profile": "My profile",
+                "books": "My book",
+                "uploadedBooks": "Uploaded books",
                 "info": "Information about me",
                 "edit": "Edit my information",
                 "rates": "My rates",
                 "ratesFrom": "Rates from me",
                 "ratesAbout": "Rates about me",
-                "borrows": "My borrows"
+                "borrows": "My borrows",
+                "swaps": "My swaps"
         },
         "book": {
                 "title": "Title",
@@ -45,21 +47,26 @@
                 "price": "Price",
                 "available": "Available",
                 "category": "Genre",
+                "isbn": "ISBN",
                 "forBorrow": "Uploaded for borrow",
+                "forLend": "Uploaded for lend",
+                "notAvailable": "Not available",
                 "createdAt": "Date of upload",
                 "info": "Information about the book",
                 "rates": "Rates",
                 "about": "About the book",
                 "others": "Uploader's books",
                 "othersFromUploader": "Other books from from the uploader",
-                "borrowIt": "Borrow the book",
-                "lendIt": "Lend the book",
-                "searchBy": "Search by title or author",
+                "borrowIt": "Borrow",
+                "lendIt": "Lend",
+                "searchBy": "Search by title, author or ISBN",
                 "offers": "Offers",
                 "uploadNew": "Upload new",
+                "upload": "Upload",
                 "wishes": "Wishes"
         },
         "borrow": {
+                "borrow": "borrow",
                 "from": "Borrow from {user}",
                 "to": "Lend to {user}",
                 "edit": "Update borrow",
@@ -76,9 +83,10 @@
         },
         "button": {
                 "send": "Send",
-                "edit": "Edit",
+                "edit": "Modify",
                 "reset": "Reset",
                 "open": "Open",
+                "passwordReset": "Send E-mail to reset password",
                 "openNewTab": "Open in new tab"
         },
         "rate": {
@@ -96,12 +104,17 @@
         },
         "notification": {
                 "created": "created",
+                "borrowRequest": "{type} a borrow request",
+                "lendRequest": "{type} a lend request",
+                "userRate": "{type} a user rate about you",
                 "deleted": "deleted",
                 "updated": "updated",
                 "verified": "verified",
                 "user_rate": "user rate",
                 "borrow": "borrow",
-                "final": "{user} {adj} a {type}"
+                "final": "{user} {adj} a {type}",
+                "none": "You do not have any notification.",
+                "notFoundOrDeleted": "The {type} you are looking for cannot be found or already deleted by {user}."
         },
         "upload": {
                 "onlyImg": "Only image allowed",
@@ -112,6 +125,9 @@
                 "404": "Page not found",
                 "or": "or",
                 "404message": "The Page you are looking for doesn't exist or an other error occurred."
+        },
+        "formValidation": {
+                "required": "Field is required"
         },
         "yes": "Yes",
         "no": "No"

@@ -48,11 +48,7 @@ export const useBookRateStore = defineStore("bookRate", () => {
 			const bookStore = useBookStore();
 			const { status } = await $axios.delete(`/book/${bookId}/rate/${rateId}`);
 			if (status == 204 && bookStore.openedBook?.rates) {
-				bookStore.openedBook.rates = (bookStore.openedBook?.rates as BookRate[])?.filter((r) => {
-					if (r._id != rateId) {
-						return true;
-					}
-				});
+				bookStore.openedBook.rates = (bookStore.openedBook?.rates as BookRate[])?.filter((r) => r._id != rateId);
 				bookStore.openedBook.overallRate = getOverallRate(bookStore.openedBook.rates);
 				bookStore.openedBook.loggedInAlreadyRated = false;
 			}

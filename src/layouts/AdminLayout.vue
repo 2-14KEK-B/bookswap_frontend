@@ -38,10 +38,7 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense auto-close class="q-ml-sm">
 						<template #label>
-							<ProfileAvatar
-								:src="userStore.loggedInUser.picture"
-								:alt="userStore.loggedInUser.fullname || userStore.loggedInUser.username || userStore.loggedInUser.email"
-							/>
+							<ProfileAvatar title :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
 						</template>
 						<q-list separator>
 							<template v-for="button in buttons" :key="button.name">
@@ -54,7 +51,7 @@
 					</q-btn-dropdown>
 					<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 						<template #label>
-							<q-icon :name="$i18n.locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+							<q-icon :name="$i18n.locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 						</template>
 						<q-list>
 							<q-item
@@ -65,7 +62,7 @@
 								@click.once="onSetLocale(locale)"
 							>
 								<q-item-section>
-									<q-icon :name="locale == 'en' ? 'img:/en.svg' : 'img:/hu.svg'" />
+									<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 								</q-item-section>
 								<q-item-section>{{ locale }}</q-item-section>
 							</q-item>
@@ -121,7 +118,8 @@
 	import { useMessageStore } from "@stores/message";
 	import { availableLocales, setLocale, locales } from "../modules/i18n";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
-	import NotificationList from "@components/NotificationList.vue";
+	import NotificationList from "@components/notification/NotificationList.vue";
+	import { getDisplayName } from "@utils/userHelper";
 	import {
 		mdiThemeLightDark,
 		mdiHomeCircleOutline,
@@ -134,6 +132,9 @@
 	} from "@quasar/extras/mdi-v7";
 	import { matMenu } from "@quasar/extras/material-icons";
 	import { matPerson, matLogout } from "@quasar/extras/material-icons";
+
+	import EN from "/en.svg";
+	import HU from "/hu.svg";
 
 	const { t: tLocale } = useI18n({
 		messages: {
