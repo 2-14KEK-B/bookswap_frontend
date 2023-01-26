@@ -44,7 +44,7 @@
 									:data="(userStore.loggedInUser.username as string)"
 									field="username"
 									:label="$t('user.username')"
-									can-modify
+									:can-modify="false"
 									:modify-button-label="$t('button.edit')"
 									@update="update"
 								/>
@@ -56,7 +56,29 @@
 									:modify-button-label="$t('button.edit')"
 									@update="update"
 								/>
-								<q-input v-model="userData.createdAt" :label="$t('user.registeredAt')" readonly />
+								<div class="row justify-between items-center" style="min-width: 280px; height: 80px">
+									<q-select
+										v-model="modifiedLocale"
+										class="col-8"
+										:label="$t('user.locale')"
+										:options="$i18n.availableLocales"
+										:readonly="!modifyLocale"
+									/>
+									<span>
+										<span v-if="!modifyLocale" class="col-auto flex-center">
+											<q-btn class="small-button q-py-none" :label="$t('button.edit')" no-caps @click="modifyLocale = true" />
+										</span>
+										<span v-else class="col-auto">
+											<span class="row" style="margin-bottom: 5px">
+												<q-btn class="small-button q-py-none" :label="$t('button.send')" @click.prevent="updateLocale" />
+											</span>
+											<span class="row">
+												<q-btn class="small-button q-py-none" :label="$t('button.reset')" @click="resetLocale" />
+											</span>
+										</span>
+									</span>
+								</div>
+								<q-input v-model="registeredAt" :label="$t('user.registeredAt')" readonly />
 								<div class="row q-pt-md flex items-center">
 									<span class="col-4">{{ $t("user.password") }}:</span>
 									<span class="col flex justify-center">
@@ -110,7 +132,7 @@
 
 <script setup lang="ts">
 	//TODO: saját borrow szerkesztése
-	import { ref } from "vue";
+	import { computed, onMounted, readonly, ref } from "vue";
 	import { Notify } from "quasar";
 	import socket from "@api/socket";
 	import { useI18n } from "vue-i18n";
@@ -126,22 +148,28 @@
 	import EditBorrow from "@components/borrow/EditBorrow.vue";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import type { Borrow } from "@interfaces/borrow";
-	import type { EditUser, User } from "@interfaces/user";
+	import type { EditUser } from "@interfaces/user";
 
 	extend(localizedFormat);
 
 	const appStore = useAppStore();
 	const userStore = useUserStore();
 	const userRateStore = useUserRateStore();
-	const { locale } = useI18n();
+	const { locale } = useI18n({ useScope: "global" });
 
 	const userTab = ref("info");
 	const rateTab = ref("to");
 	const borrowToEdit = ref<Borrow>();
 
-	const userData = ref<Partial<User>>({
-		createdAt: dayjs(userStore.loggedInUser?.createdAt).locale(locale.value).format("LLLL"),
-	});
+	const modifyLocale = ref(false);
+	const defaultLocale = readonly(ref(userStore.loggedInUser?.locale));
+	const modifiedLocale = ref();
+
+	const registeredAt = computed(() =>
+		dayjs(userStore.loggedInUser?.createdAt)
+			.locale(locale.value as string)
+			.format("LLLL"),
+	);
 
 	async function update(newData: string, field: keyof EditUser) {
 		const data: EditUser = {};
@@ -152,6 +180,9 @@
 			case "username":
 				data.username = newData;
 				break;
+			case "locale":
+				data.locale = newData;
+				break;
 			case "picture":
 				data.picture = newData;
 				break;
@@ -160,6 +191,17 @@
 				break;
 		}
 		await userStore.editLoggedIn(data);
+	}
+
+	async function updateLocale() {
+		if (modifiedLocale.value && modifiedLocale.value != defaultLocale.value) {
+			await update(modifiedLocale.value, "locale");
+		}
+	}
+
+	function resetLocale() {
+		modifiedLocale.value = defaultLocale.value;
+		modifyLocale.value = false;
 	}
 
 	socket.on("borrow-updated", async () => {
@@ -193,6 +235,10 @@
 				},
 			],
 		});
+	});
+
+	onMounted(() => {
+		modifiedLocale.value = userStore.loggedInUser?.locale;
 	});
 </script>
 

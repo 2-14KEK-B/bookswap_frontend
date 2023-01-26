@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Loading, Notify } from "quasar";
-import API_URL from "../config/api_url";
 import { matClose } from "@quasar/extras/material-icons";
 
 Notify.setDefaults({
@@ -11,7 +10,7 @@ Notify.setDefaults({
 });
 
 const $axios = axios.create({
-	baseURL: API_URL,
+	baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 	withCredentials: true,
 });
 

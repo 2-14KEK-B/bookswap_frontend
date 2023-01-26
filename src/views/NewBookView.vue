@@ -76,8 +76,8 @@
 	import axios, { AxiosProgressEvent } from "axios";
 	import { genres } from "@utils/bookHelper";
 	import { useBookStore } from "@stores/book";
-	import type { CreateBook } from "@interfaces/book";
 	import { QUploader } from "quasar";
+	import type { CreateBook } from "@interfaces/book";
 
 	const bookStore = useBookStore();
 	const router = useRouter();

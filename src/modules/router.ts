@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { LocalStorage } from "quasar";
 import { routes } from "../routes";
-import { useUserStore } from "@stores/user";
 import $axios from "@api/axios";
+import { useUserStore } from "@stores/user";
 import { useAuthStore } from "@stores/auth";
 import type { App } from "vue";
 
@@ -16,7 +17,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
 	const userStore = useUserStore();
 	const authStore = useAuthStore();
-	const user_id: string | null = localStorage.getItem("user_id");
+	const user_id: string | null = LocalStorage.getItem("user_id");
 	if (!userStore.loggedInUser) {
 		if (user_id != null) {
 			await authStore.checkValidUser();

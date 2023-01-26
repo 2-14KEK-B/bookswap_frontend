@@ -7,10 +7,10 @@
 			</span>
 			<span v-else class="col-auto">
 				<span class="row" style="margin-bottom: 5px">
-					<q-btn class="small-button q-py-none" label="Send" @click="updateDate" />
+					<q-btn class="small-button q-py-none" :label="$t('button.send')" @click="updateData" />
 				</span>
 				<span class="row">
-					<q-btn class="small-button q-py-none" label="Cancel" @click="reset" />
+					<q-btn class="small-button q-py-none" :label="$t('button.reset')" @click="reset" />
 				</span>
 			</span>
 		</span>
@@ -33,7 +33,7 @@
 	let defaultData = readonly(ref(""));
 	const modifyData = ref(false);
 
-	function updateDate() {
+	function updateData() {
 		emits("update", data.value, props.field);
 		modifyData.value = false;
 	}

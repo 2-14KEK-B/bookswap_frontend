@@ -27,6 +27,7 @@
                 "password": "Password",
                 "username": "Username",
                 "picture": "Picture",
+                "locale": "Language",
                 "registeredAt": "Registered at",
                 "firstName": "First Name",
                 "secondName": "Second Name"

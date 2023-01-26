@@ -74,20 +74,20 @@
 				</div>
 				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 					<template #label>
-						<q-icon :name="$i18n.locale == 'en' ? `img:${EN}` : `img:${HU}`" />
+						<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 					</template>
 					<q-list>
 						<q-item
-							v-for="(locale, i) in locales"
+							v-for="(availableLocale, i) in locales"
 							:key="i"
 							clickable
-							:disable="$i18n.locale == locale"
-							@click.once="onSetLocale(locale)"
+							:disable="locale == availableLocale"
+							@click.once="onSetLocale(availableLocale)"
 						>
 							<q-item-section>
-								<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
+								<q-icon :name="availableLocale == 'en' ? `img:${EN}` : `img:${HU}`" />
 							</q-item-section>
-							<q-item-section>{{ locale }}</q-item-section>
+							<q-item-section>{{ availableLocale }}</q-item-section>
 						</q-item>
 					</q-list>
 				</q-btn-dropdown>
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref } from "vue";
+	import { computed, ComputedRef, onMounted, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useQuasar } from "quasar";
 	import { useI18n } from "vue-i18n";
@@ -134,7 +134,7 @@
 	const userStore = useUserStore();
 	const authStore = useAuthStore();
 	const messageStore = useMessageStore();
-	const { t } = useI18n({ useScope: "global" });
+	const { t, locale } = useI18n({ useScope: "global" });
 
 	interface Button {
 		name: string | ComputedRef<string>;
@@ -176,7 +176,20 @@
 
 	async function onSetLocale(locale: availableLocales) {
 		await setLocale(locale);
+		const locales = {
+			hu: () => import("quasar/lang/hu"),
+			en: () => import("quasar/lang/en-GB"),
+		};
+		await locales[locale]().then((lang) => quasar.lang.set(lang.default));
 	}
+
+	onMounted(async () => {
+		const locales = {
+			hu: () => import("quasar/lang/hu"),
+			en: () => import("quasar/lang/en-GB"),
+		};
+		await locales[locale.value as availableLocales]().then((lang) => quasar.lang.set(lang.default));
+	});
 </script>
 
 <style>

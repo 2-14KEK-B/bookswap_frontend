@@ -27,6 +27,7 @@
                 "password": "Jelszó",
                 "username": "Felhasználónév",
                 "picture": "Kép",
+                "locale": "Nyelv",
                 "registeredAt": "Regisztrálás időpontja",
                 "firstName": "Vezetéknév",
                 "secondName": "Keresztnév"

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import $axios from "@api/axios";
 import { Loading } from "quasar";
+import { availableLocales, setLocale } from "../modules/i18n";
 import { getNotSeenNotificationsCount, sortNotificationsByCreatedAt } from "@utils/userHelper";
 import type { User, EditUser } from "@interfaces/user";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
@@ -69,6 +70,9 @@ export const useUserStore = defineStore("user", () => {
 		try {
 			Loading.show();
 			const { data } = await $axios.patch(`/user/me`, userData);
+			if (userData.locale) {
+				setLocale(userData.locale as availableLocales);
+			}
 
 			loggedInUser.value = data;
 		} catch (error) {

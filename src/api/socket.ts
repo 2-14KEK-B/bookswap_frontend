@@ -1,5 +1,4 @@
 import { io, Socket } from "socket.io-client";
-import API_URL from "../config/api_url";
 import type { Message, MessageContent } from "@interfaces/message";
 import type { docType, notiType } from "@interfaces/notification";
 
@@ -31,6 +30,9 @@ interface ClientToServerEvents {
 	"msg-seen": (userWhoSawId: string, toId: string, messageId: string) => void;
 }
 
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(API_URL, { autoConnect: false });
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+	import.meta.env.VITE_API_URL || "http://localhost:3000",
+	{ autoConnect: false },
+);
 
 export default socket;

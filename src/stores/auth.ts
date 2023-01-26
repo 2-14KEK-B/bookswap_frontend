@@ -1,6 +1,6 @@
 import $axios from "@api/axios";
 import socket from "@api/socket";
-import { Loading, Notify } from "quasar";
+import { Loading, Notify, LocalStorage } from "quasar";
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
 import { useBookStore } from "./book";
@@ -8,6 +8,7 @@ import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
+import { availableLocales, setLocale } from "../modules/i18n";
 import { setInitialMessageInfo } from "@utils/messageHelper";
 import type { LoginCred } from "@interfaces/auth";
 import type { Message } from "@interfaces/message";
@@ -28,7 +29,7 @@ export const useAuthStore = defineStore("auth", () => {
 			saveUserData(data);
 		} catch (error) {
 			socket.disconnect();
-			localStorage.removeItem("user_id");
+			LocalStorage.remove("user_id");
 			await router.push({ name: "home" });
 		}
 	}
@@ -39,13 +40,15 @@ export const useAuthStore = defineStore("auth", () => {
 		const borrowStore = useBorrowStore();
 		const messageStore = useMessageStore();
 		const userRateStore = useUserRateStore();
-		localStorage.setItem("user_id", user._id as string);
+		LocalStorage.set("user_id", user._id as string);
+		setLocale(user.locale as availableLocales);
 
 		userStore.loggedInUser = user;
 		bookStore.loggedInBooks = user.books as Book[];
 		messageStore.loggedInMessages = (user.messages as Message[])?.map((message) => setInitialMessageInfo(message));
 		borrowStore.loggedInBorrows = user.borrows as Borrow[];
 		userRateStore.loggedInRates = user.user_rates as { from: UserRate[]; to: UserRate[] };
+
 		socket.connect();
 		socket.emit("user-online", user._id as string);
 	}
@@ -132,7 +135,7 @@ export const useAuthStore = defineStore("auth", () => {
 			Loading.show();
 			await $axios.post("/auth/logout");
 			socket.disconnect();
-			localStorage.removeItem("user_id");
+			LocalStorage.remove("user_id");
 			userStore.loggedInUser = undefined;
 			await router.push({ name: "home" });
 		} catch (error) {

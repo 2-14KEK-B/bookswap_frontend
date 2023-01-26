@@ -51,20 +51,20 @@
 					</q-btn-dropdown>
 					<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
 						<template #label>
-							<q-icon :name="$i18n.locale == 'en' ? `img:${EN}` : `img:${HU}`" />
+							<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 						</template>
 						<q-list>
 							<q-item
-								v-for="(locale, i) in locales"
+								v-for="(availableLocale, i) in locales"
 								:key="i"
 								clickable
-								:disable="$i18n.locale == locale"
-								@click.once="onSetLocale(locale)"
+								:disable="locale == availableLocale"
+								@click.once="onSetLocale(availableLocale)"
 							>
 								<q-item-section>
-									<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
+									<q-icon :name="availableLocale == 'en' ? `img:${EN}` : `img:${HU}`" />
 								</q-item-section>
-								<q-item-section>{{ locale }}</q-item-section>
+								<q-item-section>{{ availableLocale }}</q-item-section>
 							</q-item>
 						</q-list>
 					</q-btn-dropdown>
@@ -105,20 +105,26 @@
 		<q-page-container>
 			<router-view></router-view>
 		</q-page-container>
+
+		<NotificationBorrowModal v-if="appStore.isOpenedBorrowNotification" />
+		<NotificationUserRateModal v-if="appStore.isOpenedUserRateNotification" />
 	</q-layout>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref } from "vue";
+	import { computed, ComputedRef, onMounted, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useI18n } from "vue-i18n";
 	import { useQuasar } from "quasar";
+	import { useAppStore } from "@stores/app";
 	import { useUserStore } from "@stores/user";
 	import { useAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
 	import { availableLocales, setLocale, locales } from "../modules/i18n";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NotificationList from "@components/notification/NotificationList.vue";
+	import NotificationBorrowModal from "@components/notification/NotificationBorrowModal.vue";
+	import NotificationUserRateModal from "@components/notification/NotificationUserRateModal.vue";
 	import { getDisplayName } from "@utils/userHelper";
 	import {
 		mdiThemeLightDark,
@@ -130,8 +136,7 @@
 		mdiBell,
 		mdiMessage,
 	} from "@quasar/extras/mdi-v7";
-	import { matMenu } from "@quasar/extras/material-icons";
-	import { matPerson, matLogout } from "@quasar/extras/material-icons";
+	import { matMenu, matPerson, matLogout, matBook, matLibraryBooks } from "@quasar/extras/material-icons";
 
 	import EN from "/en.svg";
 	import HU from "/hu.svg";
@@ -154,8 +159,9 @@
 			},
 		},
 	});
-	const { t } = useI18n({ useScope: "global" });
+	const { t, locale } = useI18n({ useScope: "global" });
 	const router = useRouter();
+	const appStore = useAppStore();
 	const userStore = useUserStore();
 	const authStore = useAuthStore();
 	const messageStore = useMessageStore();
@@ -210,13 +216,23 @@
 
 	const buttons = ref<{ name: string | ComputedRef<string>; action: () => void; icon?: string }[]>([
 		{
-			name: t("title.myProfile"),
+			name: t("me.profile"),
 			action: () => router.push({ name: "myProfile" }),
 			icon: matPerson,
 		},
 		{
+			name: computed(() => t("me.books")),
+			action: () => router.push({ name: "myBooks" }),
+			icon: matBook,
+		},
+		{
+			name: computed(() => t("me.swaps")),
+			action: () => router.push({ name: "myBorrows" }),
+			icon: matLibraryBooks,
+		},
+		{
 			name: computed(() =>
-				t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.darkMode") : t("title.lightMode") }),
+				t("title.darkModeButton", { mode: quasar.dark.isActive ? t("title.lightMode") : t("title.darkMode") }),
 			),
 			action: quasar.dark.toggle,
 			icon: mdiThemeLightDark,
@@ -230,7 +246,20 @@
 
 	async function onSetLocale(locale: availableLocales) {
 		await setLocale(locale);
+		const locales = {
+			hu: () => import("quasar/lang/hu"),
+			en: () => import("quasar/lang/en-GB"),
+		};
+		await locales[locale]().then((lang) => quasar.lang.set(lang.default));
 	}
+
+	onMounted(async () => {
+		const locales = {
+			hu: () => import("quasar/lang/hu"),
+			en: () => import("quasar/lang/en-GB"),
+		};
+		await locales[locale.value as availableLocales]().then((lang) => quasar.lang.set(lang.default));
+	});
 </script>
 
 <style>
