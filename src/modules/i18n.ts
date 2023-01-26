@@ -46,7 +46,7 @@ async function setDayJS(locale: availableLocales) {
 // Fetch locale.
 async function loadLocale(locale: availableLocales) {
 	try {
-		const response = await fetch(`./locales/${locale}.json`);
+		const response = await fetch(`../locales/${locale}.json`);
 		if (response.ok) {
 			return response.json();
 		}
