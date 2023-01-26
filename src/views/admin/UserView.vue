@@ -148,7 +148,6 @@
 		{ field: "email", name: "email", label: t("email") },
 		{ field: "email_is_verified", name: "email_is_verified", label: t("emailVerified") },
 		{ field: "locale", name: "locale", label: t("locale") },
-		// { field: "role", name: "role", label: "role", format: (val) => (val ? val : "user") },
 		{
 			field: "books",
 			name: "books",

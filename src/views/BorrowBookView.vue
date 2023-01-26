@@ -77,10 +77,10 @@
 								bookStore.openedBook?.for_borrow
 									? $q.screen.lt.sm
 										? $t('book.borrowIt')
-										: 'Send borrow request'
+										: $t('book.sendBorrowRequest')
 									: $q.screen.lt.sm
-									? 'Lend it'
-									: 'Send lend request'
+									? $t('book.lendIt')
+									: $t('book.sendLendRequest')
 							"
 							@click="sendBorrow"
 						/>

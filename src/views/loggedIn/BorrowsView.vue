@@ -1,8 +1,8 @@
 <template>
 	<q-page>
 		<q-tabs v-model="tab">
-			<q-tab name="borrow" label="Borrows"></q-tab>
-			<q-tab name="lend" label="Lends"></q-tab>
+			<q-tab name="borrow" :label="$t('me.borrows')"></q-tab>
+			<q-tab name="lend" :label="$t('me.lends')"></q-tab>
 		</q-tabs>
 		<q-tab-panels v-model="tab">
 			<q-tab-panel name="borrow" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">

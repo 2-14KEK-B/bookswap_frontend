@@ -28,6 +28,7 @@ interface User {
 interface EditUser {
 	username?: string;
 	email?: string;
+	locale?: string;
 	fullname?: string;
 	picture?: string;
 	password?: string;

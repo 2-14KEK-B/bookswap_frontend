@@ -1,22 +1,27 @@
 import $axios from "@api/axios";
 import socket from "@api/socket";
-import { Loading } from "quasar";
+import { Loading, Notify, LocalStorage } from "quasar";
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
+import { useBookStore } from "./book";
 import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
+import { availableLocales, setLocale } from "../modules/i18n";
 import { setInitialMessageInfo } from "@utils/messageHelper";
 import type { LoginCred } from "@interfaces/auth";
 import type { Message } from "@interfaces/message";
 import type { User } from "@interfaces/user";
 import type { Borrow } from "@interfaces/borrow";
 import type { UserRate } from "@interfaces/userRate";
-import { useBookStore } from "./book";
 import type { Book } from "@interfaces/book";
 
-export const userAuthStore = defineStore("auth", () => {
+const isEmail = new RegExp(
+	/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
+);
+
+export const useAuthStore = defineStore("auth", () => {
 	async function checkValidUser() {
 		try {
 			Loading.show();
@@ -24,7 +29,7 @@ export const userAuthStore = defineStore("auth", () => {
 			saveUserData(data);
 		} catch (error) {
 			socket.disconnect();
-			localStorage.removeItem("user_id");
+			LocalStorage.remove("user_id");
 			await router.push({ name: "home" });
 		}
 	}
@@ -35,21 +40,20 @@ export const userAuthStore = defineStore("auth", () => {
 		const borrowStore = useBorrowStore();
 		const messageStore = useMessageStore();
 		const userRateStore = useUserRateStore();
-		localStorage.setItem("user_id", user._id as string);
+		LocalStorage.set("user_id", user._id as string);
+		setLocale(user.locale as availableLocales);
 
 		userStore.loggedInUser = user;
 		bookStore.loggedInBooks = user.books as Book[];
 		messageStore.loggedInMessages = (user.messages as Message[])?.map((message) => setInitialMessageInfo(message));
 		borrowStore.loggedInBorrows = user.borrows as Borrow[];
 		userRateStore.loggedInRates = user.user_rates as { from: UserRate[]; to: UserRate[] };
+
 		socket.connect();
 		socket.emit("user-online", user._id as string);
 	}
 
 	async function login(userData: LoginCred) {
-		const isEmail = new RegExp(
-			/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
-		);
 		const loginData: { email?: string; username?: string; password: string } = { password: userData.password };
 		if (isEmail.test(userData.emailOrUsername)) {
 			loginData.email = userData.emailOrUsername;
@@ -80,7 +84,10 @@ export const userAuthStore = defineStore("auth", () => {
 	async function register(userData: Partial<User>) {
 		try {
 			Loading.show();
-			await $axios.post("/auth/register", userData);
+			const { status } = await $axios.post("/auth/register", userData);
+			if (status < 400) {
+				Notify.create({ message: "E-mail has been sent. Check you incoming e-mails" });
+			}
 		} catch (error) {
 			return;
 		}
@@ -88,7 +95,35 @@ export const userAuthStore = defineStore("auth", () => {
 
 	async function validateEmail(token: string) {
 		try {
-			await $axios.post("/auth/validate", { token });
+			const { status, data } = await $axios.get(`/auth/verify-email?token=${token}`);
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function sendResetPasswordRequest(email: string) {
+		try {
+			if (!isEmail.test(email)) {
+				return;
+			}
+			const { status, data } = await $axios.post("/auth/forgot-password", { email });
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
+		} catch (error) {
+			return;
+		}
+	}
+
+	async function resetPassword(token: string, oldPassword: string, newPassword: string) {
+		try {
+			const { status, data } = await $axios.post("/auth/reset-password", { token, oldPassword, newPassword });
+			if (status < 400) {
+				Notify.create({ message: data });
+			}
 		} catch (error) {
 			return;
 		}
@@ -100,7 +135,7 @@ export const userAuthStore = defineStore("auth", () => {
 			Loading.show();
 			await $axios.post("/auth/logout");
 			socket.disconnect();
-			localStorage.removeItem("user_id");
+			LocalStorage.remove("user_id");
 			userStore.loggedInUser = undefined;
 			await router.push({ name: "home" });
 		} catch (error) {
@@ -108,5 +143,14 @@ export const userAuthStore = defineStore("auth", () => {
 		}
 	}
 
-	return { login, loginWithGoogle, register, validateEmail, logOut, checkValidUser };
+	return {
+		login,
+		loginWithGoogle,
+		register,
+		validateEmail,
+		sendResetPasswordRequest,
+		resetPassword,
+		logOut,
+		checkValidUser,
+	};
 });

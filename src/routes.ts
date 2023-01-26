@@ -1,6 +1,6 @@
 import { useBookStore } from "@stores/book";
 import { useUserStore } from "@stores/user";
-import { userAuthStore } from "@stores/auth";
+import { useAuthStore } from "@stores/auth";
 import { getOverallRate, isLoggedInUserAlreadyRated } from "@utils/bookHelper";
 import type { User } from "@interfaces/user";
 import type { RouteRecordRaw } from "vue-router";
@@ -14,6 +14,13 @@ export const routes: RouteRecordRaw[] = [
 				path: "",
 				name: "home",
 				component: () => import("@views/HomeView.vue"),
+				beforeEnter: async (to) => {
+					if (to.redirectedFrom?.name == "VerifyEmail") {
+						const token = to.redirectedFrom?.query.token as string;
+						const authStore = useAuthStore();
+						await authStore.validateEmail(token);
+					}
+				},
 			},
 			{
 				path: "message",
@@ -126,12 +133,10 @@ export const routes: RouteRecordRaw[] = [
 		component: () => import("@views/404View.vue"),
 	},
 	{
-		path: "/validate/:token",
-		beforeEnter: async (to) => {
-			await userAuthStore().validateEmail(to.params.token as string);
-		},
+		path: "/verify",
+		name: "VerifyEmail",
 		redirect: () => {
-			return "/";
+			return { name: "home", query: {} };
 		},
 	},
 	{

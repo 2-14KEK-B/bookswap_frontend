@@ -53,7 +53,18 @@ export default defineConfig({
 			output: {
 				manualChunks(id) {
 					if (id.includes("/node_modules/")) {
-						const modules = ["quasar", "@quasar", "vue", "@vue", "axios", "pinia", "socket.io", "dayjs", "@intlify"];
+						const modules = [
+							"quasar",
+							"@quasar",
+							"vue",
+							"@vue",
+							"vue3-google-login",
+							"axios",
+							"pinia",
+							"socket.io",
+							"dayjs",
+							"@intlify",
+						];
 						const chunk = modules.find((module) => id.includes(`/node_modules/${module}`));
 						return chunk ? `vendor-${chunk}` : "vendor";
 					}

@@ -76,8 +76,8 @@
 	import axios, { AxiosProgressEvent } from "axios";
 	import { genres } from "@utils/bookHelper";
 	import { useBookStore } from "@stores/book";
-	import type { CreateBook } from "@interfaces/book";
 	import { QUploader } from "quasar";
+	import type { CreateBook } from "@interfaces/book";
 
 	const bookStore = useBookStore();
 	const router = useRouter();
@@ -96,7 +96,6 @@
 	});
 
 	async function bookCreating() {
-		console.log(input.value.category);
 		const newData: Partial<CreateBook> = {
 			author: input.value.author,
 			title: input.value.title,
