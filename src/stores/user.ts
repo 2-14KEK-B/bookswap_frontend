@@ -69,12 +69,14 @@ export const useUserStore = defineStore("user", () => {
 	async function editLoggedIn(userData: EditUser) {
 		try {
 			Loading.show();
-			const { data } = await $axios.patch(`/user/me`, userData);
+			const { data } = await $axios.patch<Partial<User>>(`/user/me`, userData);
 			if (userData.locale) {
 				setLocale(userData.locale as availableLocales);
 			}
 
-			loggedInUser.value = data;
+			if (data && loggedInUser.value) {
+				Object.assign(loggedInUser.value, data);
+			}
 		} catch (error) {
 			return;
 		}

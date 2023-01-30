@@ -76,13 +76,10 @@
 
 	async function login() {
 		await authStore.login(userCred.value);
-		appStore.login = false;
 	}
 
 	async function loginWithGoogle(res: CallbackTypes.TokenPopupResponse) {
 		await authStore.loginWithGoogle(res.access_token);
-		appStore.login = false;
-		// emits("login-with-google", res.access_token);
 	}
 
 	const isDisabled = computed(() => {
@@ -95,12 +92,6 @@
 		appStore.login = false;
 		appStore.register = true;
 	}
-
-	// const emits = defineEmits<{
-	// 	(e: "login", userCred: LoginCred): void;
-	// 	(e: "to-register"): void;
-	// 	(e: "login-with-google", token: string): void;
-	// }>();
 </script>
 
 <style scoped>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Loading, Notify } from "quasar";
+import { i18n } from "../modules/i18n";
 import { matClose } from "@quasar/extras/material-icons";
 
 Notify.setDefaults({
@@ -17,7 +18,7 @@ const $axios = axios.create({
 // Add a request interceptor
 $axios.interceptors.request.use(
 	function (config) {
-		// Do something before request is sent
+		config.headers["Accept-Language"] = i18n.global.locale.value;
 		return config;
 	},
 	function (error) {

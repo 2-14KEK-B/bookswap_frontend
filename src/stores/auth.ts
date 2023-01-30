@@ -3,6 +3,7 @@ import socket from "@api/socket";
 import { Loading, Notify, LocalStorage } from "quasar";
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
+import { useAppStore } from "./app";
 import { useBookStore } from "./book";
 import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
@@ -64,6 +65,8 @@ export const useAuthStore = defineStore("auth", () => {
 			Loading.show();
 			const { data } = await $axios.post("/auth/login", loginData);
 			saveUserData(data);
+			const appStore = useAppStore();
+			appStore.login = false;
 			await router.push({ name: "home" });
 		} catch (error) {
 			return;
@@ -75,6 +78,8 @@ export const useAuthStore = defineStore("auth", () => {
 			Loading.show();
 			const { data } = await $axios.post("/auth/google", { token: token });
 			saveUserData(data);
+			const appStore = useAppStore();
+			appStore.login = false;
 			await router.push({ name: "home" });
 		} catch (error) {
 			return;
@@ -133,7 +138,7 @@ export const useAuthStore = defineStore("auth", () => {
 		try {
 			const userStore = useUserStore();
 			Loading.show();
-			await $axios.post("/auth/logout");
+			await $axios.get("/auth/logout");
 			socket.disconnect();
 			LocalStorage.remove("user_id");
 			userStore.loggedInUser = undefined;
@@ -146,6 +151,7 @@ export const useAuthStore = defineStore("auth", () => {
 	return {
 		login,
 		loginWithGoogle,
+		saveUserData,
 		register,
 		validateEmail,
 		sendResetPasswordRequest,
