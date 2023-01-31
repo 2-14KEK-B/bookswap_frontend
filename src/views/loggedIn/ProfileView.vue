@@ -255,4 +255,7 @@
 		height: 30px;
 		width: 80px;
 	}
+	.small-button {
+		width: 100px;
+	}
 </style>

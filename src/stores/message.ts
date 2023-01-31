@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
-import $axios from "@api/axios";
 import { ref, computed } from "vue";
+import { Loading, Notify } from "quasar";
+import $axios from "@api/axios";
 import socket from "@api/socket";
-import { Loading } from "quasar";
+import { i18n } from "../modules/i18n";
 import { useUserStore } from "@stores/user";
 import { setInitialMessageInfo, countNotSeenMessages, sortMessagesByContentUpdatedAt } from "@utils/messageHelper";
 import type { Message, MessageContent } from "@interfaces/message";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
+import type { Composer } from "vue-i18n";
 
 export const useMessageStore = defineStore("message", () => {
 	const selectedMessage = ref<{ _id: string; index: number } | null>(null);
@@ -78,6 +80,8 @@ export const useMessageStore = defineStore("message", () => {
 				messageWithOtherUser?.message_contents.push(data.message as MessageContent);
 				socket.emit("send-msg-cnt", to_id, data.message as MessageContent);
 			}
+			const { t } = i18n.global as Composer;
+			Notify.create({ message: t("message.sent") });
 		} catch (error) {
 			return;
 		}

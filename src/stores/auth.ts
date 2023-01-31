@@ -128,11 +128,11 @@ export const useAuthStore = defineStore("auth", () => {
 
 	async function logOut() {
 		try {
-			const userStore = useUserStore();
 			Loading.show();
-			await $axios.post("/auth/logout");
+			await $axios.get("/auth/logout");
 			socket.disconnect();
 			LocalStorage.remove("user_id");
+			const userStore = useUserStore();
 			userStore.loggedInUser = undefined;
 			await router.push({ name: "home" });
 		} catch (error) {

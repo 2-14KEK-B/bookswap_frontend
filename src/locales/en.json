@@ -113,7 +113,8 @@
                 "to": "Lend to {user}",
                 "edit": "Update borrow",
                 "verified": "Verified",
-                "books": "Borrowed books"
+                "books": "Borrowed books",
+                "requestSent": "Request sent to other user."
         },
         "message": {
                 "users": "Users",
@@ -121,7 +122,8 @@
                 "me": "me",
                 "back": "Back",
                 "placeholder": "Start typing..",
-                "new": "Send message to {user}"
+                "new": "Send message to {user}",
+                "sent": "Message sent."
         },
         "button": {
                 "send": "Send",

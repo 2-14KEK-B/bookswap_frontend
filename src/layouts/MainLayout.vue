@@ -99,6 +99,7 @@
 			</q-toolbar>
 		</q-header>
 
+		<!-- :style="[$q.screen.gt.xs ? { 'margin-left': 10 + '%', 'margin-right': 10 + '%' } : '']" -->
 		<q-page-container>
 			<router-view />
 		</q-page-container>

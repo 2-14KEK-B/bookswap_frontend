@@ -34,8 +34,24 @@
 	const modifyData = ref(false);
 
 	function updateData() {
-		emits("update", data.value, props.field);
-		modifyData.value = false;
+		if (isValid()) {
+			emits("update", data.value, props.field);
+			modifyData.value = false;
+		}
+	}
+
+	function isValid() {
+		const length = data.value.length;
+		if (props.field == "email") {
+			return length >= 8 && length <= 64;
+		} else if (props.field == "fullname") {
+			return length >= 2 && length <= 64;
+		} else if (props.field == "password") {
+			return length >= 8 && length <= 64;
+		} else if (props.field == "username") {
+			return length >= 6 && length <= 32;
+		}
+		return false;
 	}
 
 	function reset() {
@@ -59,7 +75,7 @@
 		width: 150px;
 	}
 	.small-button {
-		width: 80px;
+		width: 100px;
 	}
 	.cancel-button {
 		height: 30px;
