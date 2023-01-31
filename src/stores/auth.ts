@@ -11,16 +11,13 @@ import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
 import { availableLocales, setLocale } from "../modules/i18n";
 import { setInitialMessageInfo } from "@utils/messageHelper";
+import { isEmail } from "@utils/validationHelper";
 import type { LoginCred } from "@interfaces/auth";
 import type { Message } from "@interfaces/message";
 import type { User } from "@interfaces/user";
 import type { Borrow } from "@interfaces/borrow";
 import type { UserRate } from "@interfaces/userRate";
 import type { Book } from "@interfaces/book";
-
-const isEmail = new RegExp(
-	/^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/,
-);
 
 export const useAuthStore = defineStore("auth", () => {
 	async function checkValidUser() {
@@ -136,11 +133,11 @@ export const useAuthStore = defineStore("auth", () => {
 
 	async function logOut() {
 		try {
-			const userStore = useUserStore();
 			Loading.show();
 			await $axios.get("/auth/logout");
 			socket.disconnect();
 			LocalStorage.remove("user_id");
+			const userStore = useUserStore();
 			userStore.loggedInUser = undefined;
 			await router.push({ name: "home" });
 		} catch (error) {

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from "axios";
 import { defineConfig } from "cypress";
 
 export default defineConfig({
@@ -6,6 +7,10 @@ export default defineConfig({
 		setupNodeEvents(on, config) {
 			// implement node event listeners here
 		},
+		responseTimeout: 60000,
+		video: true,
+		videoUploadOnPasses: false,
+		baseUrl: "http://localhost:4000",
 	},
 
 	component: {

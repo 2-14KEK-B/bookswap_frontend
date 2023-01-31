@@ -1,6 +1,11 @@
 <template>
 	<q-dialog v-model="appStore.login">
-		<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px" class="q-pa-md">
+		<q-card
+			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'"
+			style="min-width: 350px"
+			data-cy="loginModal"
+			class="q-pa-md"
+		>
 			<q-card-section class="row q-pt-none q-px-none">
 				<div class="text-h4 q-pr-lg">{{ $t("auth.login") }}</div>
 				<q-space />
@@ -15,6 +20,7 @@
 					autocomplete="on"
 					lazy-rules
 					reactive-rules
+					data-cy="emailOrUsernameLogin"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
 				<q-input
@@ -24,6 +30,7 @@
 					autocomplete="on"
 					lazy-rules
 					reactive-rules
+					data-cy="passwordLogin"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
 				<q-btn dense no-caps @click="appStore.passwordReset = true">{{ $t("auth.forgottenPassword") }}</q-btn>
@@ -34,6 +41,7 @@
 						:disabled="isDisabled"
 						type="submit"
 						no-caps
+						data-cy="loginButton"
 						:label="$t('auth.login')"
 					/>
 					<!-- @click="emits('to-register')" -->
@@ -42,6 +50,7 @@
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
 						no-caps
+						data-cy="openRegisterButton"
 						@click="toRegister"
 					/>
 					<GoogleLogin :callback="loginWithGoogle" popup-type="TOKEN" auto-login>
