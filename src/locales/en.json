@@ -172,5 +172,7 @@
                 "required": "Field is required"
         },
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "noServer": "Server is not running!",
+        "unknownError": "Something went wrong!"
 }

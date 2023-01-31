@@ -6,7 +6,7 @@ import type { App } from "vue";
 export type availableLocales = "hu" | "en";
 export const locales: availableLocales[] = ["hu", "en"];
 
-const i18n = createI18n({
+export const i18n = createI18n({
 	legacy: false,
 	globalInjection: true,
 	locale: "hu",

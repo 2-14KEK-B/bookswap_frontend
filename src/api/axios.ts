@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Loading, Notify } from "quasar";
+import type { Composer } from "vue-i18n";
+import { i18n } from "../modules/i18n";
 import { matClose } from "@quasar/extras/material-icons";
 
 Notify.setDefaults({
@@ -14,20 +16,31 @@ const $axios = axios.create({
 	withCredentials: true,
 });
 
+const { t, locale } = i18n.global as Composer;
+
 // Add a request interceptor
 $axios.interceptors.request.use(
 	function (config) {
+		config.headers["accept-language"] = locale.value;
 		// Do something before request is sent
 		return config;
 	},
 	function (error) {
+		if (import.meta.env.MODE != "production") console.log("request error: ", error);
 		if (axios.isAxiosError(error)) {
-			console.log("error from $axios.interceptors.request: ", error.response);
 			Loading.hide();
-			Notify.create({
-				message: error.response?.data as string,
-				color: "red",
-			});
+			if (error.response) {
+				Notify.create({
+					message: error.response?.data as string,
+					color: "red",
+				});
+			} else {
+				const message = t("unknownError");
+				Notify.create({
+					message: message,
+					color: "red",
+				});
+			}
 		} else {
 			Loading.hide();
 			Notify.create({
@@ -48,18 +61,23 @@ $axios.interceptors.response.use(
 		} else {
 			return Promise.reject(response);
 		}
-		// Any status code that lie within the range of 2xx cause this function to trigger
-		// Do something with response data
-		// return response;
 	},
 	function (error) {
+		if (import.meta.env.MODE != "production") console.log("response error: ", error);
 		if (axios.isAxiosError(error)) {
-			console.log("error from $axios.interceptors.request: ", error.response);
 			Loading.hide();
-			Notify.create({
-				message: error.response?.data as string,
-				color: "red",
-			});
+			if (error.response) {
+				Notify.create({
+					message: error.response.data as string,
+					color: "red",
+				});
+			} else {
+				const message = t("noServer");
+				Notify.create({
+					message: message,
+					color: "red",
+				});
+			}
 		} else {
 			Loading.hide();
 			Notify.create({

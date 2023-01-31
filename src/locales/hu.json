@@ -172,5 +172,7 @@
                 "required": "A mező kitöltése kötelező"
         },
         "yes": "Igen",
-        "no": "Nem"
+        "no": "Nem",
+        "noServer": "A szerver nem fut!",
+        "unknownError": "Valami elromlott!"
 }

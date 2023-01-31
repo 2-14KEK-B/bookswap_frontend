@@ -28,7 +28,7 @@ export const routes: RouteRecordRaw[] = [
 				component: () => import("@views/MessageView.vue"),
 			},
 			{
-				path: "newBook",
+				path: "book/new",
 				name: "newBook",
 				component: () => import("@views/NewBookView.vue"),
 			},

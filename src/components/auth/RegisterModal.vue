@@ -1,6 +1,11 @@
 <template>
 	<q-dialog v-model="appStore.register">
-		<q-card :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'" style="min-width: 350px" class="q-pa-md">
+		<q-card
+			:class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-4'"
+			style="min-width: 350px"
+			data-cy="registerModal"
+			class="q-pa-md"
+		>
 			<q-card-section class="row q-pt-none q-px-none">
 				<div class="text-h4 q-pr-lg">{{ $t("auth.register") }}</div>
 				<q-space />
@@ -14,7 +19,8 @@
 					:label="$t('user.email') + ':'"
 					lazy-rules
 					reactive-rules
-					:rules="[(val) => !!val || $t('formValidation.required')]"
+					data-cy="emailRegister"
+					:rules="[(val) => isEmail.test(val) || $t('formValidation.required')]"
 				/>
 				<div class="row justify-between">
 					<q-input v-model="name.firstName" :label="$t('user.firstName')" style="max-width: 45%" />
@@ -26,6 +32,7 @@
 					:label="$t('user.username') + ':'"
 					lazy-rules
 					reactive-rules
+					data-cy="usernameRegister"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
 				<q-input
@@ -35,6 +42,7 @@
 					autocomplete="on"
 					lazy-rules
 					reactive-rules
+					data-cy="passwordRegister"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
 				<!-- <div>
@@ -74,6 +82,7 @@
 						:disabled="isDisabled"
 						no-caps
 						type="submit"
+						data-cy="registerButton"
 						:label="$t('auth.register')"
 					/>
 					<q-btn
@@ -81,6 +90,7 @@
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						no-caps
 						:label="$t('auth.goToLogin')"
+						data-cy="openLoginButton"
 						@click="toLogin"
 					/>
 				</div>
@@ -93,6 +103,7 @@
 	import { computed, reactive } from "vue";
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
+	import { isEmail } from "@utils/validationHelper";
 	import { matClose } from "@quasar/extras/material-icons";
 	import type { RegisterCred } from "@interfaces/auth";
 	import type { User } from "@interfaces/user";
