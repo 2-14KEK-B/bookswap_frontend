@@ -1,6 +1,6 @@
 <template>
 	<q-layout view="hHh lpR fFf">
-		<q-header class="bg-primary text-white">
+		<q-header class="bg-primary text-white" data-cy="header">
 			<q-toolbar>
 				<q-toolbar-title>
 					<q-btn rounded flat :to="{ name: 'home' }">BookSwap</q-btn>
@@ -49,9 +49,14 @@
 					</q-btn>
 					<q-btn-dropdown flat rounded dense class="q-ml-sm" auto-close>
 						<template #label>
-							<ProfileAvatar title :src="userStore.loggedInUser.picture" :alt="getDisplayName(userStore.loggedInUser)" />
+							<ProfileAvatar
+								title
+								:src="userStore.loggedInUser.picture"
+								data-cy="profilePicture"
+								:alt="getDisplayName(userStore.loggedInUser)"
+							/>
 						</template>
-						<q-list separator>
+						<q-list separator data-cy="profileMenu">
 							<q-item v-if="userStore.loggedInUser.role === 'admin'" clickable :to="{ name: 'admin_user' }">
 								<q-icon :name="matAdminPanelSettings" size="md" class="q-mr-sm" />
 
@@ -69,14 +74,14 @@
 					</q-btn-dropdown>
 				</div>
 				<div v-else>
-					<q-btn flat :label="$t('auth.login')" @click="appStore.login = true" />
-					<q-btn flat :icon="darkModeButton.icon" @click="darkModeButton.action" />
+					<q-btn flat :label="$t('auth.login')" data-cy="openLoginButton" @click="appStore.login = true" />
+					<q-btn flat :icon="darkModeButton.icon" data-cy="darkModeButton" @click="darkModeButton.action" />
 				</div>
-				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
+				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" data-cy="langSelect" no-icon-animation auto-close>
 					<template #label>
 						<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 					</template>
-					<q-list>
+					<q-list data-cy="langList">
 						<q-item
 							v-for="(availableLocale, i) in locales"
 							:key="i"
@@ -94,6 +99,7 @@
 			</q-toolbar>
 		</q-header>
 
+		<!-- :style="[$q.screen.gt.xs ? { 'margin-left': 10 + '%', 'margin-right': 10 + '%' } : '']" -->
 		<q-page-container>
 			<router-view />
 		</q-page-container>

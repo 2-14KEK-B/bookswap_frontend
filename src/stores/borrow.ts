@@ -7,6 +7,8 @@ import { createNotification } from "@utils/notificationHelper";
 import type { Borrow, CreateBorrow, ModifyBorrow } from "@interfaces/borrow";
 import type { PaginateResult, PathQuery } from "@interfaces/paginate";
 import type { User } from "@interfaces/user";
+import { i18n } from "../modules/i18n";
+import type { Composer } from "vue-i18n";
 
 export const useBorrowStore = defineStore("borrow", () => {
 	const loggedInBorrows = ref<Borrow[]>([]);
@@ -44,7 +46,8 @@ export const useBorrowStore = defineStore("borrow", () => {
 				createNotification(borrowData.to, data._id, "lend", "create");
 			}
 			loggedInBorrows.value.push(data);
-			Notify.create({ message: "Request sent to other user" });
+			const { t } = i18n.global as Composer;
+			Notify.create({ message: t("borrow.requestSent") });
 		} catch (error) {
 			return;
 		}

@@ -46,6 +46,7 @@
 				:label="$q.screen.width > 350 ? $t('book.uploadNew') : $t('book.upload')"
 				:to="{ name: 'newBook' }"
 				color="primary"
+				data-cy="openNewBookButton"
 			/>
 			<q-btn no-caps :label="$t('book.wishes')" color="secondary" @click.prevent="selectBooks('lend')" />
 		</q-btn-group>

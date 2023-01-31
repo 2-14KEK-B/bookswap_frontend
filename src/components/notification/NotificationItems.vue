@@ -24,7 +24,7 @@
 			<q-item-label caption>{{ dayjs().to(notification.createdAt) }}</q-item-label>
 		</q-item-section>
 		<q-item-section side>
-			<q-btn flat @click.prevent="userStore.deleteNotification(notification._id)">
+			<q-btn flat @click.capture.stop="userStore.deleteNotification(notification._id)">
 				<q-icon :name="matDelete" />
 			</q-btn>
 		</q-item-section>
