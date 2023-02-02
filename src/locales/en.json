@@ -14,9 +14,14 @@
                 "newPasswordRequest": "Request a new password",
                 "logout": "Logout",
                 "googleLogin": "Login with Google",
+                "facebookLogin": "Login with Facebook",
                 "emailOrUsername": "Email or username",
                 "goToLogin": "Go to login",
-                "goToRegister": "Go to register"
+                "goToRegister": "Go to register",
+                "error": {
+                        "facebook": "An error occurred while logging in with Facebook.",
+                        "google": "An error occurred while logging in with Google."
+                }
         },
         "user": {
                 "profile": "{user}'s profile",

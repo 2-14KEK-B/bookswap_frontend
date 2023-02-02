@@ -33,35 +33,45 @@
 					data-cy="passwordLogin"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
-				<q-btn dense no-caps @click="appStore.passwordReset = true">{{ $t("auth.forgottenPassword") }}</q-btn>
-				<div class="q-gutter-md q-py-sm flex justify-evenly">
-					<q-btn
-						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
-						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-						:disabled="isDisabled"
-						type="submit"
-						no-caps
-						data-cy="loginButton"
-						:label="$t('auth.login')"
-					/>
-					<!-- @click="emits('to-register')" -->
-					<q-btn
-						:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
-						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-						:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
-						no-caps
-						data-cy="openRegisterButton"
-						@click="toRegister"
-					/>
-					<GoogleLogin :callback="loginWithGoogle" popup-type="TOKEN" auto-login>
+				<q-btn dense no-caps flat :label="$t('auth.forgottenPassword')" @click="appStore.passwordReset = true" />
+				<div class="column">
+					<div class="col-6 q-gutter-md q-py-sm flex justify-evenly">
 						<q-btn
 							:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
 							:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-							:icon="fabGoogle"
+							:disabled="isDisabled"
+							type="submit"
 							no-caps
-							:label="$q.screen.gt.xs ? $t('auth.googleLogin') : ''"
+							:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
+							data-cy="loginButton"
+							:label="$t('auth.login')"
 						/>
-					</GoogleLogin>
+						<!-- @click="emits('to-register')" -->
+						<q-btn
+							:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+							:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
+							:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
+							no-caps
+							:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
+							data-cy="openRegisterButton"
+							@click="toRegister"
+						/>
+					</div>
+					<div class="col-6 q-gutter-md q-py-sm flex justify-evenly">
+						<!-- :icon="$q.screen.lt.sm ? fabGoogle : 'none'" -->
+						<GoogleLogin :callback="loginWithGoogle" popup-type="TOKEN" auto-login :error="onGoogleError">
+							<q-btn
+								:class="$q.screen.gt.xs ? 'social' : ''"
+								:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+								:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
+								:icon="fabGoogle"
+								no-caps
+								:label="$q.screen.gt.xs ? $t('auth.googleLogin') : ''"
+								:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
+							/>
+						</GoogleLogin>
+						<FacebookButton />
+					</div>
 				</div>
 			</q-form>
 		</q-card>
@@ -71,14 +81,18 @@
 
 <script setup lang="ts">
 	import { ref, computed } from "vue";
+	import { Notify } from "quasar";
+	import { useI18n } from "vue-i18n";
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
 	import PasswordResetModal from "@components/auth/PasswordResetModal.vue";
+	import FacebookButton from "@components/auth/FacebookButton.vue";
 	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
 	import { matClose } from "@quasar/extras/material-icons";
 	import type { LoginCred } from "@interfaces/auth";
 
+	const { t } = useI18n({ useScope: "global" });
 	const appStore = useAppStore();
 	const authStore = useAuthStore();
 	const userCred = ref<LoginCred>({ emailOrUsername: "", password: "" });
@@ -92,6 +106,10 @@
 		await authStore.loginWithGoogle(res.access_token);
 		appStore.login = false;
 		// emits("login-with-google", res.access_token);
+	}
+
+	function onGoogleError() {
+		Notify.create({ message: t("auth.error.google") });
 	}
 
 	const isDisabled = computed(() => {
@@ -112,8 +130,8 @@
 	// }>();
 </script>
 
-<style scoped>
-	#title {
-		text-decoration: underline;
+<style>
+	button.social span i {
+		display: none;
 	}
 </style>
