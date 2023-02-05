@@ -128,7 +128,8 @@
                 "me": "me",
                 "back": "Back",
                 "placeholder": "Start typing..",
-                "new": "Send message to {user}",
+                "newUser": "Send message to {user}",
+                "new": "Send message",
                 "sent": "Message sent."
         },
         "button": {

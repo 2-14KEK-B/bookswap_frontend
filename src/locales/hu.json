@@ -128,7 +128,8 @@
                 "me": "én",
                 "back": "Vissza",
                 "placeholder": "Kezdd el gépelni..",
-                "new": "Üzenet küldése {user} számára",
+                "newUser": "Üzenet küldése {user} számára",
+                "new": "Üzenet küldése",
                 "sent": "Üzenet elküldve."
         },
         "button": {
