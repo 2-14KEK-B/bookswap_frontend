@@ -1,6 +1,6 @@
 <template>
-	<q-page>
-		<q-tabs v-model="tab">
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
+		<q-tabs v-model="tab" no-caps>
 			<q-tab name="borrow" :label="$t('me.borrows')"></q-tab>
 			<q-tab name="lend" :label="$t('me.lends')"></q-tab>
 		</q-tabs>

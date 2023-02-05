@@ -11,7 +11,7 @@
 				<q-space />
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-card-section>
-			<q-separator />
+			<q-separator class="q-mb-xs" />
 			<q-form style="min-width: 300px" @submit.prevent="register">
 				<q-input
 					v-model="userCred.email"
@@ -22,9 +22,10 @@
 					data-cy="emailRegister"
 					:rules="[(val) => isEmail.test(val) || $t('formValidation.required')]"
 				/>
-				<div class="row justify-between">
-					<q-input v-model="name.firstName" :label="$t('user.firstName')" style="max-width: 45%" />
-					<q-input v-model="name.secondName" :label="$t('user.secondName')" style="max-width: 45%" />
+				<div class="row justify-between full-width" style="padding-bottom: 20px">
+					<q-input v-model="name.firstName" :label="$t('user.firstName') + ':'" class="col" />
+					<q-space class="col-1" />
+					<q-input v-model="name.secondName" :label="$t('user.secondName') + ':'" class="col" />
 				</div>
 				<q-input
 					v-model="userCred.username"
@@ -82,6 +83,7 @@
 						:disabled="isDisabled"
 						no-caps
 						type="submit"
+						:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
 						data-cy="registerButton"
 						:label="$t('auth.register')"
 					/>
@@ -90,6 +92,7 @@
 						:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 						no-caps
 						:label="$t('auth.goToLogin')"
+						:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
 						data-cy="openLoginButton"
 						@click="toLogin"
 					/>

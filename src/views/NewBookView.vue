@@ -1,73 +1,85 @@
 <template>
-	<q-card
+	<q-page
 		flat
 		square
-		class="q-pa-lg row"
+		class="q-pa-lg"
 		:class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'"
-		style="height: calc(100vh - 50px)"
+		style="height: calc(100vh - 98px); margin-bottom: -50px"
 	>
-		<q-form class="col-12" @submit.prevent="bookCreating" @reset="resetFields">
-			<q-input
-				v-model="input.author"
-				:label="$t('book.author')"
-				lazy-rules
-				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
-			/>
-			<q-input
-				v-model="input.title"
-				:label="$t('book.title')"
-				lazy-rules
-				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
-			/>
-			<q-input v-model="input.isbn" :label="$t('book.isbn')" />
-
-			<div class="q-my-sm">
-				<span>{{ $t("book.genres.selected") }}:</span>
-				<q-badge v-for="(category, i) in input.category" :key="i" color="secondary" class="q-mx-sm" multi-line>
-					{{ $t(`book.genres.${category}`) }}
-				</q-badge>
-			</div>
-			<q-select
-				v-model="input.category"
-				:label="$t('book.genres.genre')"
-				:options="genres()"
-				emit-value
-				map-options
-				multiple
-				clearable
-			/>
-
-			<q-tabs v-model="tab" align="justify" no-caps>
-				<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.link')" />
-				<q-tab name="upload" :class="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'" :label="$t('upload.image')" />
-			</q-tabs>
-			<q-tab-panels v-model="tab" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
-				<q-tab-panel name="link" class="no-padding">
-					<q-input v-model="input.picture" :label="$t('book.picture')" />
-				</q-tab-panel>
-				<q-tab-panel name="upload" class="no-padding">
-					<q-uploader
-						ref="uploaderRef"
-						square
-						hide-upload-btn
-						max-file-size="10485760"
-						:label="$t('upload.onlyImg')"
-						class="full-width"
-						:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-5'"
-						accept="image/*"
-						@failed="failed"
-						@added="addFile"
-					/>
-				</q-tab-panel>
-			</q-tab-panels>
-			<q-input v-model="input.price" :label="$t('book.price')" type="number" suffix="Ft" />
-			<q-toggle v-model="input.for_borrow" color="green" :label="$t('book.forBorrow')" />
-			<q-card-actions>
-				<q-btn :label="$t('button.send')" type="submit" color="primary" />
-				<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />
-			</q-card-actions>
-		</q-form>
-	</q-card>
+		<q-scroll-area style="height: calc(100vh - 50px); margin: -24px" class="q-pa-md">
+			<q-form class="col-12" @submit.prevent="bookCreating" @reset="resetFields">
+				<q-input
+					v-model="input.author"
+					:label="$t('book.author')"
+					lazy-rules
+					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+				/>
+				<q-input
+					v-model="input.title"
+					:label="$t('book.title')"
+					lazy-rules
+					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+				/>
+				<q-input v-model="input.isbn" :label="$t('book.isbn')" />
+				<!-- <div class="q-my-sm">
+						<span>{{ $t("book.genres.selected") }}:</span>
+						<q-badge v-for="(category, i) in input.category" :key="i" color="secondary" class="q-mx-sm" multi-line>
+							{{ $t(`book.genres.${category}`) }}
+						</q-badge>
+					</div> -->
+				<q-select v-model="input.category" :options="genres()" label-slot emit-value map-options multiple clearable>
+					<template #label>
+						<span>
+							{{ $t("book.genres.genre") }}
+						</span>
+					</template>
+					<template #selected>
+						<q-badge v-for="(category, i) in input.category" :key="i" color="secondary" class="q-ma-xs" multi-line>
+							{{ $t(`book.genres.${category}`) }}
+						</q-badge>
+					</template>
+				</q-select>
+				<q-tabs v-model="tab" align="justify" no-caps :active-color="$q.dark.isActive ? 'bg-grey-10' : 'bg-grey-5'">
+					<q-tab name="link" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'" :label="$t('upload.link')" />
+					<q-tab name="upload" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'" :label="$t('upload.image')" />
+				</q-tabs>
+				<q-tab-panels v-model="tab" class="no-padding" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
+					<q-tab-panel name="link" class="no-padding">
+						<q-input v-model="input.picture" :label="$t('book.picture')" />
+					</q-tab-panel>
+					<q-tab-panel name="upload" class="no-padding">
+						<q-uploader
+							ref="uploaderRef"
+							square
+							hide-upload-btn
+							max-file-size="10485760"
+							:label="$t('upload.onlyImg')"
+							class="full-width"
+							:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-5'"
+							accept="image/*"
+							@failed="failed"
+							@added="addFile"
+						/>
+					</q-tab-panel>
+				</q-tab-panels>
+				<q-input
+					v-model="input.price"
+					:label="$t('book.price')"
+					mask="#####"
+					step="100"
+					placeholder="Maximum 99999"
+					max="100000"
+					class="price"
+					suffix="Ft"
+				/>
+				<q-toggle v-model="input.for_borrow" color="green" :label="$t('book.forBorrow')" />
+				<q-card-actions>
+					<q-btn :label="$t('button.send')" type="submit" color="primary" />
+					<q-btn :label="$t('button.reset')" type="reset" color="primary" flat class="q-ml-sm" />
+				</q-card-actions>
+			</q-form>
+		</q-scroll-area>
+	</q-page>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +103,7 @@
 		isbn: "",
 		category: [],
 		picture: "",
-		price: 0,
+		price: undefined,
 		for_borrow: true,
 	});
 
@@ -157,4 +169,4 @@
 	}
 </script>
 
-<style></style>
+<style scoped></style>
