@@ -13,10 +13,15 @@
                 "forgottenPassword": "Elfelejtett jelszó",
                 "newPasswordRequest": "Új jelszó igénylése",
                 "logout": "Kijelentkezés",
-                "googleLogin": "Bejelentkezés Google fiókkal",
+                "googleLogin": "Bejelentkezés Google-al",
+                "facebookLogin": "Bejelentkezés Facebook-al",
                 "emailOrUsername": "E-mail cím vagy felhasználónév",
                 "goToLogin": "Bejelentkezéshez",
-                "goToRegister": "Regisztrációhoz"
+                "goToRegister": "Regisztrációhoz",
+                "error": {
+                        "facebook": "Hiba történt a Facebook-al való bejelentkezés közben.",
+                        "google": "Hiba történt a Google-al való bejelentkezés közben."
+                }
         },
         "user": {
                 "profile": "{user} profilja",

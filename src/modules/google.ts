@@ -1,8 +1,14 @@
 import vue3GoogleLogin from "vue3-google-login";
-import type { App } from "vue";
+import type { App, Plugin } from "vue";
+
+type GoogleOptions = {
+	clientId?: string;
+};
+
+const options: GoogleOptions = {
+	clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+};
 
 export const install = (app: App) => {
-	app.use(vue3GoogleLogin, {
-		clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-	});
+	app.use<GoogleOptions>(vue3GoogleLogin as Plugin, options);
 };

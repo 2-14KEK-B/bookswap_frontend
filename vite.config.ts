@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import path, { dirname, resolve } from "path";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
+import mkcert from "vite-plugin-mkcert";
 import vue from "@vitejs/plugin-vue";
 import eslint from "vite-plugin-eslint";
 import { fileURLToPath } from "url";
@@ -9,6 +10,7 @@ import { fileURLToPath } from "url";
 
 export default defineConfig({
 	plugins: [
+		mkcert(),
 		vue({
 			template: { transformAssetUrls },
 		}),
@@ -44,6 +46,7 @@ export default defineConfig({
 		},
 	},
 	server: {
+		https: true,
 		port: 4000,
 	},
 	build: {
