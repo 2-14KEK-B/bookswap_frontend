@@ -10,7 +10,7 @@
 					<q-btn-dropdown
 						flat
 						rounded
-						class="notification"
+						class="notShow"
 						:icon="mdiBell"
 						no-icon-animation
 						dropdown-icon="none"
@@ -77,7 +77,7 @@
 					<q-btn flat :label="$t('auth.login')" data-cy="openLoginButton" @click="appStore.login = true" />
 					<q-btn flat :icon="darkModeButton.icon" data-cy="darkModeButton" @click="darkModeButton.action" />
 				</div>
-				<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" data-cy="langSelect" no-icon-animation auto-close>
+				<q-btn-dropdown dense class="notShow" flat dropdown-icon="none" data-cy="langSelect" no-icon-animation auto-close>
 					<template #label>
 						<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 					</template>
@@ -198,9 +198,4 @@
 	});
 </script>
 
-<style>
-	button.notification i,
-	button.i18n i {
-		display: none;
-	}
-</style>
+<style scoped></style>

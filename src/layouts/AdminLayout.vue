@@ -7,7 +7,7 @@
 					<q-btn flat :to="{ name: 'admin_home' }">BookSwap</q-btn>
 				</q-toolbar-title>
 				<div v-if="userStore.loggedInUser">
-					<q-btn-dropdown flat class="notification" rounded :icon="mdiBell" no-icon-animation dropdown-icon="none">
+					<q-btn-dropdown flat class="notShow" rounded :icon="mdiBell" no-icon-animation dropdown-icon="none">
 						<template #label>
 							{{ quasar.screen.gt.sm ? $t("title.notificatons") : "" }}
 							<q-badge
@@ -49,7 +49,7 @@
 							</template>
 						</q-list>
 					</q-btn-dropdown>
-					<q-btn-dropdown dense class="i18n" flat dropdown-icon="none" no-icon-animation auto-close>
+					<q-btn-dropdown dense class="notShow" flat dropdown-icon="none" no-icon-animation auto-close>
 						<template #label>
 							<q-icon :name="locale == 'en' ? `img:${EN}` : `img:${HU}`" />
 						</template>
@@ -262,9 +262,4 @@
 	});
 </script>
 
-<style>
-	button.notification i,
-	button.i18n i {
-		display: none;
-	}
-</style>
+<style></style>

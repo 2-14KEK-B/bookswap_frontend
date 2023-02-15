@@ -72,13 +72,14 @@
                 "lendIt": "Lend",
                 "sendBorrowRequest": "Send borrow request",
                 "sendLendRequest": "Send lend request",
+                "filter": "Filter",
                 "searchBy": "Search by title, author or ISBN",
                 "offers": "Offers",
                 "uploadNew": "Upload new",
                 "upload": "Upload",
                 "wishes": "Wishes",
                 "genres": {
-                        "genre": "Genre",
+                        "genre": "Genre(s)",
                         "selected": "Selected genres",
                         "fantasy": "Fantasy",
                         "scifi": "Science Fiction",
@@ -127,7 +128,8 @@
                 "me": "me",
                 "back": "Back",
                 "placeholder": "Start typing..",
-                "new": "Send message to {user}",
+                "newUser": "Send message to {user}",
+                "new": "Send message",
                 "sent": "Message sent."
         },
         "button": {

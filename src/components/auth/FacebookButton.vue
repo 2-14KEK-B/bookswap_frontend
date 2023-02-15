@@ -2,9 +2,9 @@
 	<!-- :icon="$q.screen.lt.sm ? fabFacebook : 'none'" -->
 	<q-btn
 		:class="$q.screen.gt.xs ? 'social' : ''"
-		:icon="fabFacebook"
+		:icon="`img:${facebook}`"
 		:label="$q.screen.gt.xs ? $t('auth.facebookLogin') : ''"
-		:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+		:color="$q.dark.isActive ? 'grey-5' : 'grey-7'"
 		:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 		no-caps
 		:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
@@ -17,7 +17,8 @@
 	import { useI18n } from "vue-i18n";
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
-	import { fabFacebook } from "@quasar/extras/fontawesome-v6";
+
+	import facebook from "/facebook.svg";
 
 	// eslint-disable-next-line no-undef
 	const fb = FB;

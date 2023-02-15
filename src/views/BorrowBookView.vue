@@ -90,7 +90,7 @@
 							color="secondary"
 							no-caps
 							padding="sm none"
-							:label="$t('message.new', { user: getDisplayName(bookStore.openedBook?.uploader as User) })"
+							:label="$q.screen.lt.md ? $t('message.new') : $t('message.newUser', { user: getDisplayName(bookStore.openedBook?.uploader as User) })"
 							@click="appStore.messageModal = true"
 						/>
 					</q-btn-group>

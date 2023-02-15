@@ -1,11 +1,11 @@
 <template>
-	<q-page>
+	<q-page :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-4'">
 		<q-tabs v-model="tab" no-caps>
 			<q-tab name="borrow" :label="$t('book.forBorrow')" />
 			<q-tab name="lend" :label="$t('book.forLend')" />
 			<q-tab name="not_available" :label="$t('book.notAvailable')" />
 		</q-tabs>
-		<q-scroll-area style="height: calc(100vh - 98px)">
+		<q-scroll-area style="height: calc(100vh - 98px)" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 			<div class="row q-pa-sm">
 				<div class="col">
 					<div class="row q-col-gutter-md">

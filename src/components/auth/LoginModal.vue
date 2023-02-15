@@ -11,7 +11,7 @@
 				<q-space />
 				<q-btn v-close-popup :icon="matClose" flat round dense />
 			</q-card-section>
-			<q-separator />
+			<q-separator class="q-mb-xs" />
 			<q-form style="min-width: 300px" @submit.prevent="login">
 				<q-input
 					v-model="userCred.emailOrUsername"
@@ -33,11 +33,18 @@
 					data-cy="passwordLogin"
 					:rules="[(val) => !!val || $t('formValidation.required')]"
 				/>
-				<q-btn dense no-caps flat :label="$t('auth.forgottenPassword')" @click="appStore.passwordReset = true" />
+				<q-btn
+					dense
+					no-caps
+					flat
+					class="q-my-xs"
+					:label="$t('auth.forgottenPassword')"
+					@click="appStore.passwordReset = true"
+				/>
 				<div class="column">
 					<div class="col-6 q-gutter-md q-py-sm flex justify-evenly">
 						<q-btn
-							:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+							:color="$q.dark.isActive ? 'grey-5' : 'grey-7'"
 							:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 							:disabled="isDisabled"
 							type="submit"
@@ -48,7 +55,7 @@
 						/>
 						<!-- @click="emits('to-register')" -->
 						<q-btn
-							:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+							:color="$q.dark.isActive ? 'grey-5' : 'grey-7'"
 							:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
 							:label="$q.screen.gt.xs ? $t('auth.goToRegister') : $t('auth.register')"
 							no-caps
@@ -61,10 +68,10 @@
 						<!-- :icon="$q.screen.lt.sm ? fabGoogle : 'none'" -->
 						<GoogleLogin :callback="loginWithGoogle" popup-type="TOKEN" auto-login :error="onGoogleError">
 							<q-btn
-								:class="$q.screen.gt.xs ? 'social' : ''"
-								:color="$q.dark.isActive ? 'grey-5' : 'grey-8'"
+								:class="$q.screen.gt.xs ? 'notShow' : ''"
+								:color="$q.dark.isActive ? 'grey-5' : 'grey-7'"
 								:text-color="$q.dark.isActive ? 'black' : 'grey-1'"
-								:icon="fabGoogle"
+								:icon="`img:${google}`"
 								no-caps
 								:label="$q.screen.gt.xs ? $t('auth.googleLogin') : ''"
 								:style="{ width: $q.screen.gt.xs ? 240 + 'px' : 140 + 'px' }"
@@ -88,9 +95,10 @@
 	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
 	import PasswordResetModal from "@components/auth/PasswordResetModal.vue";
 	import FacebookButton from "@components/auth/FacebookButton.vue";
-	import { fabGoogle } from "@quasar/extras/fontawesome-v6";
 	import { matClose } from "@quasar/extras/material-icons";
 	import type { LoginCred } from "@interfaces/auth";
+
+	import google from "/google.svg";
 
 	const { t } = useI18n({ useScope: "global" });
 	const appStore = useAppStore();
@@ -130,8 +138,4 @@
 	// }>();
 </script>
 
-<style>
-	button.social span i {
-		display: none;
-	}
-</style>
+<style></style>

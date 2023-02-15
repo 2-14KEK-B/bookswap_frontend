@@ -29,8 +29,8 @@
 				:class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'"
 			>
 				<q-tab-panel class="no-padding" name="info" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-					<q-card flat class="full-height" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
-						<q-scroll-area style="height: calc(100vh - 278px)" class="q-pa-lg">
+					<q-scroll-area style="height: calc(100vh - 278px)">
+						<q-card flat class="full-height q-pa-md" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 							<div class="column">
 								<EditField
 									:data="(userStore.loggedInUser.fullname as string)"
@@ -98,8 +98,8 @@
 									</span>
 								</div>
 							</div>
-						</q-scroll-area>
-					</q-card>
+						</q-card>
+					</q-scroll-area>
 				</q-tab-panel>
 				<q-tab-panel class="no-padding" name="rate" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
 					<q-tabs v-model="rateTab" no-caps align="justify" :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-3'">
