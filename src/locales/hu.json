@@ -13,10 +13,15 @@
                 "forgottenPassword": "Elfelejtett jelszó",
                 "newPasswordRequest": "Új jelszó igénylése",
                 "logout": "Kijelentkezés",
-                "googleLogin": "Bejelentkezés Google fiókkal",
+                "googleLogin": "Bejelentkezés Google-al",
+                "facebookLogin": "Bejelentkezés Facebook-al",
                 "emailOrUsername": "E-mail cím vagy felhasználónév",
                 "goToLogin": "Bejelentkezéshez",
-                "goToRegister": "Regisztrációhoz"
+                "goToRegister": "Regisztrációhoz",
+                "error": {
+                        "facebook": "Hiba történt a Facebook-al való bejelentkezés közben.",
+                        "google": "Hiba történt a Google-al való bejelentkezés közben."
+                }
         },
         "user": {
                 "profile": "{user} profilja",
@@ -66,6 +71,7 @@
                 "borrowIt": "Kikölcsönzés",
                 "sendBorrowRequest": "Kikölcsönzési kérelem küldése",
                 "sendLendRequest": "Kölcsönadási kérelem küldése",
+                "filter": "Szűrés",
                 "lendIt": "Kölcsönadás",
                 "searchBy": "Keresés cím, szerző vagy ISBN alapján",
                 "offers": "Kölcsönzés",
@@ -73,7 +79,7 @@
                 "upload": "Feltöltés",
                 "wishes": "Kérések",
                 "genres": {
-                        "genre": "Műfaj",
+                        "genre": "Műfaj(ok)",
                         "selected": "Kiválasztott műfajok",
                         "fantasy": "Fantasy",
                         "scifi": "Science Fiction",
@@ -122,7 +128,8 @@
                 "me": "én",
                 "back": "Vissza",
                 "placeholder": "Kezdd el gépelni..",
-                "new": "Üzenet küldése {user} számára",
+                "newUser": "Üzenet küldése {user} számára",
+                "new": "Üzenet küldése",
                 "sent": "Üzenet elküldve."
         },
         "button": {

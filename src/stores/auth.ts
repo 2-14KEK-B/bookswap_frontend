@@ -83,6 +83,18 @@ export const useAuthStore = defineStore("auth", () => {
 		}
 	}
 
+	async function loginWithFacebook(userId: string, token: string) {
+		try {
+			Loading.show();
+			const { data } = await $axios.post("/auth/facebook", { userID: userId, token: token });
+			// console.log(data);
+			saveUserData(data);
+			await router.push({ name: "home" });
+		} catch (error) {
+			return;
+		}
+	}
+
 	async function register(userData: Partial<User>) {
 		try {
 			Loading.show();
@@ -149,6 +161,7 @@ export const useAuthStore = defineStore("auth", () => {
 		login,
 		loginWithGoogle,
 		saveUserData,
+		loginWithFacebook,
 		register,
 		validateEmail,
 		sendResetPasswordRequest,

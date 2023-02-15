@@ -1,11 +1,12 @@
 import { defineConfig } from "vite";
 import path from "path";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
+import mkcert from "vite-plugin-mkcert";
 import vue from "@vitejs/plugin-vue";
 import eslint from "vite-plugin-eslint";
 import { VitePWA } from "vite-plugin-pwa";
 // import replace from "@rollup/plugin-replace";
-import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import type { ManifestOptions, VitePWAOptions } from "vite-plugin-pwa";
 import { fileURLToPath } from "node:url";
 // import { checker } from "vite-plugin-checker";
@@ -71,6 +72,7 @@ if (selfDestroying) pwaOptions.selfDestroying = selfDestroying;
 	"locale/en": path.resolve(__dirname, "src/locales/en.json"), */
 export default defineConfig({
 	plugins: [
+		mkcert(),
 		vue({
 			template: { transformAssetUrls },
 		}),
@@ -108,6 +110,7 @@ export default defineConfig({
 		},
 	},
 	server: {
+		https: true,
 		port: 4000,
 	},
 	build: {
