@@ -92,7 +92,7 @@
 	import { useI18n } from "vue-i18n";
 	import { useAppStore } from "@stores/app";
 	import { useAuthStore } from "@stores/auth";
-	import { CallbackTypes, GoogleLogin } from "vue3-google-login";
+	import { type CallbackTypes, GoogleLogin } from "vue3-google-login";
 	import PasswordResetModal from "@components/auth/PasswordResetModal.vue";
 	import FacebookButton from "@components/auth/FacebookButton.vue";
 	import { matClose } from "@quasar/extras/material-icons";

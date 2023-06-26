@@ -32,4 +32,4 @@ interface CreateMessage {
 	content: string;
 }
 
-export { Message, MessageContent, CreateMessage, MessagesToChat };
+export type { Message, MessageContent, CreateMessage, MessagesToChat };

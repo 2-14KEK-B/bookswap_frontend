@@ -1,4 +1,4 @@
-import { QTableProps, exportFile, Notify } from "quasar";
+import { type QTableProps, exportFile, Notify } from "quasar";
 
 function wrapCsvValue(val?: any, formatFn?: (val: any, row: any) => any, row?: any): string {
 	let formatted = formatFn !== void 0 ? formatFn(val, row) : val;

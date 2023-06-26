@@ -41,4 +41,4 @@ interface ModifyBook {
 	available?: boolean;
 }
 
-export { Book, CreateBook, ModifyBook };
+export type { Book, CreateBook, ModifyBook };

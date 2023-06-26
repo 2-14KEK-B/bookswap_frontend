@@ -8,7 +8,7 @@ import { useBorrowStore } from "./borrow";
 import { useMessageStore } from "./message";
 import { useUserRateStore } from "./userRate";
 import { router } from "../modules/router";
-import { availableLocales, setLocale } from "../modules/i18n";
+import { type availableLocales, setLocale } from "../modules/i18n";
 import { setInitialMessageInfo } from "@utils/messageHelper";
 import { isEmail } from "@utils/validationHelper";
 import type { LoginCred } from "@interfaces/auth";

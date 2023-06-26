@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, onMounted, ref } from "vue";
+	import { computed, type ComputedRef, onMounted, ref } from "vue";
 	import { useRouter } from "vue-router";
 	import { useI18n } from "vue-i18n";
 	import { useQuasar } from "quasar";
@@ -120,7 +120,7 @@
 	import { useUserStore } from "@stores/user";
 	import { useAuthStore } from "@stores/auth";
 	import { useMessageStore } from "@stores/message";
-	import { availableLocales, setLocale, locales } from "../modules/i18n";
+	import { type availableLocales, setLocale, locales } from "../modules/i18n";
 	import ProfileAvatar from "@components/ProfileAvatar.vue";
 	import NotificationList from "@components/notification/NotificationList.vue";
 	import NotificationBorrowModal from "@components/notification/NotificationBorrowModal.vue";

@@ -85,7 +85,7 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { useRouter } from "vue-router";
-	import axios, { AxiosProgressEvent } from "axios";
+	import axios, { type AxiosProgressEvent } from "axios";
 	import { genres } from "@utils/bookHelper";
 	import { useBookStore } from "@stores/book";
 	import { QUploader } from "quasar";

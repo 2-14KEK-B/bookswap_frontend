@@ -17,4 +17,4 @@ interface ModifyBookRate {
 	comment?: string;
 }
 
-export { BookRate, CreateBookRate, ModifyBookRate };
+export type { BookRate, CreateBookRate, ModifyBookRate };

@@ -20,4 +20,4 @@ interface CreateNotification {
 	not_type: notiType;
 }
 
-export { Notification, CreateNotification };
+export type { Notification, CreateNotification };

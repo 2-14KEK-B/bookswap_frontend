@@ -26,4 +26,4 @@ interface ModifyBorrow {
 	books?: string[];
 }
 
-export { Borrow, CreateBorrow, ModifyBorrow };
+export type { Borrow, CreateBorrow, ModifyBorrow };

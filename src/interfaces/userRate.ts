@@ -21,4 +21,4 @@ interface ModifyUserRate {
 	rate?: boolean;
 }
 
-export { UserRate, CreateUserRate, ModifyUserRate };
+export type { UserRate, CreateUserRate, ModifyUserRate };

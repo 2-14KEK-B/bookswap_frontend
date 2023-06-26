@@ -34,4 +34,4 @@ interface EditUser {
 	password?: string;
 }
 
-export { User, EditUser };
+export type { User, EditUser };

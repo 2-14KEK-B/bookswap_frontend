@@ -11,4 +11,4 @@ interface RegisterCred {
 	picture?: string;
 }
 
-export { LoginCred, RegisterCred };
+export type { LoginCred, RegisterCred };

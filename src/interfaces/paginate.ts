@@ -22,4 +22,4 @@ interface PathQuery {
 	keyword?: string;
 }
 
-export { PaginateResult, PathQuery };
+export type { PaginateResult, PathQuery };

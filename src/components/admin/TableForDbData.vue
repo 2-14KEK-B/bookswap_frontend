@@ -82,7 +82,7 @@
 <script setup lang="ts">
 	import { onMounted, ref, toRef } from "vue";
 	import { useI18n } from "vue-i18n";
-	import { QTableProps, QTable } from "quasar";
+	import { type QTableProps, QTable } from "quasar";
 	import { matSearch, matMoreVert } from "@quasar/extras/material-icons";
 	import exportTable from "@utils/exportTable";
 	import type { PathQuery } from "@interfaces/paginate";

@@ -9,10 +9,10 @@
 		"sourceMap": true,
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
-		"importsNotUsedAsValues": "error",
+		"verbatimModuleSyntax": true,
 		"lib": ["ESNext", "DOM"],
 		"skipLibCheck": true,
-		"types": ["vite/client", "pinia", "vue3-google-login", "cypress"],
+		"types": ["vite/client", "cypress"],
 		"typeRoots": ["node_modules/@types", "src/types"],
 		"baseUrl": ".",
 		"paths": {

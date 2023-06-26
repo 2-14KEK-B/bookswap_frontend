@@ -1,6 +1,6 @@
 <template>
 	<div class="main-row row justify-between items-center" style="min-width: 280px">
-		<q-input v-model="data" :label="label" :class="canModify ? 'col-8' : 'col-12'" :readonly="!modifyData" />
+		<q-input v-model="newData" :label="label" :class="canModify ? 'col-8' : 'col-12'" :readonly="!modifyData" />
 		<span v-if="canModify">
 			<span v-if="!modifyData" class="col-auto flex-center">
 				<q-btn class="small-button q-py-none" :label="modifyButtonLabel" no-caps @click="modifyData = true" />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted, readonly, toRef, Ref } from "vue";
+	import { ref, onMounted, readonly, toRef, type Ref } from "vue";
 	import type { EditUser } from "@interfaces/user";
 
 	const props = defineProps<{
@@ -29,19 +29,19 @@
 		canModify: boolean;
 	}>();
 
-	const data = ref<string>("");
+	const newData = ref<string>("");
 	let defaultData = readonly(ref(""));
 	const modifyData = ref(false);
 
 	function updateData() {
 		if (isValid()) {
-			emits("update", data.value, props.field);
+			emits("update", newData.value, props.field);
 			modifyData.value = false;
 		}
 	}
 
 	function isValid() {
-		const length = data.value.length;
+		const length = newData.value.length;
 		if (props.field == "email") {
 			return length >= 8 && length <= 64;
 		} else if (props.field == "fullname") {
@@ -55,7 +55,7 @@
 	}
 
 	function reset() {
-		data.value = defaultData.value;
+		newData.value = defaultData.value;
 		modifyData.value = false;
 	}
 
@@ -63,7 +63,7 @@
 
 	onMounted(() => {
 		if (props.data) {
-			data.value = props.data;
+			newData.value = props.data;
 			defaultData = readonly(toRef(props, "data") as Ref<string>);
 		}
 	});
